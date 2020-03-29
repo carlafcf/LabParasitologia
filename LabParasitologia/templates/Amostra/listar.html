@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<h1>Amostras</h1>
+	
+	{% if lista_amostras %}
+        <table>
+          <thead>
+            <th>Número da amostra</th>
+            <th>Data da amostra</th>
+          </thead>
+          {% for amostra in lista_amostras %}
+          <tr>
+            <td>{{ amostra.identificacao }}</td>
+            <td>{{ amostra.data_coleta }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        <p>Não há amostras cadastradas!</p>
+      {% endif %}
+{% endblock %}
