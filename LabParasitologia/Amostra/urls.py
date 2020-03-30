@@ -16,7 +16,10 @@ from django.contrib import admin
 from django.urls import path
 from Amostra import views
 
+app_name = 'amostra'
+
 urlpatterns = [
 	path('', views.home, name='home'),
-	path('listar', views.listar, name='listar')
+	path('listar', views.listar, name='listar'),
+	path('nova', views.adicionar, name='adicionar')
 ]

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<h1>Nova amostra</h1>
+	
+	<div class="jumbotron">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ amostra_form.as_p }}
+        <input type="submit" name="" value="Adicionar" class="btn btn-primary">
+      </form>
+  </div>
+{% endblock %}
