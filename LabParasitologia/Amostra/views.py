@@ -1,15 +1,18 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .models import Amostra
 from .forms import AmostraForm
 
 def home(request):
 	return render(request, 'Amostra/index.html')
 
+@login_required
 def listar(request):
 	amostras = Amostra.objects.all()
 	context = {'lista_amostras': amostras}
 	return render(request, 'Amostra/listar.html', context)
 
+@login_required
 def adicionar(request):
     if request.method=="POST":
         amostra_form = AmostraForm(request.POST)

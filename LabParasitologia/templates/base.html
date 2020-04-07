@@ -43,10 +43,10 @@
           </ul>
           <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
             {% if user.is_authenticated %}
-              <li class="nav-item"><a class="nav-link" href="">Log Out</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'usuario:logout' %}">Sair</a></li>
             {% else %}
-              <li class="nav-item"><a class="nav-link" href="">Login</a></li>
-              <li class="nav-item"><a class="nav-link" href="">Sign Up</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'usuario:login' %}">Login</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'usuario:cadastrar' %}">Cadastrar</a></li>
             {% endif %}
           </ul>
         </div>
