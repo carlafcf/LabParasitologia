@@ -34,3 +34,8 @@ def adicionar(request):
 
 class DetalheAmostra(LoginRequiredMixin, generic.DetailView):
     model = Amostra
+
+class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
+    model = Amostra
+    fields = ['identificacao', 'origem', 'local_coleta', 'data_coleta']
+    template_name_suffix = '_update_form'

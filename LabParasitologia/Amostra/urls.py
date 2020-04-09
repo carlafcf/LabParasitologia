@@ -23,4 +23,5 @@ urlpatterns = [
 	path('listar', views.listar, name='listar'),
 	path('nova', views.adicionar, name='adicionar'),
 	path('detalhes/<int:pk>', views.DetalheAmostra.as_view(), name='detalhes'),
+	path('editar/<int:pk>', views.EditarAmostra.as_view(), name='editar'),
 ]

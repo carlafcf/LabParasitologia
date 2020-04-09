@@ -3,13 +3,13 @@
 
 {% block content %}
 
-	<h1>Nova amostra</h1>
+	<h1>Editar amostra</h1>
 
     <div class="container">
         <form method="post">
           {% csrf_token %}
-          {% bootstrap_form amostra_form %}
-          <input type="submit" class="btn btn-default" name="" value="Cadastrar">
+          {% bootstrap_form form %}
+          <input type="submit" class="btn btn-default" name="" value="Atualizar">
         </form>
       </div>
 {% endblock %}
