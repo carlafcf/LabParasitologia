@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from django.views import generic
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Amostra
 from .forms import AmostraForm
 
@@ -29,3 +31,6 @@ def adicionar(request):
 
     return render(request, 'Amostra/adicionar.html',
                         {'amostra_form':amostra_form})
+
+class DetalheAmostra(LoginRequiredMixin, generic.DetailView):
+    model = Amostra

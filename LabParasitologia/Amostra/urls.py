@@ -21,5 +21,6 @@ app_name = 'amostra'
 urlpatterns = [
 	path('', views.home, name='home'),
 	path('listar', views.listar, name='listar'),
-	path('nova', views.adicionar, name='adicionar')
+	path('nova', views.adicionar, name='adicionar'),
+	path('detalhes/<int:pk>', views.DetalheAmostra.as_view(), name='detalhes'),
 ]

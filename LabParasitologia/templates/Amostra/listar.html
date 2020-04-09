@@ -14,6 +14,11 @@
           <tr>
             <td>{{ amostra.identificacao }}</td>
             <td>{{ amostra.data_coleta }}</td>
+            <td>
+                <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline"><i class="fa fa-search" aria-hidden="true" style="color:green"></i></a>
+                <a href="" class="btn btn-warning-outline"><i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i></a>
+                <a href="" class="btn btn-danger-outline"><i class="fa fa-trash" aria-hidden="true" style="color:red"></i></a>
+            </td>
           </tr>
           {% endfor %}
         </table>
