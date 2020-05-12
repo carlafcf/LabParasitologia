@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse, reverse_lazy
 from .models import Amostra
 from .forms import AmostraForm
 
@@ -32,10 +33,22 @@ def adicionar(request):
     return render(request, 'Amostra/adicionar.html',
                         {'amostra_form':amostra_form})
 
+class CriarAmostra(LoginRequiredMixin, generic.CreateView):
+    fields = ('identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal')
+    model = Amostra
+    template_name = 'Amostra/adicionar.html'
+    success_url = reverse_lazy("amostra:listar")
+
 class DetalheAmostra(LoginRequiredMixin, generic.DetailView):
     model = Amostra
+    template_name = "Amostra/amostra_detail.html"
 
 class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
     model = Amostra
-    fields = ['identificacao', 'origem', 'local_coleta', 'data_coleta']
-    template_name_suffix = '_update_form'
+    fields = ['identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal']
+    template_name = 'Amostra/amostra_update_form.html'
+
+class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
+    model = Amostra
+    template_name = 'Amostra/confirmar_deletar.html'
+    success_url = reverse_lazy('amostra:listar')
