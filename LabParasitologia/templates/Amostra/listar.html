@@ -5,13 +5,15 @@
 	<h1>Amostras</h1>
 	
 	{% if lista_amostras %}
-        <table>
-          <thead>
+        <table class="table">
+          <thead >
+            <th scope="col">#</th>
             <th>Número da amostra</th>
             <th>Data da amostra</th>
           </thead>
           {% for amostra in lista_amostras %}
           <tr>
+             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ amostra.identificacao }}</td>
             <td>{{ amostra.data_coleta }}</td>
             <td>
