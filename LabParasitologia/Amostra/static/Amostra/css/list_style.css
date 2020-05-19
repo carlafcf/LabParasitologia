@@ -11,6 +11,5 @@ table.dataTable thead .sorting_desc_disabled:before {
     bottom: .5em;
 }
 
-h1 {
-    background-color: blue;
-}
+table.dataTable tr.odd { background-color: white; }// change #E2E4FF to white
+table.dataTable tr.even { background-color: white; }
