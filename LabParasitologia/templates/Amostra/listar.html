@@ -1,34 +1,45 @@
 {% extends "base.html" %}
 
+{% block arquivos_js_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'Amostra/css/list_style.css' %}"/>
+<script src="{% static 'Amostra/js/list_js.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 
 	<h1>Amostras</h1>
 	
 	{% if lista_amostras %}
-        <table class="table">
+        <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
           <thead >
             <th scope="col">#</th>
             <th>Número da amostra</th>
             <th>Data da amostra</th>
+            <th></th>
           </thead>
+
+            <tbody>
           {% for amostra in lista_amostras %}
-          <tr>
-             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ amostra.identificacao }}</td>
-            <td>{{ amostra.data_coleta }}</td>
-            <td>
-                <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
-                    <i class="fa fa-search" aria-hidden="true" style="color:green"></i>
-                </a>
-                <a href="{% url 'amostra:editar' pk=amostra.pk %}" class="btn btn-warning-outline">
-                    <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
-                </a>
-                <a href="{% url 'amostra:deletar' pk=amostra.pk %}" class="btn btn-danger-outline">
-                    <i class="fa fa-trash" aria-hidden="true" style="color:red"></i>
-                </a>
-            </td>
-          </tr>
+              <tr>
+                 <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ amostra.identificacao }}</td>
+                <td>{{ amostra.data_coleta }}</td>
+                <td>
+                    <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
+                        <i class="fa fa-search" aria-hidden="true" style="color:green"></i>
+                    </a>
+                    <a href="{% url 'amostra:editar' pk=amostra.pk %}" class="btn btn-warning-outline">
+                        <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
+                    </a>
+                    <a href="{% url 'amostra:deletar' pk=amostra.pk %}" class="btn btn-danger-outline">
+                        <i class="fa fa-trash" aria-hidden="true" style="color:red"></i>
+                    </a>
+                </td>
+              </tr>
           {% endfor %}
+
+          </tbody>
         </table>
       {% else %}
         <p>Não há amostras cadastradas!</p>

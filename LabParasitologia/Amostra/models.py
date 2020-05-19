@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import date
-#from Usuario.models import User
+from Usuario.models import User
 
 TIPOS_AMOSTRA = [
         ('SA', 'Sangue'),
@@ -37,8 +37,8 @@ class Amostra(models.Model):
 
 	identificacao = models.CharField(max_length=10)
 	origem = models.CharField(max_length=200)
-	#responsavel = models.ForeignKey(User.name, on_delete=models.CASCADE, null = True )
-	#codigo_local nao entendi!
+	responsavel = models.ForeignKey(User.name,on_delete=models.CASCADE, null = True )
+	#codigo_local nao entendi! Vamos retirar!
 	local_coleta = models.CharField(max_length=200)
 	data_coleta = models.DateField(default=date.today)
 	tipo_amostra = models.CharField(max_length=2, choices=TIPOS_AMOSTRA, default='OU')

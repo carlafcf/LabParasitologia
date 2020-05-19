@@ -123,6 +123,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIR = STATIC_DIR
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 LOGIN_URL = 'usuario:login'
 LOGIN_REDIRECT_URL = 'amostra:listar'
