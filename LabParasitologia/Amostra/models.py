@@ -37,7 +37,7 @@ class Amostra(models.Model):
 	identificacao = models.CharField(max_length=10)
 	origem = models.CharField(max_length=200)
 	#responsavel = models.ForeignKey()
-	#codigo_local nao entendi!
+	#codigo_local nao entendi! Vamos retirar!
 	local_coleta = models.CharField(max_length=200)
 	data_coleta = models.DateField(default=date.today)
 	tipo_amostra = models.CharField(max_length=2, choices=TIPOS_AMOSTRA, default='OU')

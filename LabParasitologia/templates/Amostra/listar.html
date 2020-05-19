@@ -1,14 +1,23 @@
 {% extends "base.html" %}
 
+{% block arquivos_js_css %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'Amostra/css/list_style.css' %}"/>
+<script src="{% static 'Amostra/js/list_js.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 
 	<h1>Amostras</h1>
 	
 	{% if lista_amostras %}
-        <table>
+        <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
           <thead>
-            <th>Número da amostra</th>
-            <th>Data da amostra</th>
+            <tr>
+                <th class="th-sm">Número da amostra</th>
+                <th class="th-sm">Data da amostra</th>
+                <th></th>
+            </tr>
           </thead>
           {% for amostra in lista_amostras %}
           <tr>
