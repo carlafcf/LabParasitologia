@@ -37,7 +37,7 @@ class Amostra(models.Model):
 
 	identificacao = models.CharField(max_length=10)
 	origem = models.CharField(max_length=200)
-	responsavel = models.ForeignKey(User.name,on_delete=models.CASCADE, null = True )
+	responsavel = models.ForeignKey(User, on_delete=models.CASCADE, null = True, related_name='amostras')
 	#codigo_local nao entendi! Vamos retirar!
 	local_coleta = models.CharField(max_length=200)
 	data_coleta = models.DateField(default=date.today)

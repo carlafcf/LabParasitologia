@@ -3,6 +3,8 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
+
+from Usuario.models import User
 from .models import Amostra
 from .forms import AmostraForm
 
@@ -38,6 +40,13 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
     model = Amostra
     template_name = 'Amostra/adicionar.html'
     success_url = reverse_lazy("amostra:listar")
+
+    def form_valid(self, form):
+        user = User.objects.filter(username=self.request.user.username)[0]
+        form.instance.responsavel = user
+        return super(CriarAmostra, self).form_valid(form)
+
+
 
 class DetalheAmostra(LoginRequiredMixin, generic.DetailView):
     model = Amostra
