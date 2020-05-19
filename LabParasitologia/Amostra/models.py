@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+#from Usuario.models import User
 
 TIPOS_AMOSTRA = [
         ('SA', 'Sangue'),
@@ -36,7 +37,7 @@ class Amostra(models.Model):
 
 	identificacao = models.CharField(max_length=10)
 	origem = models.CharField(max_length=200)
-	#responsavel = models.ForeignKey()
+	#responsavel = models.ForeignKey(User.name, on_delete=models.CASCADE, null = True )
 	#codigo_local nao entendi!
 	local_coleta = models.CharField(max_length=200)
 	data_coleta = models.DateField(default=date.today)
@@ -44,6 +45,7 @@ class Amostra(models.Model):
 	especie_animal = models.CharField(max_length=2, choices=ESPECIES_ANIMAIS,default='OU')
 	sexo_animal = models.CharField(max_length=1, choices=SEXO, default='I')
 	#teste = models.MultipleChoiceField
+    #exame =
 
 	def __str__(self):
 		return self.identificacao
