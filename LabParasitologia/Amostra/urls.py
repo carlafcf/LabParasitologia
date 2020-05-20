@@ -22,7 +22,8 @@ from Amostra import views
 app_name = 'amostra'
 
 urlpatterns = [
-	path('', views.home, name='home'),
+	path('home/', views.home, name='home'),
+	path('', views.listar, name='listar'),
 	path('listar', views.listar, name='listar'),
 	#path('nova', views.adicionar, name='adicionar'),
 	path('nova', views.CriarAmostra.as_view(), name='adicionar'),

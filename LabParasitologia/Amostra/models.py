@@ -45,7 +45,6 @@ class Amostra(models.Model):
 	especie_animal = models.CharField(max_length=2, choices=ESPECIES_ANIMAIS,default='OU')
 	sexo_animal = models.CharField(max_length=1, choices=SEXO, default='I')
 	#teste = models.MultipleChoiceField
-    #exame =
 
 	def __str__(self):
 		return self.identificacao
