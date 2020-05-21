@@ -9,7 +9,11 @@
         <form method="post">
           {% csrf_token %}
           {% bootstrap_form form %}
-          <input type="submit" class="btn btn-success" name="" value="Cadastrar">
+
+          <input type="submit" class="btn btn-success" value="Cadastrar">
+          <input type="submit" class="btn btn-success" name="add" value="Cadastrar e adicionar outro" >
+
         </form>
+        <form action
       </div>
 {% endblock %}

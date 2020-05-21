@@ -39,13 +39,20 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
     fields = ('identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal')
     model = Amostra
     template_name = 'Amostra/adicionar.html'
-    success_url = reverse_lazy("amostra:listar")
 
     def form_valid(self, form):
         user = User.objects.filter(username=self.request.user.username)[0]
         form.instance.responsavel = user
         return super(CriarAmostra, self).form_valid(form)
 
+    def get_success_url(self):
+
+        if 'add' in self.request.POST:
+            url = reverse_lazy('amostra:adicionar')
+        else:
+            url = reverse_lazy('amostra:listar')
+
+        return url
 
 
 class DetalheAmostra(LoginRequiredMixin, generic.DetailView):
