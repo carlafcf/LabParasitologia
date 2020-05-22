@@ -30,4 +30,5 @@ urlpatterns = [
 	path('detalhes/<int:pk>', views.DetalheAmostra.as_view(), name='detalhes'),
 	path('editar/<int:pk>', views.EditarAmostra.as_view(), name='editar'),
 	path('deletar/<int:pk>', views.DeletarAmostra.as_view(), name='deletar'),
+
 ]

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Deletar Usuario</h1>
+    <form method="post">
+        {% csrf_token %}
+    <h5>Você tem certeza que deseja deletar o usuario?</h5>
+        <p><b>Usuario:</b> {{ object.username }}</p>
+        <p><b>Nome:</b> {{ object.first_name }} {{ object.last_name }}</p>
+        <p><b>E-mail:</b> {{ object.email }}</p>
+    <button type="submit" class="btn btn-success">Confirmar</button>
+</form>
+{% endblock %}

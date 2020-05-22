@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block arquivos_js_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'Amostra/css/list_style.css' %}"/>
+<script src="{% static 'Amostra/js/list_js.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <h1>Usuarios</h1>
+
+    {% if lista_user %}
+         <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
+          <thead >
+            <th scope="col">#</th>
+            <th>Usuario</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th></th>
+          </thead>
+
+             <tbody>
+             {% for user in lista_user %}
+                <tr>
+                 <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    <td>{{ user.email}}</td>
+                    <td>
+                        <a href="{% url 'usuario:detalhesUser' pk=user.pk %}" class="btn btn-primary-outline">
+                            <i class="fa fa-search" aria-hidden="true" style="color:green"></i>
+                        </a>
+                        <a href="{% url 'usuario:editar' pk=user.pk %}" class="btn btn-warning-outline">
+                            <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
+                        </a>
+                        <a href="{% url 'usuario:deletarUser' pk=user.pk %}" class="btn btn-danger-outline">
+                            <i class="fa fa-trash" aria-hidden="true" style="color:red"></i>
+                        </a>
+                    </td>
+                </tr>
+             {% endfor %}
+
+             </tbody>
+         </table>
+    {% else %}
+         <p>Não há Usuarios cadastrados!</p>
+    {% endif %}
+{% endblock %}

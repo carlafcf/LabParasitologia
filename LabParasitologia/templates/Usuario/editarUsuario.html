@@ -1,10 +1,23 @@
 {% extends "base.html" %}
+{% load bootstrap4 %}
 
 {% block content %}
 
-	<h1>Editar Usuario</h1>
+    <br>
+    <h1>Informações do Perfil</h1>
+        <br>
+        <div class="container">
+            <h5><strong>Usuario</strong>: {{ user.username }}</h5>
+            <h5><strong>Nome</strong>: {{ user.first_name }} {{ user.last_name }}</h5>
+            <h5><strong>E-mail</strong>: {{ user.email}}</h5>
+        </div>
+        <br>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-success">Atualizar</button>
+        </form>
 
-	<div class="jumbotron">
-      <h2>teste</h2>
-  </div>
+
+
 {% endblock %}

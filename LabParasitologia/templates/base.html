@@ -50,11 +50,14 @@
                 </div>
               </li>
               <li class="nav-item"> <a class="nav-link" href="">Exames</a> </li>
+                {% if user.is_superuser %}
+                  <li class="nav-item"> <a class="nav-link" href="{% url 'usuario:menu' %}">Usuarios</a> </li>
+                {% endif %}
             {% endif %}
           </ul>
           <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
             {% if user.is_authenticated %}
-              <li class="nav-item active"><a class="nav-link" href="{% url 'usuario:editar' %}">{{user.first_name}} {{user.last_name}}</a></li>
+              <li class="nav-item active"><a class="nav-link" href="{% url 'usuario:editar' pk=user.pk %}">{{user.first_name}} {{user.last_name}}</a></li>
               <li class="nav-item"><a class="nav-link" href="{% url 'usuario:logout' %}">Sair</a></li>
             {% else %}
               <li class="nav-item"><a class="nav-link" href="{% url 'usuario:login' %}">Login</a></li>
