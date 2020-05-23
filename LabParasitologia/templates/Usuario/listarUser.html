@@ -14,8 +14,8 @@
          <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
           <thead >
             <th scope="col">#</th>
-            <th>Usuario</th>
             <th>Nome</th>
+            <th>Usuario</th>
             <th>E-mail</th>
             <th></th>
           </thead>
@@ -24,8 +24,8 @@
              {% for user in lista_user %}
                 <tr>
                  <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ user }}</td>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.first_name }} {{ user.last_name }}</td>
                     <td>{{ user.email}}</td>
                     <td>
                         <a href="{% url 'usuario:detalhesUser' pk=user.pk %}" class="btn btn-primary-outline">

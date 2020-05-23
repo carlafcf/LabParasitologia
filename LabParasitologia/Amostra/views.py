@@ -63,6 +63,7 @@ class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
     model = Amostra
     fields = ['identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal']
     template_name = 'Amostra/amostra_update_form.html'
+    success_url = reverse_lazy('amostra:listar')
 
 class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
     model = Amostra
