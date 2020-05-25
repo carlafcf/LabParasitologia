@@ -23,7 +23,7 @@ class EditarUsuario(LoginRequiredMixin, generic.UpdateView):
 def menuUsuarios(request):
     user = User.objects.all()
     context = {'lista_user':user}
-    return render(request, 'Usuario/listarUser.html', context)
+    return render(request, 'Usuario/listarAmostraUser.html', context)
 
 class DetalheUser(LoginRequiredMixin, generic.DetailView):
     model = User

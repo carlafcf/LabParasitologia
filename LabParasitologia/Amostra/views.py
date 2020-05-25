@@ -18,6 +18,13 @@ def listar(request):
 	return render(request, 'Amostra/listar.html', context)
 
 @login_required
+def listarAmostraUser(request):
+	amostras = Amostra.objects.all()
+	context = {'lista_amostrasUser': amostras}
+	return render(request, 'Amostra/listarAmostraUser.html', context)
+
+
+@login_required
 def adicionar(request):
     if request.method=="POST":
         amostra_form = AmostraForm(request.POST)
@@ -68,3 +75,4 @@ class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
     model = Amostra
     template_name = 'Amostra/confirmar_deletar.html'
     success_url = reverse_lazy('amostra:listar')
+

@@ -8,9 +8,9 @@
 
 {% block content %}
 
-	<h1>Amostras</h1>
-	
-	{% if lista_amostras %}
+	<h1>Minhas amostras</h1>
+
+	{% if lista_amostrasUser %}
         <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
           <thead >
             <th scope="col">#</th>
@@ -25,7 +25,7 @@
           </thead>
 
             <tbody>
-          {% for amostra in lista_amostras %}
+          {% for amostra in lista_amostrasUser %}
 
               <tr>
                   <th scope="row"><center>{{ forloop.counter }}</center></th>
@@ -40,6 +40,13 @@
                   <td>
                     <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
                         <i class="fa fa-search" aria-hidden="true" style="color:green"></i>
+                    </a>
+
+                    <a href="{% url 'amostra:editar' pk=amostra.pk %}" class="btn btn-warning-outline">
+                        <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
+                    </a>
+                    <a href="{% url 'amostra:deletar' pk=amostra.pk %}" class="btn btn-danger-outline">
+                        <i class="fa fa-trash" aria-hidden="true" style="color:black"></i>
                     </a>
 
                       <a>

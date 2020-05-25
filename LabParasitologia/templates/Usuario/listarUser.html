@@ -4,6 +4,8 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'Amostra/css/list_style.css' %}"/>
 <script src="{% static 'Amostra/js/list_js.js' %}"></script>
+
+
 {% endblock %}
 
 {% block content %}
@@ -46,4 +48,6 @@
     {% else %}
          <p>Não há Usuarios cadastrados!</p>
     {% endif %}
+    <br>
+
 {% endblock %}
