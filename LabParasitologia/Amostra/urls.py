@@ -30,6 +30,8 @@ urlpatterns = [
 	path('detalhes/<int:pk>', views.DetalheAmostra.as_view(), name='detalhes'),
 	path('editar/<int:pk>', views.EditarAmostra.as_view(), name='editar'),
 	path('deletar/<int:pk>', views.DeletarAmostra.as_view(), name='deletar'),
-	path('listarAmostraUser/', views.listarAmostraUser, name='listarAmostraUser'),
+	path('listarAmostraUser/<int:pk>', views.listarAmostraUser, name='listarAmostraUser'),
+	path('listarAmostraUserFinalizada/<int:pk>', views.listarAmostraFinalizada, name='listarAmostraUserFinalizada'),
+	path('mudar_status/<int:status>/<int:amostra>', views.mudar_status, name='mudar_status'),
 
 ]

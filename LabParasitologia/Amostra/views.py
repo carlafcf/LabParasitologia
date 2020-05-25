@@ -18,10 +18,15 @@ def listar(request):
 	return render(request, 'Amostra/listar.html', context)
 
 @login_required
-def listarAmostraUser(request):
-	amostras = Amostra.objects.all()
+def listarAmostraUser(request, pk):
+	amostras = Amostra.objects.filter(responsavel_id=pk)
 	context = {'lista_amostrasUser': amostras}
 	return render(request, 'Amostra/listarAmostraUser.html', context)
+
+def listarAmostraFinalizada(request, pk):
+	amostras = Amostra.objects.filter(responsavel_id=pk, is_active = True)
+	context = {'lista_amostrasUserFinalizada': amostras}
+	return render(request, 'Amostra/listarAmostraUserFinalizada.html', context)
 
 
 @login_required
@@ -41,6 +46,15 @@ def adicionar(request):
 
     return render(request, 'Amostra/adicionar.html',
                         {'amostra_form':amostra_form})
+
+def mudar_status(request, status, amostra):
+    amostra = Amostra.objects.get(pk=amostra)
+    if (status==1):
+        amostra.is_active = True
+    else:
+        amostra.is_active = False
+    amostra.save()
+    return redirect('amostra:listar')
 
 class CriarAmostra(LoginRequiredMixin, generic.CreateView):
     fields = ('identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal')
@@ -70,9 +84,10 @@ class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
     model = Amostra
     fields = ['identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal']
     template_name = 'Amostra/amostra_update_form.html'
+    success_url = reverse_lazy('amostra:listar')
 
 class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
     model = Amostra
-    template_name = 'Amostra/confirmar_deletar.html'
+    template_name = 'Amostra/listar.html'
     success_url = reverse_lazy('amostra:listar')
 

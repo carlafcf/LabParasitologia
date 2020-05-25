@@ -9,7 +9,7 @@ from .models import User
 
 class SignUp(CreateView):
     form_class = forms.UserCreateForm
-    success_url = reverse_lazy('usuario:login')
+    success_url = reverse_lazy('usuario:listar')
     template_name = 'Usuario/cadastrar.html'
 
 
@@ -17,13 +17,13 @@ class EditarUsuario(LoginRequiredMixin, generic.UpdateView):
     model = User
     form_class = forms.EditarUsuarioForm
     template_name = 'Usuario/editarUsuario.html'
-    success_url = reverse_lazy('amostra:listar')
+    success_url = reverse_lazy('usuario:listar')
 
 @login_required
-def menuUsuarios(request):
-    user = User.objects.all()
+def listarUsuarios(request):
+    user = User.objects.filter(is_active=True)
     context = {'lista_user':user}
-    return render(request, 'Usuario/listarAmostraUser.html', context)
+    return render(request, 'Usuario/listarUser.html', context)
 
 class DetalheUser(LoginRequiredMixin, generic.DetailView):
     model = User
@@ -31,5 +31,29 @@ class DetalheUser(LoginRequiredMixin, generic.DetailView):
 
 class DeletarUser(LoginRequiredMixin, generic.DeleteView):
     model = User
-    template_name = 'Usuario/deletar_user.html'
-    success_url = reverse_lazy('usuario:menu')
+    template_name = 'Usuario/listarUser.html'
+    success_url = reverse_lazy('usuario:listar')
+
+def mudar_coordenacao_status(request, coord_status, usuario):
+    user = User.objects.get(pk=usuario)
+    if (coord_status==1):
+        user.is_superuser = True
+    else:
+        user.is_superuser = False
+    user.save()
+    return redirect('usuario:listar')
+
+def mudar_ativo_status(request, ativo_status, usuario):
+    user = User.objects.get(pk=usuario)
+    if (ativo_status==1):
+        user.is_active = True
+    else:
+        user.is_active = False
+    user.save()
+    return redirect('usuario:listar')
+
+@login_required
+def usuariosInativos(request):
+    user = User.objects.filter(is_active=False)
+    context = {'lista_user':user}
+    return render(request, 'Usuario/usuarios_inativos.html', context)

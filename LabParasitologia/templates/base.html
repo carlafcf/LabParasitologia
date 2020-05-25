@@ -45,15 +45,45 @@
                   Amostras
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="{% url 'amostra:adicionar' %}">Nova amostra</a>
-                  <a class="dropdown-item" href="{% url 'amostra:listar' %}">Listar amostras</a>
-                  <a class="dropdown-item" href="{% url 'amostra:listarAmostraUser' %}">Listar minhas amostras</a>
+                  <a class="dropdown-item" href="{% url 'amostra:adicionar' %}">Cadastrar</a>
+
+                  <div class="dropdown-divider"></div>
+                  <a class="">
+                    <strong><center>Todas amostras</center></strong>
+                  </a>
+
+                  <div class="dropdown-submenu" >
+                    <a class="dropdown-item" href="{% url 'amostra:listar' %}">Abertas</a>
+                    <a class="dropdown-item" href="">Finalizadas</a>
+
+                   </div>
+
+                  <div class="dropdown-divider"></div>
+                  <a>
+                    <center><strong>Minhas Amostras</strong></center>
+                  </a>
+
+                   <div class="dropdown-submenu" >
+                    <a class="dropdown-item" href="{% url 'amostra:listarAmostraUser' pk=user.pk %}">Abertas</a>
+                    <a class="dropdown-item" href="{% url 'amostra:listarAmostraUserFinalizada' pk=user.pk %}">Finalizadas</a>
+
+                   </div>
+
                 </div>
               </li>
               <li class="nav-item"> <a class="nav-link" href="">Exames</a> </li>
-                {% if user.is_superuser %}
-                  <li class="nav-item"> <a class="nav-link" href="{% url 'usuario:menu' %}">Usuarios</a> </li>
-                {% endif %}
+              {% if user.is_superuser %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Usuários
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'usuario:listar' %}">Listar</a>
+                    <a class="dropdown-item" href="{% url 'usuario:cadastrar' %}">Cadastrar</a>
+                    <a class="dropdown-item" href="{% url 'usuario:inativos' %}">Usuários inativos</a>
+                  </div>
+                </li>
+              {% endif %}
             {% endif %}
           </ul>
           <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
@@ -62,7 +92,6 @@
               <li class="nav-item"><a class="nav-link" href="{% url 'usuario:logout' %}">Sair</a></li>
             {% else %}
               <li class="nav-item"><a class="nav-link" href="{% url 'usuario:login' %}">Login</a></li>
-              <li class="nav-item"><a class="nav-link" href="{% url 'usuario:cadastrar' %}">Cadastrar</a></li>
             {% endif %}
           </ul>
         </div>

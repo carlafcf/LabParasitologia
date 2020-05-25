@@ -4,13 +4,11 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'Amostra/css/list_style.css' %}"/>
 <script src="{% static 'Amostra/js/list_js.js' %}"></script>
-
-
 {% endblock %}
 
 {% block content %}
 
-    <h1>Usuarios</h1>
+    <h1>Usuários Inativos</h1>
 
     {% if lista_user %}
          <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
@@ -19,7 +17,6 @@
             <th>Nome</th>
             <th>Usuario</th>
             <th>E-mail</th>
-            <th>Administrador</th>
             <th></th>
           </thead>
 
@@ -30,22 +27,10 @@
                     <td>{{ user }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email}}</td>
-                    {% if user.is_superuser %}
                     <td>
-                        <a href="{% url 'usuario:mudar_coordenacao_status' coord_status=0 usuario=user.pk %}" class="btn btn-primary-outline"><i class="fa fa-check" aria-hidden="true" style="color:green"></i></a>
-                    </td>
-                  {% else %}
-                    <td>
-                        <a href="{% url 'usuario:mudar_coordenacao_status' coord_status=1 usuario=user.pk %}" class="btn btn-danger-outline"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></a>
-                    </td>
-                  {% endif %}
-                    <td>
-                        <a href="{% url 'usuario:editar' pk=user.pk %}" class="btn btn-warning-outline">
-                            <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
-                        </a>
                         <a href="" class="btn btn-danger-outline"
                             data-toggle="modal" data-target="#fm-modal-grid-{{user.pk}}">
-                            <i class="fa fa-user-times" aria-hidden="true" style="color:red"></i>
+                            <i class="fa fa-user-plus" aria-hidden="true" style="color:green"></i>
                         </a>
                         <div class="modal fade" id="fm-modal-grid-{{user.pk}}" tabindex="-1"
                              role="dialog" aria-labelledBy="fm-modal-grid-{{user.pk}}"
@@ -61,14 +46,14 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-12 col-sm-6">
-                                                    <p>Você tem certeza que deseja desabilitar o usuário {{ user }}</p>
+                                                    <p>Você tem certeza que deseja habilitar o usuário {{ user }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="modal-footer">
-                                        <form action="{% url 'usuario:mudar_ativo_status' ativo_status=0 usuario=user.pk %}" method="POST">
+                                        <form action="{% url 'usuario:mudar_ativo_status' ativo_status=1 usuario=user.pk %}" method="POST">
                                                {% csrf_token %}
                                                <button class="btn">Confirmar</button>
                                         </form>
@@ -85,8 +70,6 @@
              </tbody>
          </table>
     {% else %}
-         <p>Não há Usuarios cadastrados!</p>
+         <p>Não há usuários inativos no sistema</p>
     {% endif %}
-    <br>
-
 {% endblock %}
