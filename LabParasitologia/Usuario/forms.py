@@ -7,7 +7,7 @@ from django.forms import ModelForm
 class UserCreateForm(UserCreationForm):
 
     class Meta:
-        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
         model = User
 
     def __init__(self, *args, **kwargs):

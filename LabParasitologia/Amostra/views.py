@@ -67,5 +67,5 @@ class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
 
 class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
     model = Amostra
-    template_name = 'Amostra/confirmar_deletar.html'
+    template_name = 'Amostra/listar.html'
     success_url = reverse_lazy('amostra:listar')
