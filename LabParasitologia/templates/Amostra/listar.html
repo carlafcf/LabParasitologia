@@ -86,11 +86,7 @@
                             </div>
                         </div>
                     </div>
-
-                      <a action="{% url 'amostra:mudar_status' status=0 amostra=amostra.pk %}" method="POST">
-                          {% csrf_token %}
-                        <button class="fa fa-circle" aria-hidden="true" name="status" style="color:red"></button>
-
+                        <a href="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="principal" style="color:#ca1612"></a>
                       </a>
 
 
@@ -101,7 +97,7 @@
                     <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                         <a>
-                      <i class="fa fa-circle" aria-hidden="true" name="status" style="color:#ca1612"></i>
+                      <i class="fa fa-circle" aria-hidden="true" name="status" style="color:#ca1612" ></i>
                     </a>
                 </td>
 

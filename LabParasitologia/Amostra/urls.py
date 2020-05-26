@@ -25,6 +25,7 @@ urlpatterns = [
 	path('home/', views.home, name='home'),
 	path('', views.listar, name='listar'),
 	path('listar', views.listar, name='listar'),
+	path('listarFinalizada', views.listarFinalizada, name='listarFinalizada'),
 	#path('nova', views.adicionar, name='adicionar'),
 	path('nova', views.CriarAmostra.as_view(), name='adicionar'),
 	path('detalhes/<int:pk>', views.DetalheAmostra.as_view(), name='detalhes'),

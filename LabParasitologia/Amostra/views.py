@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,18 +13,18 @@ def home(request):
 
 @login_required
 def listar(request):
-	amostras = Amostra.objects.all()
+	amostras = Amostra.objects.filter(status = False)
 	context = {'lista_amostras': amostras}
 	return render(request, 'Amostra/listar.html', context)
 
 def listarFinalizada(request):
-	amostras = Amostra.objects.all()
+	amostras = Amostra.objects.filter(status = True)
 	context = {'lista_amostras': amostras}
-	return render(request, 'Amostra/listar.html', context)
+	return render(request, 'Amostra/listarFinalizada.html', context)
 
 @login_required
 def listarAmostraUser(request, pk):
-	amostras = Amostra.objects.filter(responsavel_id=pk)
+	amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
 	context = {'lista_amostrasUser': amostras}
 	return render(request, 'Amostra/listarAmostraUser.html', context)
 
@@ -59,7 +59,7 @@ def mudar_status(request, status, amostra):
     else:
         amostra.status = False
     amostra.save()
-    return redirect('amostra:listar')
+    return redirect('amostra:listar' )
 
 class CriarAmostra(LoginRequiredMixin, generic.CreateView):
     fields = ('identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal')

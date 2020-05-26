@@ -8,9 +8,9 @@
 
 {% block content %}
 
-	<h1>Minhas amostras finalizadas</h1>
-
-	{% if lista_amostrasUserFinalizada %}
+	<h1>Amostras</h1>
+	
+	{% if lista_amostras %}
         <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
           <thead >
             <th scope="col">#</th>
@@ -25,9 +25,10 @@
           </thead>
 
             <tbody>
-          {% for amostra in lista_amostrasUserFinalizada %}
+          {% for amostra in lista_amostras %}
 
               <tr>
+
                   <th scope="row"><center>{{ forloop.counter }}</center></th>
                   <td><center>{{ amostra.data_coleta|date:"d M Y" }}</center></td>
                   <td><center>{{ amostra.identificacao }}</center></td>
@@ -37,12 +38,24 @@
                   <td><center>{{ amostra.especie_animal }}</center></td>
                   <td><center>{{ amostra.sexo_animal }}</center></td>
 
-                  <td>
-                      <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
+                {% if user.is_superuser %}
+                 <td>
+                   <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                         <a>
-                      <a href="{% url 'amostra:mudar_status' status=0 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:green"></a>
+                      <a href="{% url 'amostra:mudar_status' status=0 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="principal" style="color:green"></a>
+                  </td>
+                {% else %}
+                <td>
+                    <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
+                        <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
+                        <a>
+                      <i class="fa fa-circle" aria-hidden="true" name="status" style="color:green"></i>
+                    </a>
                 </td>
+
+                {% endif %}
+
 
               </tr>
 
