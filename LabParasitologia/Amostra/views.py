@@ -17,6 +17,11 @@ def listar(request):
 	context = {'lista_amostras': amostras}
 	return render(request, 'Amostra/listar.html', context)
 
+def listarFinalizada(request):
+	amostras = Amostra.objects.all()
+	context = {'lista_amostras': amostras}
+	return render(request, 'Amostra/listar.html', context)
+
 @login_required
 def listarAmostraUser(request, pk):
 	amostras = Amostra.objects.filter(responsavel_id=pk)
@@ -24,7 +29,7 @@ def listarAmostraUser(request, pk):
 	return render(request, 'Amostra/listarAmostraUser.html', context)
 
 def listarAmostraFinalizada(request, pk):
-	amostras = Amostra.objects.filter(responsavel_id=pk, is_active = True)
+	amostras = Amostra.objects.filter(responsavel_id=pk, status = True)
 	context = {'lista_amostrasUserFinalizada': amostras}
 	return render(request, 'Amostra/listarAmostraUserFinalizada.html', context)
 
@@ -50,9 +55,9 @@ def adicionar(request):
 def mudar_status(request, status, amostra):
     amostra = Amostra.objects.get(pk=amostra)
     if (status==1):
-        amostra.is_active = True
+        amostra.status = True
     else:
-        amostra.is_active = False
+        amostra.status = False
     amostra.save()
     return redirect('amostra:listar')
 

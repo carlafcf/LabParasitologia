@@ -39,9 +39,9 @@
 
                   <td>
 
-                      <a action="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST">
+                      <a action="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST" >
                           {% csrf_token %}
-                        <button class="fa fa-circle" aria-hidden="true" name="status" style="color:green"></button>
+                          <input class="fa fa-circle" aria-hidden="true" name="status" style="color:green">
 
                       </a>
 
