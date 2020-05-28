@@ -13,26 +13,31 @@ def home(request):
 
 @login_required
 def listar(request):
-	amostras = Amostra.objects.filter(status = False)
-	context = {'lista_amostras': amostras}
+	amostras = Amostra.objects.filter(status = True)
+	context = {'lista_amostras': amostras, 'titulo': "Amostras", 'amostrasUsuario': False,
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listar'}
 	return render(request, 'Amostra/listar.html', context)
 
+@login_required
 def listarFinalizada(request):
-	amostras = Amostra.objects.filter(status = True)
-	context = {'lista_amostras': amostras}
-	return render(request, 'Amostra/listarFinalizada.html', context)
+	amostras = Amostra.objects.filter(status = False)
+	context = {'lista_amostras': amostras, 'titulo': "Amostras finalizadas", 'amostrasUsuario': False,
+               'finalizadas': True, 'paginaRetorno': 'Amostra:listarFinalizada'}
+	return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarAmostraUser(request, pk):
-	amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
-	context = {'lista_amostrasUser': amostras}
-	return render(request, 'Amostra/listarAmostraUser.html', context)
+	amostras = Amostra.objects.filter(responsavel_id=pk,  status = True)
+	context = {'lista_amostras': amostras, 'titulo': "Minhas amostras", 'amostrasUsuario': True,
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAmostraUser'}
+	return render(request, 'Amostra/listar.html', context)
 
+@login_required
 def listarAmostraFinalizada(request, pk):
-	amostras = Amostra.objects.filter(responsavel_id=pk, status = True)
-	context = {'lista_amostrasUserFinalizada': amostras}
-	return render(request, 'Amostra/listarAmostraUserFinalizada.html', context)
-
+	amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
+	context = {'lista_amostras': amostras, 'titulo': "Minhas amostras", 'amostrasUsuario': True,
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAmostraUserFinalizada'}
+	return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def adicionar(request):
@@ -54,10 +59,12 @@ def adicionar(request):
 
 def mudar_status(request, status, amostra):
     amostra = Amostra.objects.get(pk=amostra)
+    print(amostra.status)
     if (status==1):
         amostra.status = True
     else:
         amostra.status = False
+    print(amostra.status)
     amostra.save()
     return redirect('amostra:listar' )
 
@@ -89,7 +96,10 @@ class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
     model = Amostra
     fields = ['identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal']
     template_name = 'Amostra/amostra_update_form.html'
-    success_url = reverse_lazy('amostra:listar')
+
+    def get_success_url(self):
+        return(self.request.POST.get('next', '/'))
+    #success_url = reverse_lazy('amostra:listar')
 
 class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
     model = Amostra

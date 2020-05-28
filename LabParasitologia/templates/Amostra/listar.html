@@ -8,7 +8,7 @@
 
 {% block content %}
 
-	<h1>Amostras</h1>
+	<h1>{{ titulo }}</h1>
 	
 	{% if lista_amostras %}
         <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
@@ -16,7 +16,7 @@
             <th scope="col">#</th>
             <th><center>Data da amostra</center></th>
             <th><center>Identificação</center></th> <!-- Número da amostra -->
-            <th><center>Responsavel</center></th>
+            <th><center>Responsável</center></th>
             <th><center>Local Coleta</center></th> <!-- Setor -->
             <th><center>Tipo de amostra</center></th>
             <th><center>Espécie</center></th>
@@ -30,80 +30,71 @@
               <tr>
 
                   <th scope="row"><center>{{ forloop.counter }}</center></th>
-                  <td><center>{{ amostra.data_coleta|date:"d M Y" }}</center></td>
+                  <td><center>{{ amostra.data_coleta|date:"d/m/y" }}</center></td>
                   <td><center>{{ amostra.identificacao }}</center></td>
                   <td><center>{{ amostra.responsavel }}</center></td>
                   <td><center>{{ amostra.local_coleta }}</center></td>
-                  <td><center>{{ amostra.tipo_amostra }}</center></td>
-                  <td><center>{{ amostra.especie_animal }}</center></td>
+                  <td><center>{{ amostra.get_tipo_amostra_display }}</center></td>
+                  <td><center>{{ amostra.get_especie_animal_display }}</center></td>
                   <td><center>{{ amostra.sexo_animal }}</center></td>
 
-                {% if user.is_superuser %}
-
                   <td>
-                    <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
-                        <i class="fa fa-search" aria-hidden="true" style="color:green"></i>
-                     </a>
-                    <a href="{% url 'amostra:editar' pk=amostra.pk %}" class="btn btn-warning-outline">
-                        <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
-                    </a>
-                    <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{amostra.pk}}">
-                        <i class="fa fa-trash" aria-hidden="true" style="color:black"></i>
-                    </a>
-                    <div class="modal fade" id="fm-modal-grid-{{amostra.pk}}" tabindex="-1"
-                         role="dialog" aria-labelledBy="fm-modal-grid-{{amostra.pk}}"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button class="close" data-dismiss="modal" aria-label="Cerrar">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-6">
-                                                <p>Você tem certeza que deseja deletar a seguinte amostra:</p>
-                                                <p>Origem: {{amostra.origem}}</p>
-                                                <p>Local de coleta: {{amostra.local_coleta}}</p>
-                                                <p>Identificação: {{amostra.identificacao}}</p>
-                                                <p>Data de coleta: {{amostra.data_coleta}}</p>
-                                                <p>Espécie: {{amostra.get_especie_animal_display}}</p>
+                      <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
+                        <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
+                      </a>
+
+                      {% if not finalizadas  %}
+                          {% if user.is_superuser or amostrasUsuario or amostra.responsavel.pk == user.pk %}
+                                <a href="{% url 'amostra:editar' pk=amostra.pk %}?next={{ request.path }}" class="btn btn-warning-outline">
+                                    <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
+                                </a>
+                                <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{amostra.pk}}">
+                                    <i class="fa fa-trash" aria-hidden="true" style="color:black"></i>
+                                </a>
+                                <div class="modal fade" id="fm-modal-grid-{{amostra.pk}}" tabindex="-1"
+                                     role="dialog" aria-labelledBy="fm-modal-grid-{{amostra.pk}}"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button class="close" data-dismiss="modal" aria-label="Cerrar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-6">
+                                                            <p>Você tem certeza que deseja deletar a seguinte amostra:</p>
+                                                            <p>Origem: {{amostra.origem}}</p>
+                                                            <p>Local de coleta: {{amostra.local_coleta}}</p>
+                                                            <p>Identificação: {{amostra.identificacao}}</p>
+                                                            <p>Data de coleta: {{amostra.data_coleta}}</p>
+                                                            <p>Espécie: {{amostra.get_especie_animal_display}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <form action="{% url 'amostra:deletar' pk=amostra.pk %}" method="POST">
+                                                       {% csrf_token %}
+                                                       <button class="btn">Deletar</button>
+                                                </form>
+                                                <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="modal-footer">
-                                    <form action="{% url 'amostra:deletar' pk=amostra.pk %}" method="POST">
-                                           {% csrf_token %}
-                                           <button class="btn">Deletar</button>
-                                    </form>
-                                    <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        <a href="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="principal" style="color:#ca1612"></a>
-                      </a>
-
-
-                </td>
-
-                {% else %}
-                <td>
-                    <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
-                        <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
-                        <a>
-                      <i class="fa fa-circle" aria-hidden="true" name="status" style="color:#ca1612" ></i>
-                    </a>
-                </td>
-
-                {% endif %}
-
-
+                                <a href="{% url 'amostra:mudar_status' status=0 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:red"></a>
+                          {% endif %}
+                      {% else %}
+                            {% if amostra.responsavel.pk == user.pk %}
+                                <a href="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:green"></a>
+                            {% endif %}
+                      {% endif %}
+                  </td>
               </tr>
 
           {% endfor %}
