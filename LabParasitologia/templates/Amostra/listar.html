@@ -79,6 +79,7 @@
                                             <div class="modal-footer">
                                                 <form action="{% url 'amostra:deletar' pk=amostra.pk %}" method="POST">
                                                        {% csrf_token %}
+                                                        <input type="hidden" name="next" value="{{request.path}}">
                                                        <button class="btn">Deletar</button>
                                                 </form>
                                                 <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
@@ -87,18 +88,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="{% url 'amostra:mudar_status' status=0 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:red"></a>
+                                <a href="{% url 'amostra:mudar_status' status=0 amostra=amostra.pk %}?next={{ request.path }}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:red"></a>
                           {% endif %}
                       {% else %}
                             {% if amostra.responsavel.pk == user.pk %}
-                                <a href="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:green"></a>
+                                <a href="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}?next={{ request.path }}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:green"></a>
                             {% endif %}
                       {% endif %}
                   </td>
               </tr>
 
           {% endfor %}
-
           </tbody>
         </table>
       {% else %}

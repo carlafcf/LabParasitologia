@@ -35,8 +35,8 @@ def listarAmostraUser(request, pk):
 @login_required
 def listarAmostraFinalizada(request, pk):
 	amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
-	context = {'lista_amostras': amostras, 'titulo': "Minhas amostras", 'amostrasUsuario': True,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAmostraUserFinalizada'}
+	context = {'lista_amostras': amostras, 'titulo': "Minhas amostras finalizadas", 'amostrasUsuario': True,
+               'finalizadas': True, 'paginaRetorno': 'Amostra:listarAmostraUserFinalizada'}
 	return render(request, 'Amostra/listar.html', context)
 
 @login_required
@@ -59,14 +59,12 @@ def adicionar(request):
 
 def mudar_status(request, status, amostra):
     amostra = Amostra.objects.get(pk=amostra)
-    print(amostra.status)
     if (status==1):
         amostra.status = True
     else:
         amostra.status = False
-    print(amostra.status)
     amostra.save()
-    return redirect('amostra:listar' )
+    return redirect(request.GET.get('next', '/'))
 
 class CriarAmostra(LoginRequiredMixin, generic.CreateView):
     fields = ('identificacao', 'origem', 'local_coleta', 'data_coleta', 'tipo_amostra','sexo_animal','especie_animal')
@@ -99,10 +97,11 @@ class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         return(self.request.POST.get('next', '/'))
-    #success_url = reverse_lazy('amostra:listar')
 
 class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
     model = Amostra
     template_name = 'Amostra/listar.html'
-    success_url = reverse_lazy('amostra:listar')
+
+    def get_success_url(self):
+        return(self.request.POST.get('next', '/'))
 
