@@ -3,7 +3,7 @@ $('#dtBasicExample').DataTable( {
     "pageLength": 50,
     "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Todos"] ],
   "columnDefs": [
-    { "orderable": false, "targets": 3 }
+    { "orderable": false, "targets": [4,5] }
   ],
     "language": {
   "decimal":        "",
