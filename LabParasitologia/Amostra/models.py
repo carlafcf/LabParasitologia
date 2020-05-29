@@ -48,6 +48,7 @@ class Amostra(models.Model):
     status = models.BooleanField(default=False)
     exame = models.ManyToManyField(Exame)
 
+
     def __str__(self):
         return self.identificacao
 
