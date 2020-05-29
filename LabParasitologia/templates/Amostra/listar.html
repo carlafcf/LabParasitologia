@@ -88,7 +88,8 @@
                                     </div>
                                 </div>
                                 <a href="{% url 'amostra:mudar_status' status=0 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:red"></a>
-                          {% endif %}
+                                <!--<a href="" method="POST" class="fa fa-clipboard" aria-hidden="true" name="" style="color:black"></a>-->
+                        {% endif %}
                       {% else %}
                             {% if amostra.responsavel.pk == user.pk %}
                                 <a href="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST" class="fa fa-circle" aria-hidden="true" name="" style="color:green"></a>

@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from Usuario.models import User
+from Exame.models import Exame
 
 TIPOS_AMOSTRA = [
         ('SA', 'Sangue'),
@@ -45,6 +46,7 @@ class Amostra(models.Model):
     especie_animal = models.CharField(max_length=2, choices=ESPECIES_ANIMAIS,default='OU')
     sexo_animal = models.CharField(max_length=1, choices=SEXO, default='I')
     status = models.BooleanField(default=False)
+    exame = models.ManyToManyField(Exame)
 
     def __str__(self):
         return self.identificacao
