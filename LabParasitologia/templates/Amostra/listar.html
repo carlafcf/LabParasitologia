@@ -41,16 +41,18 @@
                   <td><center>{{ amostra.responsavel }}</center></td>
 
                   <td>
-                      <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline">
+                      <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                       </a>
 
                       {% if not finalizadas  %}
                           {% if user.is_superuser or amostrasUsuario or amostra.responsavel.pk == user.pk %}
-                                <a href="{% url 'amostra:editar' pk=amostra.pk %}?next={{ request.path }}" class="btn btn-warning-outline">
+                                <a href="{% url 'amostra:editar' pk=amostra.pk %}?next={{ request.path }}" class="btn btn-warning-outline"
+                                        data-toggle="tooltip" title="Editar">
                                     <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
                                 </a>
-                                <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{amostra.pk}}">
+                                <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{amostra.pk}}"
+                                        data-tt="tooltip" title="Deletar">
                                     <i class="fa fa-trash" aria-hidden="true" style="color:black"></i>
                                 </a>
                                 <div class="modal fade" id="fm-modal-grid-{{amostra.pk}}" tabindex="-1"
@@ -91,7 +93,8 @@
                                     </div>
                                 </div>
 
-                                <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#mudar-status-{{amostra.pk}}">
+                                <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#mudar-status-{{amostra.pk}}"
+                                    data-tt="tooltip" title="Finalizar amostra">
                                     <i class="fa fa-circle" aria-hidden="true" style="color:red"></i>
                                 </a>
                                 <div class="modal fade" id="mudar-status-{{amostra.pk}}" tabindex="-1"
@@ -136,8 +139,9 @@
                                 <!--<a href="" method="POST" class="fa fa-clipboard" aria-hidden="true" name="" style="color:black"></a>-->
                         {% endif %}
                       {% else %}
-                            {% if amostra.responsavel.pk == user.pk %}
-                                <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#reativar-{{amostra.pk}}">
+                            {% if user.is_superuser or amostra.responsavel.pk == user.pk %}
+                                <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#reativar-{{amostra.pk}}"
+                                        data-tt="tooltip" title="Reativar amostra">
                                     <i class="fa fa-circle" aria-hidden="true" style="color:green"></i>
                                 </a>
                                 <div class="modal fade" id="reativar-{{amostra.pk}}" tabindex="-1"
