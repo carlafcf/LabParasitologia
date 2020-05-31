@@ -4,10 +4,21 @@
 {% block content %}
   <div class="container">
     <h1>Adicionar Exame</h1>
-
+    {% if amostra %}
+            <h5>Amostra: {{ amostra.identificacao }}</h5>
+			<h5>Data: {{ amostra.data_coleta }} </h5>
+			<h5>Responsavel: {{ amostra.responsavel }} </h5>
+			<h5>Local: {{ amostra.local_coleta }}</h5>
+    		<h5>{{ amostra.get_tipo_amostra_display }}</h5>
+    		<h5>Especie: {{ amostra.get_especie_animal_display }}</h5>
+    		<h5>Sexo: {{ amostra.sexo_animal }}</h5>
+            <br>
+    {% endif %}
     <form method="POST">
       {% csrf_token %}
-      {% bootstrap_form form %}
+      {% for field in exame_form %}
+        {% bootstrap_field field %}
+      {% endfor %}
         <input type="submit" class="btn btn-success" value="Adicionar">
         <input type="submit" class="btn btn-success" name="add" value="Adicionar novamente" >
     </form>

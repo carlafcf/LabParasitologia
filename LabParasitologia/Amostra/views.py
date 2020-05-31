@@ -87,14 +87,9 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
         return url
 
 
-class DetalheAmostra(LoginRequiredMixin, generic.DetailView):
-    model = Amostra
-    template_name = "Amostra/amostra_detail.html"
-
-    def exameListar(request, pk):
-        exame = Exame.objects.all()
-        context = {'lista_exame': exame}
-        return render( context)
+#class DetalheAmostra(LoginRequiredMixin, generic.DetailView):
+#    model = Amostra
+#    template_name = "Amostra/amostra_detail.html"
 
 
 class EditarAmostra(LoginRequiredMixin, generic.UpdateView):

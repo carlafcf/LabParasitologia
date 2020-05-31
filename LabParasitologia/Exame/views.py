@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import RealizacaoExameForm
 from django.views import generic
 from django.urls import reverse_lazy
@@ -15,42 +15,44 @@ def exameListar(request, pk):
     return render(request, 'Amostra/amostra_detail.html', context)
 
 
-class AdicionarExame(LoginRequiredMixin, generic.CreateView):
-    fields = ('exame','amostra','resultado')
-    model = RealizacaoExame
-    template_name = 'Exame/AdicionarExame.html'
+#class AdicionarExame(LoginRequiredMixin, generic.CreateView):
+#    fields = ('exame','resultado')
+#    model = RealizacaoExame
+#    template_name = 'Exame/AdicionarExame.html'
 
-    #def form_valid(self, form):
-    #    amostra = Amostra.objects.filter(pk=pk)
-    #    form.instance.amostra = amostra
-    #    return super(AdicionarExame, self).form_valid(form)
+#    def form_valid(self, form):
+#        amostra = Amostra.objects.filter(pk=pk)
+#        form.instance.amostra = amostra
+#        return super(AdicionarExame, self).form_valid(form)
+#
+#    def get_success_url(self):
+#
+#        if 'add' in self.request.POST:
+#            url = reverse_lazy('exame:AdicionarExame')
+#        else:
+#            url = reverse_lazy('amostra:listar')
 
-    def get_success_url(self):
-
-        if 'add' in self.request.POST:
-            url = reverse_lazy('exame:AdicionarExame')
-        else:
-            url = reverse_lazy('amostra:listar')
-
-        return url
-
-#def addExame(request, pk):
-#    amostra = Amostra.objects.get(pk=pk)
-#    url = reverse_lazy('amostra:listar')
-#    if request.method == "POST":
-#        exame_form = RealizacaoExameForm(request.POST)
-#    else:
-#        exame_form = RealizacaoExameForm()
-
-#    if exame_form.is_valid():
-#        amostra.exame = exame_form.save()
-#        amostra.exame.save()
 #        return url
 
-#    else:
-#        print(exame_form.errors)
-#    return render(request, 'Exame/AdicionarExame.html',
-#                  {'exame_form': exame_form})
+def addExame(request, pk):
+    amostra = Amostra.objects.get(pk=pk)
+    if request.method == "POST":
+        exame_form = RealizacaoExameForm(request.POST)
+    else:
+        exame_form = RealizacaoExameForm()
+
+    if exame_form.is_valid():
+        exame_form.instance.amostra = amostra
+        RealizacaoExame = exame_form.save()
+        RealizacaoExame.save()
+        if 'add' in request.POST:
+            return redirect('exame:AdicionarExame', pk)
+        else:
+            return redirect('amostra:detalhes', pk)
+    else:
+        print(exame_form.errors)
+    return render(request, 'Exame/AdicionarExame.html',
+                  {'exame_form': exame_form, 'amostra':amostra})
 
 
 

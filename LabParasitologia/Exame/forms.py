@@ -5,4 +5,4 @@ from .models import RealizacaoExame
 class RealizacaoExameForm(forms.ModelForm):
     class Meta():
         model = RealizacaoExame
-        fields=('exame','amostra','resultado')
+        fields=('exame','resultado')
