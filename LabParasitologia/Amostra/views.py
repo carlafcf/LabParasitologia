@@ -7,6 +7,7 @@ from django.urls import reverse, reverse_lazy
 from Usuario.models import User
 from .models import Amostra
 from .forms import AmostraForm
+from Exame.models import Exame
 
 def home(request):
 	return render(request, 'Amostra/index.html')
@@ -89,6 +90,12 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
 class DetalheAmostra(LoginRequiredMixin, generic.DetailView):
     model = Amostra
     template_name = "Amostra/amostra_detail.html"
+
+    def exameListar(request, pk):
+        exame = Exame.objects.all()
+        context = {'lista_exame': exame}
+        return render( context)
+
 
 class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
     model = Amostra

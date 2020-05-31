@@ -1,11 +1,42 @@
 {% extends "base.html" %}
+{% load bootstrap4 %}
 
 {% block content %}
+<div class="container">
+	{% if a %}
+		{% for amostra in a %}
+			{% if user.is_superuser or amostra.responsavel.pk == user.pk %}
+				<div class=text-right>
+        			<a href="{% url 'exame:AdicionarExame' %}" class="btn btn-success">Adicionar exame</a>
+				</div>
+			{% endif %}
+			<h1><strong>Amostra {{ amostra.identificacao }}</strong></h1>
+			<h5>Data: {{ amostra.data_coleta }} </h5>
+			<h5>Responsavel: {{ amostra.responsavel }} </h5>
+			<h5>Local: {{ amostra.local_coleta }}</h5>
+    		<h5>{{ amostra.get_tipo_amostra_display }}</h5>
+    		<h5>Especie: {{ amostra.get_especie_animal_display }}</h5>
+    		<h5>Sexo: {{ amostra.sexo_animal }}</h5>
+			<br>
+		{% endfor %}
+	{% endif %}
 
-	<h1>Amostra {{ amostra.identificacao }} </h1>
-	<h5>Data {{ amostra.data_coleta }} </h5>
+	<h2><strong>Exames</strong></h2>
+	{% if lista_exame %}
+		{% for exame in lista_exame %}
+			<h5>Exame: {{ exame.exame }}</h5>
+			<h5>Resultado: {{ exame.resultado }}</h5>
+			<br>
+		{% endfor %}
+	{% else %}
+		<h5>Nao há exame adicionado</h5>
+	{% endif %}
 
-	<div class="jumbotron">
-      <h2>teste</h2>
+	<br>
+
+
   </div>
+
+</div>
+
 {% endblock %}

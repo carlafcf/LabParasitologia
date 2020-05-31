@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <div class="container">
+    <h1>Cadastrar Exame</h1>
+    <form method="post">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+        <input type="submit" class="btn btn-success" value="Cadastrar">
+        <input type="submit" class="btn btn-success" name="add" value="Cadastrar e adicionar novamente" >
+    </form>
+  </div>
+{% endblock %}

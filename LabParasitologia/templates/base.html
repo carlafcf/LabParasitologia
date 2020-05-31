@@ -71,7 +71,7 @@
 
                 </div>
               </li>
-              <li class="nav-item"> <a class="nav-link" href="">Exames</a> </li>
+               <a href="{% url 'exame:CadastrarExame' %}" class="nav-link" >Exames</a>
               {% if user.is_superuser %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
