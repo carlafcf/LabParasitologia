@@ -45,7 +45,7 @@ class Amostra(models.Model):
     tipo_amostra = models.CharField(max_length=2, choices=TIPOS_AMOSTRA, default='OU')
     especie_animal = models.CharField(max_length=2, choices=ESPECIES_ANIMAIS,default='OU')
     sexo_animal = models.CharField(max_length=1, choices=SEXO, default='I')
-    status = models.BooleanField(default=False)
+    status = models.BooleanField(default=True)
     exame = models.ManyToManyField(Exame)
 
 
@@ -53,7 +53,7 @@ class Amostra(models.Model):
         return self.identificacao
 
     class Meta:
-        ordering = ['-data_coleta']
+        ordering = ['-data_coleta','origem','local_coleta','especie_animal','identificacao','tipo_amostra']
 
 
 

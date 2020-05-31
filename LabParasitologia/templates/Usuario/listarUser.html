@@ -10,16 +10,16 @@
 
 {% block content %}
 
-    <h1>Usuarios</h1>
+    <h1>Usuários</h1>
 
     {% if lista_user %}
-         <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
+         <table id="userDT" class="table" cellspacing="0" width="100%">
           <thead >
             <th scope="col">#</th>
             <th>Nome</th>
             <th>Usuario</th>
             <th>E-mail</th>
-            <th>Administrador</th>
+            <th><center>Administrador</center></th>
             <th></th>
           </thead>
 
@@ -31,20 +31,21 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.email}}</td>
                     {% if user.is_superuser %}
-                    <td>
+                    <td><center>
                         <a href="{% url 'usuario:mudar_coordenacao_status' coord_status=0 usuario=user.pk %}" class="btn btn-primary-outline"><i class="fa fa-check" aria-hidden="true" style="color:green"></i></a>
-                    </td>
+                    </center></td>
                   {% else %}
-                    <td>
+                    <td><center>
                         <a href="{% url 'usuario:mudar_coordenacao_status' coord_status=1 usuario=user.pk %}" class="btn btn-danger-outline"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></a>
-                    </td>
+                    </center></td>
                   {% endif %}
                     <td>
-                        <a href="{% url 'usuario:editar' pk=user.pk %}" class="btn btn-warning-outline">
+                        <a href="{% url 'usuario:editar' pk=user.pk %}" class="btn btn-warning-outline" data-toggle="tooltip" title="Editar">
                             <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
                         </a>
                         <a href="" class="btn btn-danger-outline"
-                            data-toggle="modal" data-target="#fm-modal-grid-{{user.pk}}">
+                            data-toggle="modal" data-target="#fm-modal-grid-{{user.pk}}"
+                            data-tt="tooltip" title="Desabilitar usuário">
                             <i class="fa fa-user-times" aria-hidden="true" style="color:red"></i>
                         </a>
                         <div class="modal fade" id="fm-modal-grid-{{user.pk}}" tabindex="-1"
