@@ -7,6 +7,9 @@ app_name = 'exame'
 urlpatterns = [
     #path('AdicionarExame/<int:pk>', views.AdicionarExame.as_view(), name='AdicionarExame'),
     path('AdicionarExame/<int:pk>', views.addExame, name='AdicionarExame'),
-    #url('AdicionarExame/', views.AdicionarExame.as_view(), name='AdicionarExame'),
+    url('ListarExame/', views.exameListar, name='ListarExame'),
     url('CadastrarExame/', views.CadastrarExame.as_view(), name='CadastrarExame'),
+    path('DestalhesExame/<int:pk>', views.DetalheExame.as_view(), name='DetalheExame'),
+    path('EditarExame/<int:pk>', views.EditarExame.as_view(), name='EditarExame'),
+    path('DeletarExame/<int:pk>', views.DeletarExame.as_view(), name='DeletarExame'),
 ]

@@ -71,7 +71,15 @@
 
                 </div>
               </li>
-               <a href="{% url 'exame:CadastrarExame' %}" class="nav-link" >Exames</a>
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="examesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Exames
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="examesDropdown">
+                    <a class="dropdown-item" href="{% url 'exame:CadastrarExame' %}">Cadastrar</a>
+                    <a class="dropdown-item" href="{% url 'exame:ListarExame' %}">Listar</a>
+                  </div>
+                </li>
               {% if user.is_superuser %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

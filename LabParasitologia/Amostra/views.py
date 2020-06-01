@@ -68,7 +68,7 @@ def mudar_status(request, status, amostra):
     return redirect(request.POST.get('next', '/'))
 
 class CriarAmostra(LoginRequiredMixin, generic.CreateView):
-    fields = ('data_coleta', 'origem', 'local_coleta','especie_animal', 'identificacao', 'tipo_amostra','sexo_animal')
+    fields = ('data_coleta', 'origem', 'localidade','setor','especie_animal', 'identificacao', 'tipo_amostra','sexo_animal')
     model = Amostra
     template_name = 'Amostra/adicionar.html'
 
@@ -94,7 +94,7 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
 
 class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
     model = Amostra
-    fields = ['data_coleta', 'origem', 'local_coleta','especie_animal', 'identificacao', 'tipo_amostra','sexo_animal']
+    fields = ['data_coleta', 'origem', 'localidade', 'setor','especie_animal', 'identificacao', 'tipo_amostra','sexo_animal']
     template_name = 'Amostra/amostra_update_form.html'
 
     def get_success_url(self):

@@ -38,9 +38,8 @@ class Amostra(models.Model):
     identificacao = models.CharField(max_length=10)
     origem = models.CharField(max_length=200)
     responsavel = models.ForeignKey(User, on_delete=models.CASCADE, null = True, related_name='amostras')
-    #localidade(codigo_local) nao entendi! Vamos retirar!
-    #setor
-    local_coleta = models.CharField(max_length=200)
+    localidade = models.CharField(max_length=200, default=' ')
+    setor = models.CharField(max_length=200)
     data_coleta = models.DateField(default=date.today)
     tipo_amostra = models.CharField(max_length=2, choices=TIPOS_AMOSTRA, default='OU')
     especie_animal = models.CharField(max_length=2, choices=ESPECIES_ANIMAIS,default='OU')
@@ -53,7 +52,7 @@ class Amostra(models.Model):
         return self.identificacao
 
     class Meta:
-        ordering = ['-data_coleta','origem','local_coleta','especie_animal','identificacao','tipo_amostra']
+        ordering = ['-data_coleta','origem','localidade','setor','especie_animal','identificacao','tipo_amostra']
 
 
 
