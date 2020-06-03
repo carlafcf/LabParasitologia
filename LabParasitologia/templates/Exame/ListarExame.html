@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
+{% block arquivos_js_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'Amostra/css/list_style.css' %}"/>
+<script src="{% static 'Amostra/js/list_js.js' %}"></script>
+{% endblock %}
+
 
 {% block content %}
   <div class="container">
