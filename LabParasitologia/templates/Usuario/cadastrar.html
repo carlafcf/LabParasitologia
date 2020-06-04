@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 
+{% block titulo %}
+	<h1>Cadastrar</h1>
+{% endblock %}
+
+
 {% block content %}
   <div class="container">
-    <h1>Cadastrar</h1>
+
     <form method="post">
       {% csrf_token %}
       {% bootstrap_form form %}

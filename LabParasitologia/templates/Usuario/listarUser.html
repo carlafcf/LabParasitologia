@@ -4,13 +4,15 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'Amostra/css/list_style.css' %}"/>
 <script src="{% static 'Amostra/js/list_js.js' %}"></script>
+{% endblock %}
 
-
+{% block titulo %}
+	<h1>Usuários</h1>
 {% endblock %}
 
 {% block content %}
 
-    <h1>Usuários</h1>
+
 
     {% if lista_user %}
          <table id="userDT" class="table" cellspacing="0" width="100%">

@@ -6,10 +6,14 @@
 <script src="{% static 'Amostra/js/list_js.js' %}"></script>
 {% endblock %}
 
+{% block titulo %}
+	<h1>Listar Exame</h1>
+{% endblock %}
+
 
 {% block content %}
   <div class="container">
-    <h1>Listar Exame</h1>
+
     {% if listar_exame %}
        <table id="amostraDT" class="table" cellspacing="0" width="100%">
            <thead >

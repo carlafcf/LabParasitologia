@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Laboratório de Parasitologia</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <!-- Datatable -->
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+   <!--<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables_themeroller.css">-->
+   <!--<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>-->
+   <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">-->
+	<!--<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>-->
+	<!--<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>-->
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+    <!-- Optional theme -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Liu+Jian+Mao+Cao|Montserrat&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    {% block arquivos_js_css %}
+    {% endblock %}
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mynav" role="navigation" id='navbar'>
+      <div class="container">
+        <a class="navbar-brand bigbrand" href="{% url 'amostra:home' %}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Amostras
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="{% url 'amostra:adicionar' %}">Cadastrar</a>
+
+                  <div class="dropdown-divider"></div>
+                  <a class="">
+                    <strong><center>Todas amostras</center></strong>
+                  </a>
+
+                  <div class="dropdown-submenu" >
+                    <a class="dropdown-item" href="{% url 'amostra:listar' %}">Abertas</a>
+                    <a class="dropdown-item" href="{% url 'amostra:listarFinalizada' %}">Finalizadas</a>
+
+                   </div>
+
+                  <div class="dropdown-divider"></div>
+                  <a>
+                    <center><strong>Minhas amostras</strong></center>
+                  </a>
+
+                   <div class="dropdown-submenu" >
+                    <a class="dropdown-item" href="{% url 'amostra:listarAmostraUser' pk=user.pk %}">Abertas</a>
+                    <a class="dropdown-item" href="{% url 'amostra:listarAmostraUserFinalizada' pk=user.pk %}">Finalizadas</a>
+
+                   </div>
+
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="examesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Exames
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="examesDropdown">
+                    <a class="dropdown-item" href="{% url 'exame:CadastrarExame' %}">Cadastrar</a>
+                    <a class="dropdown-item" href="{% url 'exame:ListarExame' %}">Listar</a>
+                  </div>
+                </li>
+              {% if user.is_superuser %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Usuários
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'usuario:listar' %}">Listar</a>
+                    <a class="dropdown-item" href="{% url 'usuario:cadastrar' %}">Cadastrar</a>
+                    <a class="dropdown-item" href="{% url 'usuario:inativos' %}">Usuários inativos</a>
+                  </div>
+                </li>
+              {% endif %}
+            {% endif %}
+          </ul>
+          <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+            {% if user.is_authenticated %}
+              <li class="nav-item active"><a class="nav-link" href="{% url 'usuario:editar' pk=user.pk %}">{{user.first_name}} {{user.last_name}}</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'usuario:logout' %}">Sair</a></li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'usuario:login' %}">Login</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      {% block content %}
+
+      {% endblock %}
+    </div>
+  </body>
+</html>

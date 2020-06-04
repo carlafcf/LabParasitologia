@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 
+{% block titulo %}
+<h1>Detalhes Exame</h1>
+{% endblock %}
+
+
 {% block content %}
   <div class="container">
-    <h1>Detalhes Exame</h1>
+
     <h5>Nome: {{ exame.nome }}</h5>
   </div>
 {% endblock %}

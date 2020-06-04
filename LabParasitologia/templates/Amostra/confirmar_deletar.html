@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
+{% block titulo %}
+<h1>Deletar amostra</h1>
+{% endblock %}
+
 {% block content %}
-    <h1>Deletar amostra</h1>
+
     <form method="post">
         {% csrf_token %}
     <h5>Você tem certeza que deseja deletar a amostra?</h5>
