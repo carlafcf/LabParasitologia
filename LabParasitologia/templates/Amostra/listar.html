@@ -55,7 +55,7 @@
                           {% if user.is_superuser or amostrasUsuario or amostra.responsavel.pk == user.pk %}
                                 <a href="{% url 'amostra:editar' pk=amostra.pk %}?next={{ request.path }}" class="btn btn-warning-outline"
                                         data-toggle="tooltip" title="Editar">
-                                    <i class="fa fa-pencil" aria-hidden="true" style="color:blue"></i>
+                                    <i class="fas fa-pencil-alt" style="color:blue"></i>
                                 </a>
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{amostra.pk}}"
                                         data-tt="tooltip" title="Deletar">

@@ -7,9 +7,10 @@
 
 
 {% block content %}
-
+        <h5>Usuario: {{ user.username }} </h5>
+	    <h5>Nome: {{ user.first_name }} {{ user.last_name }} </h5>
+        <h5>E-mail: {{ user.email }} </h5>
     <br>
-    <h1>Informações do Perfil</h1>
         <form method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
