@@ -2,6 +2,7 @@ from django.db import models
 from datetime import date
 from Usuario.models import User
 from Exame.models import Exame
+from Local.models import Local
 
 TIPOS_AMOSTRA = [
         ('SA', 'Sangue'),
@@ -38,7 +39,7 @@ class Amostra(models.Model):
     identificacao = models.CharField(max_length=10)
     origem = models.CharField(max_length=200)
     responsavel = models.ForeignKey(User, on_delete=models.CASCADE, null = True, related_name='amostras')
-    localidade = models.CharField(max_length=200, default=' ')
+    localidade = models.ForeignKey(Local, on_delete=models.CASCADE, null = True, related_name='local')
     setor = models.CharField(max_length=200)
     data_coleta = models.DateField(default=date.today)
     tipo_amostra = models.CharField(max_length=2, choices=TIPOS_AMOSTRA, default='OU')

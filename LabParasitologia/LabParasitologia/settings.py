@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'Amostra',
     'Usuario',
     'Exame',
+    'Local',
 ]
 
 MIDDLEWARE = [

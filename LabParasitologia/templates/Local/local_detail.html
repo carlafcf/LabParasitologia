@@ -1,16 +1,22 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 
+{% block titulo %}
+<h1>Local Detalhes</h1>
+{% endblock %}
 {% block content %}
 <div class="container">
-	{% if a %}
-		{% for amostra in a %}
-			{% if user.is_superuser or amostra.responsavel.pk == user.pk %}
-				<div class=text-right>
-        			<a href="{% url 'exame:AdicionarExame' pk=amostra.pk %}" class="btn btn-success">Adicionar exame</a>
-				</div>
-			{% endif %}
-			<h1><strong>Amostra {{ amostra.identificacao }}</strong></h1>
+	{% if loc %}
+		{% for local in loc %}
+			<h5>Nome: {{ local.nome }} </h5>
+            <br>
+		{% endfor %}
+	{% endif %}
+
+	<h2><strong>Amostras</strong></h2>
+	{% if lista_amostra %}
+		{% for amostra in lista_amostra %}
+			<h5>Amostra: {{ amostra.identificacao }}</h5>
 			<h5>Data: {{ amostra.data_coleta }} </h5>
 			<h5>Responsavel: {{ amostra.responsavel }} </h5>
 			<h5>Localidade: {{ amostra.localidade }}</h5>
@@ -20,23 +26,11 @@
     		<h5>Sexo: {{ amostra.sexo_animal }}</h5>
 			<br>
 		{% endfor %}
-	{% endif %}
-
-	<h2><strong>Exames</strong></h2>
-	{% if lista_exame %}
-		{% for exame in lista_exame %}
-			<h5>Exame: {{ exame.exame }}</h5>
-			<h5>Resultado: {{ exame.resultado }}</h5>
-			<br>
-		{% endfor %}
 	{% else %}
 		<h5>Nao há exame adicionado</h5>
 	{% endif %}
-
-	<br>
-
-
   </div>
+
 
 
 {% endblock %}
