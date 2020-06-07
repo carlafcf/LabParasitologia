@@ -10596,13 +10596,7 @@ a:focus {
 }
 
 .bg-password-image {
-  background: url("https://ravel.com.br/blog/wp-content/uploads/2020/02/change-senha.jpg");
-  background-position: center;
-  background-size: cover;
-}
-
-.bg-password-reset-done {
-  background: url("https://www.itapecurumirim.ma.leg.br/copy_of_emaillogopng.png");
+  background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQWgOnzArX_zM0fk1z_b2jGPFfilUx3rdg-e31Kyt3HKnwvfTVw&usqp=CAU");
   background-position: center;
   background-size: cover;
 }
