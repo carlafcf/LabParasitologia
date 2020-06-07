@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 
+{% block titulo %}
+ <h1>Adicionar Exame</h1>
+{% endblock %}
+
 {% block content %}
   <div class="container">
-    <h1>Adicionar Exame</h1>
+
     {% if amostra %}
             <h5>Amostra: {{ amostra.identificacao }}</h5>
 			<h5>Data: {{ amostra.data_coleta }} </h5>

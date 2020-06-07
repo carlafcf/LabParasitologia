@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block titulo %}
+<h1>Local Detalhes</h1>
+{% endblock %}
+{% block content %}
+<div class="container">
+	{% if loc %}
+		{% for local in loc %}
+			<h5>Nome: {{ local.nome }} </h5>
+            <br>
+		{% endfor %}
+	{% endif %}
+
+	<h2><strong>Amostras</strong></h2>
+	{% if lista_amostra %}
+		{% for amostra in lista_amostra %}
+			<h5>Amostra: {{ amostra.identificacao }}</h5>
+			<h5>Data: {{ amostra.data_coleta }} </h5>
+			<h5>Responsavel: {{ amostra.responsavel }} </h5>
+			<h5>Localidade: {{ amostra.localidade }}</h5>
+			<h5>Setor: {{ amostra.setor }}</h5>
+    		<h5>{{ amostra.get_tipo_amostra_display }}</h5>
+    		<h5>Especie: {{ amostra.get_especie_animal_display }}</h5>
+    		<h5>Sexo: {{ amostra.sexo_animal }}</h5>
+			<br>
+		{% endfor %}
+	{% else %}
+		<h5>Nao há exame adicionado</h5>
+	{% endif %}
+  </div>
+
+
+
+{% endblock %}
