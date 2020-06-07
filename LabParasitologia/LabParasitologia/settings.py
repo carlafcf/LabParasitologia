@@ -129,3 +129,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 LOGIN_URL = 'usuario:login'
 LOGIN_REDIRECT_URL = 'amostra:listar'
 LOGOUT_REDIRECT_URL = 'usuario:login'
+
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'labparasitologia.eaj.ufrn@gmail.com'
+EMAIL_HOST_PASSWORD = 'labparasitologia'
+EMAIL_USE_TLS = True
+SERVER_EMAIL='labparasitologia.eaj.ufrn@gmail.com'
+DEFAULT_FROM_EMAIL = 'labparasitologia.eaj.ufrn@gmail.com'
