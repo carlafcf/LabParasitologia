@@ -14,10 +14,10 @@ def home(request):
 
 @login_required
 def listar(request):
-	amostras = Amostra.objects.filter(status = True)
-	context = {'lista_amostras': amostras, 'titulo': "Amostras", 'amostrasUsuario': False,
+    amostras = Amostra.objects.filter(status = True)
+    context = {'lista_amostras': amostras, 'titulo': "Amostras", 'amostrasUsuario': False,
                'finalizadas': False, 'paginaRetorno': 'Amostra:listar'}
-	return render(request, 'Amostra/listar.html', context)
+    return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarFinalizada(request):
