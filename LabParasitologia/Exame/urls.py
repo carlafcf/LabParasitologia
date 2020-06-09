@@ -12,4 +12,5 @@ urlpatterns = [
     path('DestalhesExame/<int:pk>', views.exame_amostraDetalhes, name='DetalheExame'),
     path('EditarExame/<int:pk>', views.EditarExame.as_view(), name='EditarExame'),
     path('DeletarExame/<int:pk>', views.DeletarExame.as_view(), name='DeletarExame'),
+
 ]

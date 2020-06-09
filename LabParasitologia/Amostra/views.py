@@ -8,6 +8,7 @@ from Usuario.models import User
 from .models import Amostra
 from .forms import AmostraForm
 from Exame.models import Exame
+from datetime import date
 
 def home(request):
 	return render(request, 'base.html')
@@ -72,6 +73,16 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
     model = Amostra
     template_name = 'Amostra/adicionar.html'
 
+    def get_initial(self):
+        initial = super(CriarAmostra, self).get_initial()
+        obj = Amostra.objects.filter(responsavel_id=self.request.user.pk).order_by('-id')[0]
+        initial['data_coleta'] = obj.data_coleta
+        initial[ 'origem'] = obj.origem
+        initial['localidade'] = obj.localidade
+        initial['setor'] = obj.setor
+        initial['especie_animal'] = obj.especie_animal
+        return initial
+
     def form_valid(self, form):
         user = User.objects.filter(username=self.request.user.username)[0]
         form.instance.responsavel = user
@@ -106,4 +117,11 @@ class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         return(self.request.POST.get('next', '/'))
+
+@login_required
+def listarAmostrasAbertas(request):
+    hoje = date.today
+    amostras = Amostra.objects.all()
+    context = {'lista_amostras': amostras, 'hj':hoje }
+    return render(request, 'base.html', context)
 
