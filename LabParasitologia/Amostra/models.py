@@ -40,6 +40,7 @@ class Amostra(models.Model):
     origem = models.CharField(max_length=200)
     responsavel = models.ForeignKey(User, on_delete=models.CASCADE, null = True, related_name='amostras')
     localidade = models.ForeignKey(Local, on_delete=models.CASCADE, null = True, related_name='local')
+    #localidade = models.CharField(max_length=200)
     setor = models.CharField(max_length=200)
     data_coleta = models.DateField(default=date.today)
     tipo_amostra = models.CharField(max_length=2, choices=TIPOS_AMOSTRA, default='OU')

@@ -10,7 +10,7 @@ from .forms import AmostraForm
 from Exame.models import Exame
 
 def home(request):
-	return render(request, 'base.html')
+	return render(request, 'Amostra/index.html')
 
 @login_required
 def listar(request):
