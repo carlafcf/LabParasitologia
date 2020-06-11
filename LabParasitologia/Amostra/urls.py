@@ -17,7 +17,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from Amostra import views
+from . import views
 from Exame.views import exame_amostraDetalhes
 
 app_name = 'amostra'
@@ -35,5 +35,6 @@ urlpatterns = [
 	path('listarAmostraUser/<int:pk>', views.listarAmostraUser, name='listarAmostraUser'),
 	path('listarAmostraUserFinalizada/<int:pk>', views.listarAmostraFinalizada, name='listarAmostraUserFinalizada'),
 	path('mudar_status/<int:status>/<int:amostra>', views.mudar_status, name='mudar_status'),
+	path('alertas/', views.listarAmostrasAbertas, name='alerta'),
 
 ]
