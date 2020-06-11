@@ -38,17 +38,16 @@ ESPECIES_ANIMAIS = [
 class Amostra(models.Model):
     identificacao = models.CharField(max_length=10)
     origem = models.CharField(max_length=200)
-    responsavel = models.ForeignKey(User, on_delete=models.CASCADE, null = True, related_name='amostras')
-    localidade = models.ForeignKey(Local, on_delete=models.CASCADE, null = True, related_name='local')
-    #localidade = models.CharField(max_length=200)
+    #responsavel = models.ForeignKey(User, on_delete=models.CASCADE, null = True, related_name='amostras')
+    #localidade = models.ForeignKey(Local, on_delete=models.CASCADE, null = True, related_name='local')
+    localidade = models.CharField(max_length=200)
     setor = models.CharField(max_length=200)
     data_coleta = models.DateField(default=date.today)
     tipo_amostra = models.CharField(max_length=2, choices=TIPOS_AMOSTRA, default='OU')
     especie_animal = models.CharField(max_length=2, choices=ESPECIES_ANIMAIS,default='OU')
     sexo_animal = models.CharField(max_length=1, choices=SEXO, default='I')
     status = models.BooleanField(default=True)
-    exame = models.ManyToManyField(Exame)
-
+    #exame = models.ManyToManyField(Exame)
 
     def __str__(self):
         return self.identificacao

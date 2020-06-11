@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block arquivos_js_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'Amostra/css/list_style.css' %}"/>
+<script src="{% static 'Amostra/js/list_js.js' %}"></script>
+{% endblock %}
+
+{% block titulo %}
+	  <h1>Usuários Inativos</h1>
+{% endblock %}
+
+{% block content %}
+
+
+
+    {% if listar_exame %}
+         <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
+          <thead >
+            <th scope="col">#</th>
+            <th><center>Nome</center></th>
+            <th></th>
+          </thead>
+
+             <tbody>
+             {% for exame in listar_exame %}
+                <tr>
+                   <th scope="row"><center>{{ forloop.counter }}</center></th>
+                  <td><center>{{ exame.nome }}</center></td>
+                    <td>
+                        <a href="" class="btn btn-danger-outline"
+                            data-toggle="modal" data-target="#fm-modal-grid-{{exame.pk}}">
+                            <i class="fa fa-check" aria-hidden="true" style="color:green"></i>
+                        </a>
+                        <div class="modal fade" id="fm-modal-grid-{{exame.pk}}" tabindex="-1"
+                             role="dialog" aria-labelledBy="fm-modal-grid-{{exame.pk}}"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button class="close" data-dismiss="modal" aria-label="Cerrar">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-6">
+                                                     <p>Você tem certeza que deseja habilitar o seguinte exame:</p>
+                                                     <p>Nome: {{ exame.nome }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <form action="{% url 'exame:mudar_status_exame' status=1 exame=exame.pk %}" method="POST">
+                                               {% csrf_token %}
+                                               <button class="btn">Confirmar</button>
+                                        </form>
+                                        <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+             {{ exame.full_name|upper }}
+             {% endfor %}
+             </tbody>
+         </table>
+    {% else %}
+         <p>Não há exames inativos no sistema</p>
+    {% endif %}
+
+ <div class="pagination">
+        <span class="step-links">
+             <nav aria-label="Navegação de página exemplo">
+                 <ul class="pagination">
+                    {% if listar_exame.has_previous %}
+                        <a class="page-link" href="?page=1">&laquo; Primeiro</a>
+                        <a class="page-link" href="?page={{ listar_exame.previous_page_number }}">Anterior</a>
+                    {% endif %}
+
+
+                    {% if listar_exame.has_next %}
+                        <a class="page-link" href="?page={{ listar_exame.next_page_number }}">Proximo</a>
+                        <a class="page-link" href="?page={{ listar_exame.paginator.num_pages }}">Ultimo &raquo;</a>
+                    {% endif %}
+                 </ul>
+             </nav>
+        </span>
+    </div>
+        <span class="current" >
+         <center> Página {{ listar_exame.number }} de {{ listar_exame.paginator.num_pages }}.</center>
+        </span>
+
+{% endblock %}

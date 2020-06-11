@@ -111,12 +111,20 @@
       </li>
       {% endif %}
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'exame:ListarExame' %}">
-          <i class="fa fa-clipboard-list"></i>
+       <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseExame" aria-expanded="true" aria-controls="collapseUtilities">
+           <i class="fa fa-clipboard-list"></i>
           <span>Todos exames</span>
         </a>
+        <div id="collapseExame" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+             <h6 class="collapse-header">Situação:</h6>
+            <a class="collapse-item" href="{% url 'exame:ListarExame' %}">Ativos</a>
+            <a class="collapse-item" href="{% url 'exame:examesInativos' %}">Inativos</a>
+          </div>
+        </div>
       </li>
+
       {% if user.is_superuser %}
        <hr class="sidebar-divider">
 

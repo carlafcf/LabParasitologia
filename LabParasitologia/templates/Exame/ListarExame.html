@@ -12,10 +12,12 @@
 
 
 {% block content %}
+
+
   <div class="container">
 
     {% if listar_exame %}
-       <table id="amostraDT" class="table" cellspacing="0" width="100%">
+       <table id="exameT" class="table" cellspacing="0" width="100%">
            <thead >
             <th scope="col">#</th>
             <th><center>Nome</center></th>
@@ -23,19 +25,21 @@
           </thead>
             <tbody>
                {% for exame in listar_exame %}
+
                <tr>
                    <th scope="row"><center>{{ forloop.counter }}</center></th>
                   <td><center>{{ exame.nome }}</center></td>
                    <td>
-                       <a href="{% url 'exame:DetalheExame' pk=exame.pk %}" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
+                      <a href="{% url 'exame:DetalheExame' pk=exame.pk %}" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                       </a>
+                      <!-- <button action="displayDate()" class="fa fa-search"></button>-->
                        <a href="{% url 'exame:EditarExame' pk=exame.pk %}?next={{ request.path }}" class="btn btn-warning-outline" data-toggle="tooltip" title="Editar">
                           <i class="fas fa-pencil-alt" style="color:blue"></i>
                        </a>
                       <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{exame.pk}}"
                                         data-tt="tooltip" title="Deletar">
-                       <i class="fa fa-trash" aria-hidden="true" style="color:black"></i>
+                      <i class="fa fa-times" aria-hidden="true" style="color:red"></i>
 
                       </a>
                                  <div class="modal fade" id="fm-modal-grid-{{exame.pk}}" tabindex="-1"
@@ -52,7 +56,7 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-6">
-                                                            <p>Você tem certeza que deseja deletar o seguinte exame:</p>
+                                                            <p>Você tem certeza que deseja desabilitar o seguinte exame:</p>
                                                             <p>Nome: {{ exame.nome }}</p>
                                                         </div>
                                                     </div>
@@ -60,10 +64,10 @@
                                             </div>
 
                                             <div class="modal-footer">
-                                                <form action="{% url 'exame:DeletarExame' pk=exame.pk %}" method="POST">
+                                                <form action="{% url 'exame:mudar_status_exame' status=0 exame=exame.pk %}" method="POST">
                                                        {% csrf_token %}
                                                         <input type="hidden" name="next" value="{{request.path}}">
-                                                       <button class="btn">Deletar</button>
+                                                       <button class="btn">Confirmar</button>
                                                 </form>
                                                 <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
 
@@ -74,10 +78,38 @@
 
                    </td>
                </tr>
+               {{ exame.full_name|upper }}
                {% endfor %}
 
             </tbody>
        </table>
+
+    {% else %}
+      <p>Não há exames cadastrados ou ativos no sistema</p>
     {% endif %}
+
+      <div class="pagination">
+        <span class="step-links">
+             <nav aria-label="Navegação de página exemplo">
+                 <ul class="pagination">
+                    {% if listar_exame.has_previous %}
+                        <a class="page-link" href="?page=1">&laquo; Primeiro</a>
+                        <a class="page-link" href="?page={{ listar_exame.previous_page_number }}">Anterior</a>
+                    {% endif %}
+
+                    {% if listar_exame.has_next %}
+                        <a class="page-link" href="?page={{ listar_exame.next_page_number }}">Proximo</a>
+                        <a class="page-link" href="?page={{ listar_exame.paginator.num_pages }}">Ultimo &raquo;</a>
+                    {% endif %}
+                 </ul>
+             </nav>
+        </span>
+    </div>
+        <span class="current" >
+         <center> Página {{ listar_exame.number }} de {{ listar_exame.paginator.num_pages }}.</center>
+        </span>
+        <br>
+
+
   </div>
 {% endblock %}
