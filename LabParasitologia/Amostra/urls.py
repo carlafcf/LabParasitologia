@@ -35,6 +35,6 @@ urlpatterns = [
 	path('listarAmostraUser/<int:pk>', views.listarAmostraUser, name='listarAmostraUser'),
 	path('listarAmostraUserFinalizada/<int:pk>', views.listarAmostraFinalizada, name='listarAmostraUserFinalizada'),
 	path('mudar_status/<int:status>/<int:amostra>', views.mudar_status, name='mudar_status'),
-	path('alertas/', views.listarAmostrasAbertas, name='alerta'),
+	path('alertas/', views.listarAlertas, name='listar_alertas'),
 
 ]
