@@ -11,14 +11,14 @@ from Exame.models import Exame
 from datetime import date
 
 def home(request):
-	return render(request, 'base.html')
+	return render(request, 'Amostra/index.html')
 
 @login_required
 def listar(request):
-	amostras = Amostra.objects.filter(status = True)
-	context = {'lista_amostras': amostras, 'titulo': "Amostras", 'amostrasUsuario': False,
+    amostras = Amostra.objects.filter(status = True)
+    context = {'lista_amostras': amostras, 'titulo': "Amostras", 'amostrasUsuario': False,
                'finalizadas': False, 'paginaRetorno': 'Amostra:listar'}
-	return render(request, 'Amostra/listar.html', context)
+    return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarFinalizada(request):
@@ -73,14 +73,18 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
     model = Amostra
     template_name = 'Amostra/adicionar.html'
 
+
     def get_initial(self):
-        initial = super(CriarAmostra, self).get_initial()
-        obj = Amostra.objects.filter(responsavel_id=self.request.user.pk).order_by('-id')[0]
-        initial['data_coleta'] = obj.data_coleta
-        initial[ 'origem'] = obj.origem
-        initial['localidade'] = obj.localidade
-        initial['setor'] = obj.setor
-        initial['especie_animal'] = obj.especie_animal
+        if 'add' in self.request.POST:
+            initial = super(CriarAmostra, self).get_initial()
+            obj = Amostra.objects.filter(responsavel_id=self.request.user.pk).order_by('-id')[0]
+            initial['data_coleta'] = obj.data_coleta
+            initial[ 'origem'] = obj.origem
+            initial['localidade'] = obj.localidade
+            initial['setor'] = obj.setor
+            initial['especie_animal'] = obj.especie_animal
+        else:
+            initial = super(CriarAmostra, self).get_initial()
         return initial
 
     def form_valid(self, form):
@@ -89,12 +93,10 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
         return super(CriarAmostra, self).form_valid(form)
 
     def get_success_url(self):
-
         if 'add' in self.request.POST:
             url = reverse_lazy('amostra:adicionar')
         else:
             url = reverse_lazy('amostra:listar')
-
         return url
 
 

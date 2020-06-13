@@ -7,91 +7,115 @@
 
 
 {% block content %}
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/themes/light_blue.min.js"></script>
-  <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
-  <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
-  <style type="text/css"></style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
 
   <div class="container">
-
-    <h5>Nome: {{ exame.nome }}</h5>
-
+    {% for item in nomes %}
+    <h5>Nome: {{ item.nome }}</h5>
+    {% endfor %}
                 <div class="card shadow mb-4">
                 <div class="card-header py-3">
                   <h6 class="m-0 font-weight-bold text-primary">Quantidade de exames cadastrados por mês</h6>
                 </div>
                 <div class="card-body">
                   <div class="chart-bar">
-                     <div id="container" style="height: 300px; width: 100%;"></div>
+                     <canvas id="myChart" style="height: 300px; width: 95%;"></canvas>
                   </div>
                   <hr>
                 </div>
               </div>
 
-  <script>
-      anychart.onDocumentReady(function () {
-	// set chart theme
-    anychart.theme('morning');
-        // create column chart
-        var chart = anychart.column();
 
-        // turn on chart animation
-        chart.animation(true);
 
-        // set chart title text settings
-        chart.title('');
+    <form method="POST">
+        <br>
+        <p>Escolha a espécie desejada:</p>
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          <input type="submit" class="btn btn-success" value="Gerar gráfico">
+    </form>
+        <br>
 
-        // create area series with passed data
-        var series = chart.column([
-          ['Jan', '10'],
-          ['Fev', '18'],
-          ['Mar', '20'],
-          ['Abr', '55'],
-          ['Mai', '12'],
-          ['Jun', '14'],
-          ['Jul', '17'],
-          ['Ago', '21'],
-          ['Set', '24'],
-          ['Out', '23'],
-          ['Nov', '2'],
-          ['Dez', '24']
-           ]);
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Resultados por especie: {{ especie }}</h6>
+                </div>
+                <div class="card-body">
+                  <div class="chart-bar">
+                     <canvas id="myChartEspecie" style="height: 300px; width: 95%;"></canvas>
 
-        // set series tooltip settings
-        series.tooltip().titleFormat('{%X}');
+                  </div>
+                  <hr>
+                </div>
+              </div>
 
-        series
-          .tooltip()
-          .position('center-top')
-          .anchor('center-bottom')
-          .offsetX(0)
-          .offsetY(5)
-          .format('${%Value}{groupsSeparator: }');
 
-        // set scale minimum
-        chart.yScale().minimum(0);
-
-        // set yAxis labels formatter
-        chart.yAxis().labels().format('{%Value}{groupsSeparator: }');
-
-        // tooltips position and interactivity settings
-        chart.tooltip().positionMode('point');
-        chart.interactivity().hoverMode('by-x');
-
-        // axes titles
-        //chart.xAxis().title('Mês');
-        chart.yAxis().title('Quantidade');
-
-        // set container id for the chart
-        chart.container('container');
-
-        // initiate chart drawing
-        chart.draw();
-      });
-
+<script>
+var colunas = {{ meses|safe }};
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Jan', 'Fev' ,'Mar' ,'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        datasets: [{
+            label: '#Quantidade',
+            data: colunas,
+            backgroundColor: 'rgba(74, 111, 220, 1)',
+            borderColor: 'rgba(74, 111, 220, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
 </script>
+
+
+<script>
+var colunas2 = {{ resultadosE|safe }};
+var colunas1 = {{ resultados|safe }};
+var ctx = document.getElementById('myChartEspecie').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ tipo_exames|safe }},
+        datasets: [
+        {
+            label: '#Todos',
+            data: colunas1,
+            backgroundColor: 'rgba(74, 111, 220, 1)',
+            borderColor: 'rgba(74, 111, 220, 1)',
+            borderWidth: 1
+        },
+        {
+            label: '#Especie',
+            data: colunas2,
+            backgroundColor: 'rgba(208, 109, 36, 1)',
+            borderColor: 'rgba(208, 109, 36, 1)',
+            borderWidth: 1
+        }
+
+        ]
+
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+
   </div>
 {% endblock %}

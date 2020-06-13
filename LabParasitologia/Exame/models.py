@@ -1,6 +1,6 @@
 from django.db import models
 #from Amostra.models import Amostra
-from datetime import datetime
+from datetime import datetime, date
 
 
 class Exame(models.Model):
@@ -15,8 +15,11 @@ class Exame(models.Model):
         ordering = ('nome',)
 
 class RealizacaoExame(models.Model):
-    #exame = models.ForeignKey(Exame, on_delete=models.CASCADE)
-    #amostra = models.ForeignKey(to='Amostra.amostra', on_delete=models.CASCADE, null=True)
-    resultado = models.CharField(max_length=200)
-    #created_at = models.DateTimeField(default=datetime.today)
+    exame = models.ForeignKey(Exame, on_delete=models.CASCADE)
+    amostra = models.ForeignKey(to='Amostra.amostra', on_delete=models.CASCADE, null=True)
+    resultado = models.BigIntegerField(null=True)
+    #created_at = models.DateTimeField(default=datetime.today, null=True, blank=True)
+    data = models.DateField(default=date.today)
 
+    def __str__(self):
+        return self.exame

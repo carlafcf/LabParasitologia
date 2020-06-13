@@ -4,5 +4,10 @@ from .models import Amostra
 
 class AmostraForm(forms.ModelForm):
     class Meta():
-        model=Amostra
+        model = Amostra
         fields=('identificacao', 'origem', 'setor', 'data_coleta', 'tipo_amostra')
+
+class EspecieForm(forms.ModelForm):
+    class Meta():
+        model = Amostra
+        fields=('especie_animal',)
