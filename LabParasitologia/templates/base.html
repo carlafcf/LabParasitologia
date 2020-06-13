@@ -212,35 +212,33 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">{{ counter }}</span>
+                <span class="badge badge-danger badge-counter">{{ amostras_pendentes_count }}</span>
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                 <h6 class="dropdown-header">
-                  Alerts Center
+                  Central de Alertas
                 </h6>
 
-                  {% for amostra in lista_amostras %}
-                    {% if amostra.responsavel_id == user.pk and amostra.status == True %}
+                  {% for amostra in amostras_pendentes|slice:"3" %}
 
-                <a class="dropdown-item d-flex align-items-center" href="{% url 'amostra:detalhes' pk=amostra.pk%}">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-warning">
-                      <i class="fas fa-exclamation-triangle text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                   <form action="{% url 'amostra:alerta' %}" method="POST">
-                    <div class="small text-gray-500"></div>
-                    A amostra {{ amostra.identificacao }} foi cadastrada em {{ amostra.data_coleta|date:"d/m/y" }} e ainda não foi concluída.
-                   </form>
-                  </div>
-                </a>
-
-                    {% endif %}
+                    <a class="dropdown-item d-flex align-items-center" href="{% url 'amostra:detalhes' pk=amostra.pk%}">
+                      <div class="mr-3">
+                        <div class="icon-circle bg-warning">
+                          <i class="fas fa-exclamation-triangle text-white"></i>
+                        </div>
+                      </div>
+                      <div>
+                       <form action="{% url 'amostra:listar_alertas' %}" method="POST">
+                        <div class="small text-gray-500"></div>
+                        A amostra <b>{{amostra.origem }} ({{amostra.localidade}}): {{ amostra.identificacao }}</b> cadastrada em
+                         <b>{{ amostra.data_coleta|date:"d/m/y" }}</b> ainda não foi concluída.
+                       </form>
+                      </div>
+                    </a>
                   {% endfor %}
 
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'amostra:listar_alertas' %}">Mostrar todos</a>
               </div>
             </li>
 

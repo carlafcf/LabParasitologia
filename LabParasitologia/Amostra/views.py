@@ -8,7 +8,7 @@ from Usuario.models import User
 from .models import Amostra
 from .forms import AmostraForm
 from Exame.models import Exame
-from datetime import date
+from datetime import date, timedelta
 
 def home(request):
 	return render(request, 'Amostra/index.html')
@@ -121,9 +121,12 @@ class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
         return(self.request.POST.get('next', '/'))
 
 @login_required
-def listarAmostrasAbertas(request):
-    hoje = date.today
-    amostras = Amostra.objects.all()
-    context = {'lista_amostras': amostras, 'hj':hoje }
-    return render(request, 'base.html', context)
+def listarAlertas(request):
+    amostras_alerta = Amostra.objects.filter(
+        responsavel=request.user,
+        status=True,
+        data_coleta__lte=date.today() - timedelta(days=10)).order_by('data_coleta')
+    context = {'lista_amostras': amostras_alerta, 'titulo': "Amostras com alerta", 'amostrasUsuario': True,
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAlertas'}
+    return render(request, 'Amostra/listar.html', context)
 
