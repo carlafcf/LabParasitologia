@@ -1,18 +1,15 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 
-{% block titulo %}
-	<h1>Cadastrar</h1>
-{% endblock %}
-
-
 {% block content %}
   <div class="container">
 
-    <form method="post">
-      {% csrf_token %}
-      {% bootstrap_form form %}
-      <input type="submit" class="btn btn-success" name="" value="Cadastrar">
-    </form>
+                      <form method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <input type="submit" class="btn btn-success" name="" value="Cadastrar">
+                      </form>
+
   </div>
+
 {% endblock %}

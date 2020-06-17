@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from datetime import datetime
+from datetime import datetime,date
 import json
 
 from .forms import especieForm
@@ -75,7 +75,6 @@ class CadastrarExame(LoginRequiredMixin, generic.CreateView):
     template_name = 'Exame/CadastrarExame.html'
 
     def get_success_url(self):
-
         if 'add' in self.request.POST:
             url = reverse_lazy('exame:CadastrarExame')
         else:

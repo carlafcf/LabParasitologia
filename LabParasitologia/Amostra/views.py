@@ -9,6 +9,7 @@ from .models import Amostra
 from .forms import AmostraForm
 from Exame.models import Exame
 from datetime import date, timedelta
+from .forms import amostraForm
 
 def home(request):
 	return render(request, 'Amostra/index.html')
@@ -44,20 +45,22 @@ def listarAmostraFinalizada(request, pk):
 @login_required
 def adicionar(request):
     if request.method=="POST":
-        amostra_form = AmostraForm(request.POST)
+        form = amostraForm(request.POST)
 
-        if amostra_form.is_valid():
-            amostra = amostra_form.save()
+        if form.is_valid():
+            user = User.objects.filter(username=request.user.username)[0]
+            form.instance.responsavel = user
+            amostra = form.save()
             amostra.save()
             return listar(request)
 
         else:
-            print(amostra_form.errors)
+            print(form.errors)
     else:
-        amostra_form = AmostraForm()
+        form = amostraForm()
 
     return render(request, 'Amostra/adicionar.html',
-                        {'amostra_form':amostra_form})
+                        {'form':form})
 
 def mudar_status(request, status, amostra):
     amostra = Amostra.objects.get(pk=amostra)
@@ -69,7 +72,7 @@ def mudar_status(request, status, amostra):
     return redirect(request.POST.get('next', '/'))
 
 class CriarAmostra(LoginRequiredMixin, generic.CreateView):
-    fields = ('data_coleta', 'origem', 'localidade','setor','especie_animal', 'identificacao', 'tipo_amostra','sexo_animal')
+    form_class = amostraForm
     model = Amostra
     template_name = 'Amostra/adicionar.html'
 
@@ -107,7 +110,7 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
 
 class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
     model = Amostra
-    fields = ['data_coleta', 'origem', 'localidade', 'setor','especie_animal', 'identificacao', 'tipo_amostra','sexo_animal']
+    form_class = amostraForm
     template_name = 'Amostra/amostra_update_form.html'
 
     def get_success_url(self):
