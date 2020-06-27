@@ -56,7 +56,7 @@ var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['Jan', 'Fev' ,'Mar' ,'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        labels: {{labels|safe}},
         datasets: [{
             label: '#Quantidade',
             data: colunas,
@@ -79,13 +79,13 @@ var myChart = new Chart(ctx, {
 
 
 <script>
-var colunas2 = {{ resultadosE|safe }};
-var colunas1 = {{ resultados|safe }};
+var colunas2 = {{ resultado|safe }};
+var colunas1 = {{ resultado_total|safe }};
 var ctx = document.getElementById('myChartEspecie').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: {{ tipo_exames|safe }},
+        labels: {{ categorias|safe }},
         datasets: [
         {
             label: '#Todos',

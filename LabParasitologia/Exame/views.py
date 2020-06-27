@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect
-from .forms import RealizacaoExameForm
+from .forms import RealizacaoExameForm,ResultadoFormNumerico,ResultadoFormTextual, ResultadoTextualFormset, ResultadoNumericoFormset
 from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from datetime import datetime
+from datetime import datetime, timedelta
+# from dateutil.relativedelta import relativedelta
 import json
 
 from .forms import especieForm
-from .models import RealizacaoExame, Exame
+from .models import RealizacaoExame, Exame, ResultadoExame
 from Amostra.models import Amostra
 
 def exameListar(request):
@@ -70,7 +71,7 @@ def addExame(request, pk):
 
 
 class CadastrarExame(LoginRequiredMixin, generic.CreateView):
-    fields = ('nome',)
+    fields = ('nome','tipo_resultado')
     model = Exame
     template_name = 'Exame/CadastrarExame.html'
 
@@ -79,16 +80,134 @@ class CadastrarExame(LoginRequiredMixin, generic.CreateView):
         if 'add' in self.request.POST:
             url = reverse_lazy('exame:CadastrarExame')
         else:
-            url = reverse_lazy('exame:ListarExame')
+            url = reverse_lazy('exame:definir_resultados', kwargs={'pk': self.object.id})
         return url
+
+def definir_resultados(request,pk):
+    template_name = 'Exame/DefinirResultados.html'
+    exame = Exame.objects.get(pk=pk)
+    if exame.tipo_resultado == "NUM":
+        if request.method == 'GET':
+            formset = ResultadoNumericoFormset(request.GET or None)
+        elif request.method == 'POST':
+            print("post")
+            formset = ResultadoNumericoFormset(request.POST)
+            if formset.is_valid():
+                print("valid")
+                for count, form in enumerate(formset, start=1):
+                    print(count)
+                    # extract name from each form and save
+                    valor = form.cleaned_data.get('valor')
+                    print(valor)
+                    # save book instance
+                    if valor:
+                        ResultadoExame(resultado_numerico=valor, exame=exame, ordem=count).save()
+                # once all books are saved, redirect to book list view
+                return redirect('amostra:home')
+        print("not valid")
+        return render(request, template_name, {
+            'formset': formset,
+        })
+    else:
+        if request.method == 'GET':
+            formset = ResultadoTextualFormset(request.GET or None)
+        elif request.method == 'POST':
+            formset = ResultadoTextualFormset(request.POST)
+            if formset.is_valid():
+                for count, form in enumerate(formset, start=1):
+                    # extract name from each form and save
+                    valor = form.cleaned_data.get('valor')
+                    # save book instance
+                    if valor:
+                        ResultadoExame(resultado_textual=valor, exame=exame, ordem=count).save()
+                # once all books are saved, redirect to book list view
+                return redirect('amostra:home')
+        return render(request, template_name, {
+            'formset': formset,
+        })
 
 class DetalheExame(LoginRequiredMixin, generic.DetailView):
     model = Exame
     template_name = "Exame/exame_detail.html"
 
+def monthdelta(date, delta):
+    m, y = (date.month+delta) % 12, date.year + ((date.month)+delta-1) // 12
+    if not m: m = 12
+    d = min(date.day, [31,
+        29 if y%4==0 and not y%400==0 else 28,31,30,31,30,31,31,30,31,30,31][m-1])
+    return date.replace(day=d,month=m, year=y)
+
+def NovoDetalheExame(request, pk):
+    nome = Exame.objects.filter(pk=pk)
+    categorias = [1,2,3,4,5]
+    valores = [0,0,0,0,0]
+    exames = RealizacaoExame.objects.filter(exame_id=pk)
+
+    # Total de exames por mes nos últimos 12 meses
+    months = []
+    total = []
+    for m in range(-11, 1):
+        months.append(str(monthdelta(datetime.now(), m).month)+"/"+str(monthdelta(datetime.now(), m).year))
+        total.append(0)
+    for exame in exames:
+        data = str(exame.data.month)+"/"+str(exame.data.year)
+        try:
+            index = months.index(data)
+        except ValueError:
+            index = -1
+        if index>=0:
+            total[index]=total[index]+1
+
+    # Resultado dos exames por especie nos ultimos 12 meses
+    resultado = [0,0,0,0,0]
+    resultado_total = [0,0,0,0,0]
+    if request.method == 'POST':
+        form = especieForm(request.POST)
+        if form.is_valid():
+            especie = request.POST['especie_animal']
+            for exame in exames:
+                data = str(exame.data.month) + "/" + str(exame.data.year)
+                try:
+                    index_mes = months.index(data)
+                    try:
+                        index_tipo = categorias.index(exame.resultado)
+                    except ValueError:
+                        index_tipo = -1
+                except ValueError:
+                    index_mes = -1
+                if index_mes >= 0:
+                    resultado_total[index_tipo] = resultado_total[index_tipo] + 1
+                    if exame.amostra.especie_animal == especie:
+                        resultado[index_tipo] = resultado[index_tipo] + 1
+    else:
+        form = especieForm()
+        for exame in exames:
+            data = str(exame.data.month) + "/" + str(exame.data.year)
+            try:
+                index_mes = months.index(data)
+                try:
+                    index_tipo = categorias.index(exame.resultado)
+                except ValueError:
+                    index_tipo = -1
+            except ValueError:
+                index_mes = -1
+            if index_mes >= 0:
+                resultado_total[index_tipo] = resultado_total[index_tipo] + 1
+
+
+    json_resultado_especie = json.dumps(resultado)
+    json_resultado_total = json.dumps(resultado_total)
+    json_tipo_exame = json.dumps(categorias)
+    json_mes = json.dumps(total)
+    json_labels = json.dumps(months)
+    context = {'nomes': nome, 'meses': json_mes, 'form':form, 'labels': json_labels, 'resultado': json_resultado_especie,
+               'categorias': json_tipo_exame, 'resultado_total': json_resultado_total}
+    return render(request, 'Exame/exame_detail.html', context)
+
 def DetalheExame(request, pk):
     nome = Exame.objects.filter(pk=pk)
     exames = RealizacaoExame.objects.filter(exame_id=pk)
+    NovoDetalheExame(pk)
     resultado = []
     resultadoE = []
     tipo_exame = []
