@@ -15,6 +15,16 @@
 
 
   <div class="container">
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="includes/upload/jquery-1.4.2.min.js"></script>
+
+      <script type = "text/javascript">
+        function carregar(pagina){
+            $("#conteudo").load(pagina);
+        }
+      </script>
+
 
     {% if listar_exame %}
        <table id="exameT" class="table" cellspacing="0" width="100%">
@@ -30,7 +40,7 @@
                    <th scope="row"><center>{{ forloop.counter }}</center></th>
                   <td><center>{{ exame.nome }}</center></td>
                    <td>
-                      <a href="{% url 'exame:DetalheExame' pk=exame.pk %}" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
+                      <a onclick="carregar('{% url 'exame:DetalheExame' pk=exame.pk %}');" href="#" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                       </a>
                       <!-- <button action="displayDate()" class="fa fa-search"></button>-->
@@ -109,6 +119,8 @@
          <center> Página {{ listar_exame.number }} de {{ listar_exame.paginator.num_pages }}.</center>
         </span>
         <br>
+
+      <div id="conteudo"></div>
 
 
   </div>

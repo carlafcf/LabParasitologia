@@ -3,6 +3,7 @@ from datetime import date
 from Usuario.models import User
 from Exame.models import Exame
 from Local.models import Local
+from datetime import datetime, date
 
 TIPOS_AMOSTRA = [
         ('SA', 'Sangue'),
@@ -47,6 +48,7 @@ class Amostra(models.Model):
     sexo_animal = models.CharField(max_length=1, choices=SEXO, default='I')
     status = models.BooleanField(default=True)
     exame = models.ManyToManyField(Exame)
+    created_at = models.DateField(default=date.today, null=True, blank=True)
 
     def __str__(self):
         return self.identificacao

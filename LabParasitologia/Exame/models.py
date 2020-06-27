@@ -18,8 +18,6 @@ class RealizacaoExame(models.Model):
     exame = models.ForeignKey(Exame, on_delete=models.CASCADE)
     amostra = models.ForeignKey(to='Amostra.amostra', on_delete=models.CASCADE, null=True)
     resultado = models.BigIntegerField(null=True)
-    #created_at = models.DateTimeField(default=datetime.today, null=True, blank=True)
+    created_at = models.DateTimeField(default=datetime.today, null=True, blank=True)
     data = models.DateField(default=date.today)
 
-    def __str__(self):
-        return self.exame

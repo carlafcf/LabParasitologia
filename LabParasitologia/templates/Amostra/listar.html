@@ -13,6 +13,7 @@
 {% block content %}
 
 
+
 	
 	{% if lista_amostras %}
         <table id="amostraDT" class="table" cellspacing="0" width="100%">
@@ -102,7 +103,7 @@
 
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#mudar-status-{{amostra.pk}}"
                                     data-tt="tooltip" title="Finalizar amostra">
-                                    <i class="fa fa-circle" aria-hidden="true" style="color:red"></i>
+                                    <i class="fa fa-times" aria-hidden="true" style="color:red"></i>
                                 </a>
                                 <div class="modal fade" id="mudar-status-{{amostra.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="mudar-status-{{amostra.pk}}"
@@ -150,7 +151,7 @@
                             {% if user.is_superuser or amostra.responsavel.pk == user.pk %}
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#reativar-{{amostra.pk}}"
                                         data-tt="tooltip" title="Reativar amostra">
-                                    <i class="fa fa-circle" aria-hidden="true" style="color:green"></i>
+                                    <i class="fa fa-check" aria-hidden="true" style="color:green"></i>
                                 </a>
                                 <div class="modal fade" id="reativar-{{amostra.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="reativar-{{amostra.pk}}"

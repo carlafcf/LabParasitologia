@@ -1,6 +1,7 @@
-{% extends "base.html" %}
-{% load bootstrap4 %}
 
+{% load bootstrap4 %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
 {% block titulo %}
 <h1>Detalhes Exame</h1>
 {% endblock %}
@@ -8,6 +9,7 @@
 
 {% block content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
   <div class="container">
     {% for item in nomes %}
@@ -119,3 +121,5 @@ var myChart = new Chart(ctx, {
 
   </div>
 {% endblock %}
+    </div>
+</div>
