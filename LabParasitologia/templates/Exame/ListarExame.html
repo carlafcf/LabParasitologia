@@ -41,7 +41,7 @@
                    <th scope="row"><center>{{ forloop.counter }}</center></th>
                   <td><center>{{ exame.nome }}</center></td>
                    <td>
-                      <a href="{% url 'exame:DetalheExame' pk=exame.pk %}" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
+                      <a onclick="carregar('{% url 'exame:DetalheExame' pk=exame.pk %}');" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                       </a>
                       <!-- <button action="displayDate()" class="fa fa-search"></button>-->

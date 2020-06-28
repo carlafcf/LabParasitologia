@@ -20,6 +20,7 @@ def home(request):
     AB = Amostra.objects.filter(status=True)
     user = User.objects.filter(username=request.user.username)[0]
 
+    ultimo_12 = []
     mesE = []
     mesA = []
     LE = []
@@ -28,15 +29,31 @@ def home(request):
     j = 0
     a1 = 1
     a2 = 1
+    a = 1
+    ex = 0
 
     tdy = date.today()
     ultimo_ano = tdy+relativedelta(years=-1)
     ultimo_seis_meses = tdy+relativedelta(months=-6)
+    coluna = ultimo_ano
 
     MAB = 0
     qtdE = 0
     qtdA = 0
     qtdAB = 0
+
+    while(ex <=12):
+        coluna = coluna + relativedelta(months=1)
+        if coluna.month <= tdy.month:
+            ultimo_12.insert(a, str(coluna.month)+"/"+str(coluna.year))
+            a = a + 1
+        ex = ex + 1
+    coluna = ultimo_ano
+    while(a <=12):
+        coluna = coluna + relativedelta(months=1)
+        if coluna.month > tdy.month:
+            ultimo_12.insert(a, str(coluna.month)+"/"+str(coluna.year))
+        a = a + 1
 
     for item in AB:
         qtdAB = qtdAB + 1
@@ -75,13 +92,13 @@ def home(request):
         LEV.insert(i, j)
         i = i + 1
         j = 0
-
+    json_coluna = json.dumps(ultimo_12)
     json_mesA = json.dumps(mesA)
     json_mesE = json.dumps(mesE)
     json_LE = json.dumps(LE)
     json_LEV = json.dumps(LEV)
     pctAB = (qtdAB*100)/qtdA
-    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV}
+    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
     return render(request, 'Amostra/index.html', context)
 
 @login_required
