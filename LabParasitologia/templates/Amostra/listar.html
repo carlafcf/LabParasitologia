@@ -69,6 +69,7 @@
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
+                                                <h5 class="modal-title" id=""><strong>Deletar Amostra</strong></h5>
                                                 <button class="close" data-dismiss="modal" aria-label="Cerrar">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -103,7 +104,8 @@
 
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#mudar-status-{{amostra.pk}}"
                                     data-tt="tooltip" title="Finalizar amostra">
-                                    <i class="fa fa-times" aria-hidden="true" style="color:red"></i>
+                                    <i class="fas fa-times-circle" aria-hidden="true" style="color:red"></i>
+
                                 </a>
                                 <div class="modal fade" id="mudar-status-{{amostra.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="mudar-status-{{amostra.pk}}"
@@ -111,6 +113,7 @@
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
+                                                <h5 class="modal-title" id=""><strong>Finalizar Amostra</strong></h5>
                                                 <button class="close" data-dismiss="modal" aria-label="Cerrar">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -151,7 +154,7 @@
                             {% if user.is_superuser or amostra.responsavel.pk == user.pk %}
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#reativar-{{amostra.pk}}"
                                         data-tt="tooltip" title="Reativar amostra">
-                                    <i class="fa fa-check" aria-hidden="true" style="color:green"></i>
+                                    <i class="fas fa-check-circle" aria-hidden="true" style="color:green"></i>
                                 </a>
                                 <div class="modal fade" id="reativar-{{amostra.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="reativar-{{amostra.pk}}"
@@ -159,6 +162,7 @@
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
+                                                <h5 class="modal-title" id=""><strong>Reativar amostra</strong></h5>
                                                 <button class="close" data-dismiss="modal" aria-label="Cerrar">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -195,6 +199,7 @@
                             {% endif %}
                       {% endif %}
                   </td>
+
               </tr>
 
           {% endfor %}

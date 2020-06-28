@@ -33,7 +33,7 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Amostra total</div>
+                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Amostra total(mês)</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">{{ qtdA }}</div>
                     </div>
                     <div class="col-auto">
@@ -50,7 +50,7 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Exames total</div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Exames total(mês)</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">{{ qtdE }}</div>
                     </div>
                     <div class="col-auto">
@@ -109,7 +109,7 @@
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">quantidade de Amostras e Exames cadastrados nos ultimo 12 meses</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Amostras e Exames cadastradas (ultimos 12 meses)</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -137,7 +137,7 @@
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Exames realizados no ultimo 6 meses</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Exames realizados (ultimos 6 meses)</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="MenuChartUm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -203,13 +203,13 @@ var ctx = document.getElementById('myDoughnutChart').getContext('2d');
 var myDoughnutChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
-        labels: ['Famacha', 'exame2' ,'exame3' ],
+        labels: {{ LE | safe }},
         datasets: [
         {
             label: '#Exame',
-            data: {{ LE | safe }},
-            backgroundColor: ['rgba(74, 111, 220, 1)','rgba(35, 207, 243, 1)','rgba(208, 109, 36, 1)',],
-            borderColor: ['rgba(74, 111, 220, 1)','rgba(35, 207, 243, 1)','rgba(208, 109, 36, 1)'],
+            data: {{ LEV | safe }},
+            backgroundColor: ['rgba(74, 111, 220, 1)','rgba(35, 207, 243, 1)','rgba(208, 109, 36, 1)','rgba(34, 177, 76, 1)'],
+            borderColor: ['rgba(74, 111, 220, 1)','rgba(35, 207, 243, 1)','rgba(208, 109, 36, 1)','rgba(34, 177, 76, 1)'],
             borderWidth: 1
         }
         ]
@@ -221,6 +221,7 @@ var myDoughnutChart = new Chart(ctx, {
     }
 });
 </script>
+
 
 
 	

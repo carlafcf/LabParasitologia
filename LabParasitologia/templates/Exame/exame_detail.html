@@ -11,6 +11,31 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
+<script>
+
+    $(document).ready(function()
+    {
+        $('form').submit(function()
+        {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(data)
+                {
+                    alert(data.mensagem);
+                },
+                error: function(data)
+                {
+                    alert('Ocorreu um erro inesperado!');
+                }
+            });
+        });
+    });
+</script>
+
+
   <div class="container">
     {% for item in nomes %}
     <h5>Nome: {{ item.nome }}</h5>
@@ -29,7 +54,7 @@
 
 
 
-    <form method="POST">
+    <form method="POST" action="">
         <br>
         <p>Escolha a espécie desejada:</p>
           {% csrf_token %}
