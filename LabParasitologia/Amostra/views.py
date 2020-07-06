@@ -40,6 +40,7 @@ def home(request):
     MAB = 0
     qtdE = 0
     qtdA = 0
+    qtdAT = 0
     qtdAB = 0
 
     while(ex <=12):
@@ -63,6 +64,7 @@ def home(request):
     for item in amostra:
         if item.created_at.month == tdy.month:
             qtdA = qtdA + 1
+        qtdAT = qtdAT+1
 
     while (a1 <= 12):
         for a in amostra:
@@ -97,37 +99,45 @@ def home(request):
     json_mesE = json.dumps(mesE)
     json_LE = json.dumps(LE)
     json_LEV = json.dumps(LEV)
-    pctAB = (qtdAB*100)/qtdA
+
+    if qtdAT == 0:
+        pctAB = (qtdAB * 100) / 1
+    else:
+        pctAB = (qtdAB*100)/qtdAT
     context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
     return render(request, 'Amostra/index.html', context)
 
 @login_required
 def listar(request):
     amostras = Amostra.objects.filter(status = True)
+    quinze = date.today() - timedelta(days=15)
+    dez = date.today() - timedelta(days=10)
     context = {'lista_amostras': amostras, 'titulo': "Amostras", 'amostrasUsuario': False,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listar'}
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listar','quinze':quinze,'dez':dez}
     return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarFinalizada(request):
-	amostras = Amostra.objects.filter(status = False)
-	context = {'lista_amostras': amostras, 'titulo': "Amostras finalizadas", 'amostrasUsuario': False,
+    amostras = Amostra.objects.filter(status = False)
+    context = {'lista_amostras': amostras, 'titulo': "Amostras finalizadas", 'amostrasUsuario': False,
                'finalizadas': True, 'paginaRetorno': 'Amostra:listarFinalizada'}
-	return render(request, 'Amostra/listar.html', context)
+    return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarAmostraUser(request, pk):
-	amostras = Amostra.objects.filter(responsavel_id=pk,  status = True)
-	context = {'lista_amostras': amostras, 'titulo': "Minhas amostras", 'amostrasUsuario': True,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAmostraUser'}
-	return render(request, 'Amostra/listar.html', context)
+    amostras = Amostra.objects.filter(responsavel_id=pk,  status = True)
+    quinze = date.today() - timedelta(days=15)
+    dez = date.today() - timedelta(days=10)
+    context = {'lista_amostras': amostras, 'titulo': "Minhas amostras", 'amostrasUsuario': True,
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAmostraUser','quinze':quinze,'dez':dez}
+    return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarAmostraFinalizada(request, pk):
-	amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
-	context = {'lista_amostras': amostras, 'titulo': "Minhas amostras finalizadas", 'amostrasUsuario': True,
+    amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
+    context = {'lista_amostras': amostras, 'titulo': "Minhas amostras finalizadas", 'amostrasUsuario': True,
                'finalizadas': True, 'paginaRetorno': 'Amostra:listarAmostraUserFinalizada'}
-	return render(request, 'Amostra/listar.html', context)
+    return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def adicionar(request):
