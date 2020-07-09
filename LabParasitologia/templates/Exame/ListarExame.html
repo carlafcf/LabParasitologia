@@ -26,6 +26,7 @@
       </script>
 
 
+
     {% if listar_exame %}
        <table id="exameT" class="table" cellspacing="0" width="100%">
            <thead >
@@ -40,24 +41,32 @@
                    <th scope="row"><center>{{ forloop.counter }}</center></th>
                   <td><center>{{ exame.nome }}</center></td>
                    <td>
-                      <a onclick="carregar('{% url 'exame:DetalheExame' pk=exame.pk %}');" href="#" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
+                       <table>
+                       <th>
+                      <a onclick="carregar('{% url 'exame:DetalheExame' pk=exame.pk %}');" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                       </a>
+                       </th>
                       <!-- <button action="displayDate()" class="fa fa-search"></button>-->
+                       <th>
                        <a href="{% url 'exame:EditarExame' pk=exame.pk %}?next={{ request.path }}" class="btn btn-warning-outline" data-toggle="tooltip" title="Editar">
                           <i class="fas fa-pencil-alt" style="color:blue"></i>
                        </a>
+                       </th>
+                       <th>
                       <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{exame.pk}}"
                                         data-tt="tooltip" title="Deletar">
                       <i class="fa fa-times" aria-hidden="true" style="color:red"></i>
 
                       </a>
+                        </th>
                                  <div class="modal fade" id="fm-modal-grid-{{exame.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="fm-modal-grid-{{amostra.pk}}"
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <div class="modal-header">
+                                            <div class="modal-header" style="background-color: rgb(78,115,223);">
+                                                <h5 class="modal-title" id=""><strong><font color="white">Desativar exame</font></strong></h5>
                                                 <button class="close" data-dismiss="modal" aria-label="Cerrar">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -66,26 +75,26 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-6">
-                                                            <p>Você tem certeza que deseja desabilitar o seguinte exame:</p>
+                                                            <p><strong>Você tem certeza que deseja desativar o seguinte exame:</strong></p>
                                                             <p>Nome: {{ exame.nome }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="modal-footer">
+                                            <div class="modal-footer" style="background-color: rgb(78,115,223);">
                                                 <form action="{% url 'exame:mudar_status_exame' status=0 exame=exame.pk %}" method="POST">
                                                        {% csrf_token %}
                                                         <input type="hidden" name="next" value="{{request.path}}">
-                                                       <button class="btn">Confirmar</button>
+                                                       <button class="btn btn-danger">Desativar</button>
                                                 </form>
-                                                <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                                                <button class="btn btn-dark" data-dismiss="modal">Cancelar</button>
 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
+                    </table>
                    </td>
                </tr>
                {{ exame.full_name|upper }}

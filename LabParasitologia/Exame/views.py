@@ -97,7 +97,8 @@ def novoAddExame(request, pk, exame):
 
 
 class CadastrarExame(LoginRequiredMixin, generic.CreateView):
-    fields = ('nome','tipo_resultado')
+    #fields = ('nome','tipo_resultado')
+    fields = ('nome',)
     model = Exame
     template_name = 'Exame/CadastrarExame.html'
 

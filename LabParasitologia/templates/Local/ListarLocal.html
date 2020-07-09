@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block titulo %}
-	<h1>Listar Exame</h1>
+	<h1>Listar locais</h1>
 {% endblock %}
 
 
@@ -43,7 +43,8 @@
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <div class="modal-header">
+                                             <div class="modal-header" style="background-color: rgb(78,115,223);">
+                                                <h5 class="modal-title" id=""><strong><font color="white">Deletar local</font></strong></h5>
                                                 <button class="close" data-dismiss="modal" aria-label="Cerrar">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -52,20 +53,20 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-6">
-                                                            <p>Você tem certeza que deseja deletar o seguinte local:</p>
+                                                            <p><strong>Você tem certeza que deseja deletar o seguinte local:</strong></p>
                                                             <p>Nome: {{ local.nome }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="modal-footer">
+                                            <div class="modal-footer" style="background-color: rgb(78,115,223);">
                                                 <form action="{% url 'local:DeletarLocal' pk=local.pk %}" method="POST">
                                                        {% csrf_token %}
                                                         <input type="hidden" name="next" value="{{request.path}}">
-                                                       <button class="btn">Deletar</button>
+                                                       <button class="btn btn-danger">Deletar</button>
                                                 </form>
-                                                <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                                                <button class="btn btn-dark" data-dismiss="modal">Cancelar</button>
 
                                             </div>
                                         </div>

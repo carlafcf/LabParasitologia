@@ -11,120 +11,133 @@ from Exame.models import Exame, RealizacaoExame
 from datetime import date, timedelta,datetime
 from .forms import amostraForm
 import json
+from dateutil.relativedelta import *
 
 def home(request):
-    tdy = datetime.today()
     exame = Exame.objects.all()
     Rexame = RealizacaoExame.objects.all()
     amostra = Amostra.objects.all()
     AB = Amostra.objects.filter(status=True)
     user = User.objects.filter(username=request.user.username)[0]
+
+    ultimo_12 = []
+    mesE = []
+    mesA = []
+    LE = []
+    LEV = []
+    i = 0
+    j = 0
+    a1 = 1
+    a2 = 1
+    a = 1
+    ex = 0
+
+    tdy = date.today()
+    ultimo_ano = tdy+relativedelta(years=-1)
+    ultimo_seis_meses = tdy+relativedelta(months=-6)
+    coluna = ultimo_ano
+
     MAB = 0
     qtdE = 0
     qtdA = 0
+    qtdAT = 0
     qtdAB = 0
-    pctAB = 0
-    jan = 0
-    fev = 0
-    mar = 0
-    abr = 0
-    mai = 0
-    jun = 0
-    jul = 0
-    ago = 0
-    set = 0
-    out = 0
-    nov = 0
-    dez = 0
-    jan1 = 0
-    fev1 = 0
-    mar1 = 0
-    abr1 = 0
-    mai1 = 0
-    jun1 = 0
-    jul1 = 0
-    ago1 = 0
-    set1 = 0
-    out1 = 0
-    nov1 = 0
-    dez1 = 0
-    famacha = 0
-    exame2 = 0
-    exame3 = 0
+
+    while(ex <=12):
+        coluna = coluna + relativedelta(months=1)
+        if coluna.month <= tdy.month:
+            ultimo_12.insert(a, str(coluna.month)+"/"+str(coluna.year))
+            a = a + 1
+        ex = ex + 1
+    coluna = ultimo_ano
+    while(a <=12):
+        coluna = coluna + relativedelta(months=1)
+        if coluna.month > tdy.month:
+            ultimo_12.insert(a, str(coluna.month)+"/"+str(coluna.year))
+        a = a + 1
+
     for item in AB:
         qtdAB = qtdAB + 1
         if item.responsavel == user:
             MAB = MAB + 1
+
     for item in amostra:
         if item.created_at.month == tdy.month:
             qtdA = qtdA + 1
-        if item.created_at.month == 1:   jan = jan + 1
-        if item.created_at.month == 2:   fev = fev + 1
-        if item.created_at.month == 3:   mar = mar + 1
-        if item.created_at.month == 4:   abr = abr + 1
-        if item.created_at.month == 5:   mai = mai + 1
-        if item.created_at.month == 6:   jun = jun + 1
-        if item.created_at.month == 7:   jul = jul + 1
-        if item.created_at.month == 8:   ago = ago + 1
-        if item.created_at.month == 9:   set = set + 1
-        if item.created_at.month == 10:  out = out + 1
-        if item.created_at.month == 11:  nov = nov + 1
-        if item.created_at.month == 12:  dez = dez + 1
+        qtdAT = qtdAT+1
+
+    while (a1 <= 12):
+        for a in amostra:
+            if (item.created_at >= ultimo_ano and item.created_at <= tdy):
+                if a.created_at.month == a1: j = j + 1
+        mesA.insert(a1, j)
+        a1 = a1 + 1
+        j = 0
+
     for item in Rexame:
         if item.created_at.month == tdy.month:
             qtdE = qtdE + 1
-        if item.created_at.month == 1:   jan1 = jan1 + 1
-        if item.created_at.month == 2:   fev1 = fev1 + 1
-        if item.created_at.month == 3:   mar1 = mar1 + 1
-        if item.created_at.month == 4:   abr1 = abr1 + 1
-        if item.created_at.month == 5:   mai1 = mai1 + 1
-        if item.created_at.month == 6:   jun1 = jun1 + 1
-        if item.created_at.month == 7:   jul1 = jul1 + 1
-        if item.created_at.month == 8:   ago1 = ago1 + 1
-        if item.created_at.month == 9:   set1 = set1 + 1
-        if item.created_at.month == 10:  out1 = out1 + 1
-        if item.created_at.month == 11:  nov1 = nov1 + 1
-        if item.created_at.month == 12:  dez1 = dez1 + 1
-        if item.exame.nome == 'Famacha': famacha = famacha + 1
-        if item.exame.nome == 'exame2': exame2 = exame2 + 1
-        if item.exame.nome == 'exame3': exame3 = exame3 + 1
-    LE = [famacha, exame2, exame3]
-    mesE = [jan1, fev1, mar1, abr1, mai1, jun1, jul1, ago1, set1, out1, nov1, dez1]
-    mesA = [jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez]
+
+    while (a2 <= 12):
+        for e in Rexame:
+            if (item.created_at >= ultimo_ano and item.created_at <= tdy):
+                if e.created_at.month == a2: j = j + 1
+        mesE.insert(a2, j)
+        a2 = a2 + 1
+        j = 0
+
+    for e in exame:
+        LE.insert(i, e.nome)
+        for item in Rexame:
+            if (item.created_at >= ultimo_seis_meses and item.created_at <= tdy):
+                if LE[i] == item.exame.nome: j = j + 1
+        LEV.insert(i, j)
+        i = i + 1
+        j = 0
+    json_coluna = json.dumps(ultimo_12)
     json_mesA = json.dumps(mesA)
     json_mesE = json.dumps(mesE)
     json_LE = json.dumps(LE)
-    pctAB = (qtdAB*100)/qtdA
-    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE}
+    json_LEV = json.dumps(LEV)
+
+    if qtdAT == 0:
+        pctAB = (qtdAB * 100) / 1
+    else:
+        pctAB = (qtdAB*100)/qtdAT
+    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
     return render(request, 'Amostra/index.html', context)
 
 @login_required
 def listar(request):
     amostras = Amostra.objects.filter(status = True)
+    quinze = date.today() - timedelta(days=15)
+    dez = date.today() - timedelta(days=10)
     context = {'lista_amostras': amostras, 'titulo': "Amostras", 'amostrasUsuario': False,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listar'}
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listar','quinze':quinze,'dez':dez}
     return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarFinalizada(request):
-	amostras = Amostra.objects.filter(status = False)
-	context = {'lista_amostras': amostras, 'titulo': "Amostras finalizadas", 'amostrasUsuario': False,
+    amostras = Amostra.objects.filter(status = False)
+    context = {'lista_amostras': amostras, 'titulo': "Amostras finalizadas", 'amostrasUsuario': False,
                'finalizadas': True, 'paginaRetorno': 'Amostra:listarFinalizada'}
-	return render(request, 'Amostra/listar.html', context)
+    return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarAmostraUser(request, pk):
-	amostras = Amostra.objects.filter(responsavel_id=pk,  status = True)
-	context = {'lista_amostras': amostras, 'titulo': "Minhas amostras", 'amostrasUsuario': True,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAmostraUser'}
-	return render(request, 'Amostra/listar.html', context)
+    amostras = Amostra.objects.filter(responsavel_id=pk,  status = True)
+    quinze = date.today() - timedelta(days=15)
+    dez = date.today() - timedelta(days=10)
+    context = {'lista_amostras': amostras, 'titulo': "Minhas amostras", 'amostrasUsuario': True,
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAmostraUser','quinze':quinze,'dez':dez}
+    return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listarAmostraFinalizada(request, pk):
-	amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
-	context = {'lista_amostras': amostras, 'titulo': "Minhas amostras finalizadas", 'amostrasUsuario': True,
+    amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
+    context = {'lista_amostras': amostras, 'titulo': "Minhas amostras finalizadas", 'amostrasUsuario': True,
                'finalizadas': True, 'paginaRetorno': 'Amostra:listarAmostraUserFinalizada'}
-	return render(request, 'Amostra/listar.html', context)
+    return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def adicionar(request):

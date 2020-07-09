@@ -54,7 +54,8 @@
                             aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
-                                    <div class="modal-header">
+                                    <div class="modal-header" style="background-color: rgb(78,115,223);">
+                                        <h5 class="modal-title" id=""><strong><font color="white">Desativar usuario</font></strong></h5>
                                         <button class="close" data-dismiss="modal" aria-label="Cerrar">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -63,18 +64,18 @@
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-12 col-sm-6">
-                                                    <p>Você tem certeza que deseja desabilitar o usuário {{ user }}</p>
+                                                    <p><strong>Você tem certeza que deseja desativar o usuário:</strong> {{ user }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="modal-footer">
+                                    <div class="modal-footer" style=" background-color: rgb(78,115,223);">
                                         <form action="{% url 'usuario:mudar_ativo_status' ativo_status=0 usuario=user.pk %}" method="POST">
                                                {% csrf_token %}
-                                               <button class="btn">Confirmar</button>
+                                               <button class="btn btn-danger">Desativar</button>
                                         </form>
-                                        <button class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                                        <button class="btn btn-dark"  data-dismiss="modal">Cancelar</button>
 
                                     </div>
                                 </div>

@@ -10,7 +10,7 @@ TIPOS_RESULTADO = [
 class Exame(models.Model):
     nome = models.CharField(max_length=200)
     status = models.BooleanField(default=True)
-    tipo_resultado = models.CharField(max_length=3, choices=TIPOS_RESULTADO, default='NUM')
+    #tipo_resultado = models.CharField(max_length=3, choices=TIPOS_RESULTADO, default='NUM', null=True)
 
     def __str__(self):
         return self.nome
@@ -27,8 +27,7 @@ class RealizacaoExame(models.Model):
     created_at = models.DateTimeField(default=datetime.today, null=True, blank=True)
     data = models.DateField(default=date.today)
 
-    def __str__(self):
-        return self.exame.nome
+
 
 class ResultadoExame(models.Model):
     resultado_textual = models.CharField(max_length=200, blank=True, null=True)
