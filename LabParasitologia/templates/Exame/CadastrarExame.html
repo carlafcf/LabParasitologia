@@ -8,11 +8,22 @@
 {% block content %}
   <div class="container">
 
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Como cadastrar exames</h6>
+        </div>
+        <div class="card-body">
+          <p>Para cadastrar exames, escolha o <b>nome do exame</b> que você deseja cadastrar e o <b>tipo de resultado</b> que será armazenado nele.</p>
+          <p class="mb-0"><b>Números:</b> Valores inteiros dentro de um intervalo </p>
+          <p class="mb-0"><b>Valores exatos:</b> Valores pré-determinados. Exemplo: (1, 2, 3, 4, 5) ou (Nenhum, Pouco, Muito, Bastante) </p>
+        </div>
+      </div>
+
     <form method="post">
       {% csrf_token %}
       {% bootstrap_form form %}
         <input type="submit" class="btn btn-success" value="Próximo">
-        <input type="submit" class="btn btn-success" name="add" value="Cadastrar e adicionar novamente" >
+        <!--<input type="submit" class="btn btn-success" name="add" value="Cadastrar e adicionar novamente" >-->
     </form>
   </div>
 {% endblock %}

@@ -23,9 +23,10 @@ def exameListar(request):
     return render(request, 'Exame/ListarExame.html', context)
 
 def exame_amostraDetalhes(request, pk):
-    amostra = Amostra.objects.filter(pk=pk)
+    amostra = Amostra.objects.filter(pk=pk)[0]
     exame = RealizacaoExame.objects.filter(amostra_id=pk)
-    context = {'a':amostra, 'lista_exame':exame}
+    exames_cadastrados = Exame.objects.all()
+    context = {'amostra':amostra, 'lista_exame':exame, 'exames_cadastrados': exames_cadastrados}
     return render(request, 'Amostra/amostra_detail.html', context)
 
 
@@ -53,10 +54,35 @@ def addExame(request, pk):
     if request.method == "POST":
         exame_form = RealizacaoExameForm(request.POST)
     else:
-        exame_form = RealizacaoExameForm()
+        exame_form = RealizacaoExameForm(tipo="NUM")
 
     if exame_form.is_valid():
         exame_form.instance.amostra = amostra
+        RealizacaoExame = exame_form.save()
+        RealizacaoExame.save()
+        if 'add' in request.POST:
+            return redirect('exame:AdicionarExame', pk)
+        else:
+            return redirect('amostra:detalhes', pk)
+    else:
+        print(exame_form.errors)
+    return render(request, 'Exame/AdicionarExame.html',
+                  {'exame_form': exame_form, 'amostra':amostra})
+
+def novoAddExame(request, pk, exame):
+    amostra = Amostra.objects.get(pk=pk)
+    exame_cadastrar = Exame.objects.get(pk=exame)
+    tipo = exame_cadastrar.tipo_resultado
+    possiveis_resultados = ResultadoExame.objects.filter(exame=exame)
+
+    if request.method == "POST":
+        exame_form = RealizacaoExameForm(request.POST, tipo=tipo, exame=exame)
+    else:
+        exame_form = RealizacaoExameForm(tipo=tipo, exame=exame)
+
+    if exame_form.is_valid():
+        exame_form.instance.amostra = amostra
+        exame_form.instance.exame = exame_cadastrar
         RealizacaoExame = exame_form.save()
         RealizacaoExame.save()
         if 'add' in request.POST:
@@ -85,6 +111,7 @@ class CadastrarExame(LoginRequiredMixin, generic.CreateView):
 def definir_resultados(request,pk):
     template_name = 'Exame/DefinirResultados.html'
     exame = Exame.objects.get(pk=pk)
+    i=0
     if exame.tipo_resultado == "NUM":
         if request.method == 'GET':
             formset = ResultadoNumericoFormset(request.GET or None)
@@ -94,18 +121,17 @@ def definir_resultados(request,pk):
             if formset.is_valid():
                 print("valid")
                 for count, form in enumerate(formset, start=1):
-                    print(count)
                     # extract name from each form and save
                     valor = form.cleaned_data.get('valor')
-                    print(valor)
                     # save book instance
                     if valor:
-                        ResultadoExame(resultado_numerico=valor, exame=exame, ordem=count).save()
+                        ResultadoExame(resultado_numerico=valor, exame=exame, ordem=i).save()
+                        i=i+1
                 # once all books are saved, redirect to book list view
-                return redirect('amostra:home')
+                return redirect('exame:ListarExame')
         print("not valid")
         return render(request, template_name, {
-            'formset': formset,
+            'formset': formset, 'tipo': 'NUM',
         })
     else:
         if request.method == 'GET':
@@ -120,9 +146,9 @@ def definir_resultados(request,pk):
                     if valor:
                         ResultadoExame(resultado_textual=valor, exame=exame, ordem=count).save()
                 # once all books are saved, redirect to book list view
-                return redirect('amostra:home')
+                return redirect('exame:ListarExame')
         return render(request, template_name, {
-            'formset': formset,
+            'formset': formset, 'tipo': 'TEX',
         })
 
 class DetalheExame(LoginRequiredMixin, generic.DetailView):
@@ -136,11 +162,35 @@ def monthdelta(date, delta):
         29 if y%4==0 and not y%400==0 else 28,31,30,31,30,31,31,30,31,30,31][m-1])
     return date.replace(day=d,month=m, year=y)
 
+def encontrarCategoria(resultado, categorias, tipo):
+    if tipo == 'NUM':
+        for i in range(len(categorias)):
+            if i == 0 and resultado <= categorias[i]:
+                return i
+            elif i == (len(categorias)-1) and resultado > categorias[i]:
+                return i+1
+            elif i != (len(categorias)-1) and resultado > categorias[i] and resultado <= categorias[i+1]:
+                return i+1
+    else:
+        try:
+            return categorias.index(resultado)
+        except ValueError:
+            return -1
+
 def NovoDetalheExame(request, pk):
     nome = Exame.objects.filter(pk=pk)
-    categorias = [1,2,3,4,5]
+    tipo = nome[0].tipo_resultado
+    categorias = []
+    for cat in nome[0].resultados.all():
+        if tipo == 'NUM':
+            categorias.append(cat.resultado_numerico)
+        else:
+            categorias.append(cat.resultado_textual)
     valores = [0,0,0,0,0]
     exames = RealizacaoExame.objects.filter(exame_id=pk)
+
+    print("Categorias")
+    print(categorias)
 
     # Total de exames por mes nos últimos 12 meses
     months = []
@@ -157,10 +207,32 @@ def NovoDetalheExame(request, pk):
         if index>=0:
             total[index]=total[index]+1
 
-    # Resultado dos exames por especie nos ultimos 12 meses
-    resultado = [0,0,0,0,0]
-    resultado_total = [0,0,0,0,0]
+    # Resultado dos exames em range por especie nos ultimos 12 meses
+    resultado = []
+    resultado_total = []
+    categorias_exibir = []
+    # Definir como exibir os ranges de resultados
+    if tipo=='NUM':
+        exames = exames.order_by('resultado_numerico')
+        categorias_exibir.append("resultado <= " + str(categorias[0]))
+        for i in range(len(categorias)):
+            if i!=(len(categorias)-1):
+                categorias_exibir.append(str(categorias[i]) + " < resultado <= " + str(categorias[i+1]))
+            resultado.append(0)
+            resultado_total.append(0)
+        categorias_exibir.append("resultado > " + str(categorias[len(categorias)-1]))
+        resultado.append(0)
+        resultado_total.append(0)
+    else:
+        exames = exames.order_by('resultado_textual')
+        categorias_exibir = categorias
+        for i in range(len(categorias)):
+            resultado.append(0)
+            resultado_total.append(0)
+
+    # O que exibir: POST (por especie) ou então todos
     if request.method == 'POST':
+        print("IF")
         form = especieForm(request.POST)
         if form.is_valid():
             especie = request.POST['especie_animal']
@@ -168,10 +240,14 @@ def NovoDetalheExame(request, pk):
                 data = str(exame.data.month) + "/" + str(exame.data.year)
                 try:
                     index_mes = months.index(data)
-                    try:
-                        index_tipo = categorias.index(exame.resultado)
-                    except ValueError:
-                        index_tipo = -1
+                    if tipo == 'NUM':
+                        index_tipo = encontrarCategoria(exame.resultado_numerico, categorias, tipo)
+                    else:
+                        index_tipo = encontrarCategoria(exame.resultado_textual, categorias, tipo)
+                    # try:
+                    #     index_tipo = categorias.index(exame.resultado)
+                    # except ValueError:
+                    #     index_tipo = -1
                 except ValueError:
                     index_mes = -1
                 if index_mes >= 0:
@@ -179,15 +255,20 @@ def NovoDetalheExame(request, pk):
                     if exame.amostra.especie_animal == especie:
                         resultado[index_tipo] = resultado[index_tipo] + 1
     else:
+        print("Else")
         form = especieForm()
         for exame in exames:
             data = str(exame.data.month) + "/" + str(exame.data.year)
             try:
                 index_mes = months.index(data)
-                try:
-                    index_tipo = categorias.index(exame.resultado)
-                except ValueError:
-                    index_tipo = -1
+                if tipo=='NUM':
+                    index_tipo = encontrarCategoria(exame.resultado_numerico, categorias, tipo)
+                else:
+                    index_tipo = encontrarCategoria(exame.resultado_textual, categorias, tipo)
+                # try:
+                #     index_tipo = categorias.index(exame.resultado)
+                # except ValueError:
+                #     index_tipo = -1
             except ValueError:
                 index_mes = -1
             if index_mes >= 0:
@@ -196,108 +277,12 @@ def NovoDetalheExame(request, pk):
 
     json_resultado_especie = json.dumps(resultado)
     json_resultado_total = json.dumps(resultado_total)
-    json_tipo_exame = json.dumps(categorias)
+    json_tipo_exame = json.dumps(categorias_exibir)
     json_mes = json.dumps(total)
     json_labels = json.dumps(months)
     context = {'nomes': nome, 'meses': json_mes, 'form':form, 'labels': json_labels, 'resultado': json_resultado_especie,
                'categorias': json_tipo_exame, 'resultado_total': json_resultado_total}
     return render(request, 'Exame/exame_detail.html', context)
-
-def DetalheExame(request, pk):
-    nome = Exame.objects.filter(pk=pk)
-    exames = RealizacaoExame.objects.filter(exame_id=pk)
-    NovoDetalheExame(pk)
-    resultado = []
-    resultadoE = []
-    tipo_exame = []
-    jan = 0
-    fev = 0
-    mar = 0
-    abr = 0
-    mai = 0
-    jun = 0
-    jul = 0
-    ago = 0
-    set = 0
-    out = 0
-    nov = 0
-    dez = 0
-    um = 0
-    dois = 0
-    tres = 0
-    quatro = 0
-    cinco = 0
-    um1 = 0
-    dois2 = 0
-    tres3 = 0
-    quatro4 = 0
-    cinco5 = 0
-    saudavel = 0
-    normal = 0
-    doente = 0
-    saudavel1 = 0
-    normal2 = 0
-    doente3 = 0
-    especie = None
-    teste = None
-    for exame in exames:
-        if exame.data.month == 1:   jan = jan + 1
-        if exame.data.month == 2:   fev = fev + 1
-        if exame.data.month == 3:   mar = mar + 1
-        if exame.data.month == 4:   abr = abr + 1
-        if exame.data.month == 5:   mai = mai + 1
-        if exame.data.month == 6:   jun = jun + 1
-        if exame.data.month == 7:   jul = jul + 1
-        if exame.data.month == 8:   ago = ago + 1
-        if exame.data.month == 9:   set = set + 1
-        if exame.data.month == 10:  out = out + 1
-        if exame.data.month == 11:  nov = nov + 1
-        if exame.data.month == 12:  dez = dez + 1
-    if request.method == 'POST':
-        form = especieForm(request.POST)
-        if form.is_valid():
-            especie = request.POST['especie_animal']
-            for item in nome:
-                if item.nome == 'Famacha':
-                    tipo_exame = ['1', '2', '3', '4', '5']
-                    for exame in exames:
-                        if exame.amostra.especie_animal == especie:
-                            if exame.resultado == 1:   um = um + 1
-                            if exame.resultado == 2:   dois = dois + 1
-                            if exame.resultado == 3:   tres = tres + 1
-                            if exame.resultado == 4:   quatro = quatro + 1
-                            if exame.resultado == 5:   cinco = cinco + 1
-                            resultadoE = [um, dois, tres, quatro, cinco]
-                    for exame in exames:
-                        if exame.resultado == 1:   um1 = um1 + 1
-                        if exame.resultado == 2:   dois2 = dois2 + 1
-                        if exame.resultado == 3:   tres3 = tres3 + 1
-                        if exame.resultado == 4:   quatro4 = quatro4 + 1
-                        if exame.resultado == 5:   cinco5 = cinco5 + 1
-                        resultado = [um1, dois2, tres3, quatro4, cinco5]
-                else:
-                    tipo_exame = ['0-50', '51-100', '101-200']
-                    for exame in exames:
-                        if exame.amostra.especie_animal == especie:
-                            if exame.resultado >= 0 and exame.resultado <= 50:   saudavel = saudavel + 1
-                            if exame.resultado >= 51 and exame.resultado <= 100:   normal = normal + 1
-                            if exame.resultado >= 101 and exame.resultado <= 200:   doente = doente + 1
-                            resultadoE = [saudavel, normal, doente]
-                    for exame in exames:
-                        if exame.resultado >= 0 and exame.resultado <= 50:   saudavel1 = saudavel1 + 1
-                        if exame.resultado >= 51 and exame.resultado <= 100:   normal2 = normal2 + 1
-                        if exame.resultado >= 101 and exame.resultado <= 200:   doente3 = doente3 + 1
-                        resultado = [saudavel1, normal2, doente3]
-    else:
-        form = especieForm()
-    mes = [jan, fev ,mar ,abr, mai, jun, jul, ago, set, out, nov, dez]
-    json_resultado = json.dumps(resultado)
-    json_resultadoE = json.dumps(resultadoE)
-    json_tipo_exame = json.dumps(tipo_exame)
-    json_mes = json.dumps(mes)
-    context = {'nomes':nome, 'meses':json_mes, 'tipo_exames':json_tipo_exame, 'resultadosE':json_resultadoE,'resultados':json_resultado,'form': form, 'especie':especie}
-    return render(request, 'Exame/exame_detail.html', context)
-
 
 class EditarExame(LoginRequiredMixin, generic.UpdateView):
     model = Exame

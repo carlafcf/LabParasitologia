@@ -2,11 +2,32 @@
 {% load bootstrap4 %}
 
 {% block titulo %}
-<h1>Definir resultados</h1>
+<h1>Definir possíveis resultados</h1>
 {% endblock %}
 
 {% block content %}
   <div class="container">
+
+      <div class="card shadow mb-4">
+                <!-- Card Header - Accordion -->
+                <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <h6 class="m-0 font-weight-bold text-primary">Como definir possíveis resultados</h6>
+                </a>
+                <!-- Card Content - Collapse -->
+                <div class="collapse show" id="collapseCardExample">
+                  <div class="card-body">
+                    {% if tipo == "NUM" %}
+                        <p>Para exames em que o resultado é um valor inteiro, deve-se indicar os intervalos nos quais se deseja analisar os resultados.</p>
+                        <p class="mb-0">Por exemplo, se forem cadastrados os possíveis resultados <b>5</b>, <b>15</b>, <b>100</b> e <b>200</b>, os gráficos para análise deste exame serão da seguinte forma:</p>
+                        <canvas id="myChartNI" height=60></canvas>
+                    {% else %}
+                        <p>Para exames em que o resultado são valores exatos, deve-se indicar os possíveis valores que podem ser cadastrados como resultados do exame.</p>
+                        <p class="mb-0">Por exemplo, se forem cadastrados os possíveis resultados <b>Nenhum</b>, <b>Pouco</b>, <b>Razoável</b> e <b>Muito</b>, os gráficos para análise deste exame serão da seguinte forma:</p>
+                        <canvas id="myChartVE" height=60></canvas>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
 
       <form class="form-horizontal" method="POST" action="">
         {% csrf_token %}
@@ -25,18 +46,82 @@
                     </div>
                 </div>
             </div>
+            <br>
         {% endfor %}
-        <div class="row spacer">
-            <div class="col-4 offset-2">
-                <button type="submit" class="btn btn-block btn-primary">Create</button>
-            </div>
-        </div>
+        <!--<div class="row spacer">-->
+            <!--<div class="col-4 offset-2">-->
+                <button type="submit" class="btn btn-success">Cadastrar</button>
+            <!--</div>-->
+        <!--</div>-->
         </form>
   </div>
 
   {% endblock %}
 
 {% block extra_js %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+<script>
+var ctx = document.getElementById('myChartNI').getContext('2d');
+var myChartNI = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['resultado <= 5', '5 < resultado <= 15', '15 < resultado <= 100', '100 < resultado <= 200', 'resultado > 200'],
+        datasets: [
+        {
+            label: '# de exames',
+            data: [5, 3, 8, 1, 0],
+            backgroundColor: 'rgba(74, 111, 220, 1)',
+            borderColor: 'rgba(74, 111, 220, 1)',
+            borderWidth: 1
+        }
+
+        ]
+
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+
+<script>
+var ctx = document.getElementById('myChartVE').getContext('2d');
+var myChartVE = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Nenhum', 'Pouco', 'Razoável', 'Muito'],
+        datasets: [
+        {
+            label: '# de exames',
+            data: [5, 3, 8, 1],
+            backgroundColor: 'rgba(74, 111, 220, 1)',
+            borderColor: 'rgba(74, 111, 220, 1)',
+            borderWidth: 1
+        }
+
+        ]
+
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
 
     <script type='text/javascript'>
         function updateElementIndex(el, prefix, ndx) {

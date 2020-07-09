@@ -6,14 +6,28 @@ from Amostra.models import Amostra
 from datetime import date
 
 class RealizacaoExameForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.tipo = kwargs.pop('tipo')
+        self.exame = kwargs.pop('exame')
+        super().__init__(*args, **kwargs)
+        if self.tipo == 'NUM':
+            del self.fields['resultado_textual']
+        else:
+            del self.fields['resultado_numerico']
+            self.fields['resultado_textual'] = forms.ChoiceField(
+                choices=[(str(o.resultado_textual), str(o.resultado_textual)) for o in ResultadoExame.objects.filter(exame=self.exame)]
+            )
+
     def clean_data(self):
         data = self.cleaned_data['data']
         if data > date.today():
-            raise forms.ValidationError("essa data ainda nao passou!")
+            raise forms.ValidationError("Não é possível cadastrar exames para datas futuras.")
         return data
+
     class Meta():
         model = RealizacaoExame
-        fields=('exame','resultado','data')
+        fields = ('resultado_numerico', 'resultado_textual', 'data')
 
 
 class especieForm(forms.ModelForm):

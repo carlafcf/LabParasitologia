@@ -1,10 +1,10 @@
 from django.db import models
-#from Amostra.models import Amostra
+# from Amostra.models import Amostra
 from datetime import datetime, date
 
 TIPOS_RESULTADO = [
-    ('NUM', 'Numérico'),
-    ('TEX', 'Textual')
+    ('NUM', 'Números'),
+    ('TEX', 'Valores exatos')
 ]
 
 class Exame(models.Model):
@@ -19,9 +19,11 @@ class Exame(models.Model):
         ordering = ('nome',)
 
 class RealizacaoExame(models.Model):
+
     exame = models.ForeignKey(Exame, on_delete=models.CASCADE)
     amostra = models.ForeignKey(to='Amostra.amostra', on_delete=models.CASCADE, null=True)
-    resultado = models.BigIntegerField(null=True)
+    resultado_numerico = models.IntegerField(null=True)
+    resultado_textual = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(default=datetime.today, null=True, blank=True)
     data = models.DateField(default=date.today)
 
