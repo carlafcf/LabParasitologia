@@ -24,7 +24,9 @@ def exameListar(request):
 
 def exame_amostraDetalhes(request, pk):
     amostra = Amostra.objects.filter(pk=pk)[0]
+    print(pk)
     exame = RealizacaoExame.objects.filter(amostra_id=pk)
+    print(exame)
     exames_cadastrados = Exame.objects.all()
     context = {'amostra':amostra, 'lista_exame':exame, 'exames_cadastrados': exames_cadastrados}
     return render(request, 'Amostra/amostra_detail.html', context)
@@ -83,8 +85,13 @@ def novoAddExame(request, pk, exame):
     if exame_form.is_valid():
         exame_form.instance.amostra = amostra
         exame_form.instance.exame = exame_cadastrar
+        print(exame_form.instance.amostra)
+        print(exame_form.instance.exame)
+        print(exame_form.instance.resultado_numerico)
         RealizacaoExame = exame_form.save()
+        print("Passou")
         RealizacaoExame.save()
+        print("Daqui tambem")
         if 'add' in request.POST:
             return redirect('exame:AdicionarExame', pk)
         else:
@@ -97,8 +104,8 @@ def novoAddExame(request, pk, exame):
 
 
 class CadastrarExame(LoginRequiredMixin, generic.CreateView):
-    #fields = ('nome','tipo_resultado')
-    fields = ('nome',)
+    fields = ('nome','tipo_resultado')
+    #fields = ('nome',)
     model = Exame
     template_name = 'Exame/CadastrarExame.html'
 
