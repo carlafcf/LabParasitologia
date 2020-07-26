@@ -14,7 +14,7 @@ from .models import RealizacaoExame, Exame, ResultadoExame
 from Amostra.models import Amostra
 
 def exameListar(request):
-    exame_list = Exame.objects.all()
+    exame_list = Exame.objects.filter(status=True)
     paginator = Paginator(exame_list, 5)
 
     page = request.GET.get('page')
@@ -97,8 +97,8 @@ def novoAddExame(request, pk, exame):
 
 
 class CadastrarExame(LoginRequiredMixin, generic.CreateView):
-    #fields = ('nome','tipo_resultado')
-    fields = ('nome',)
+    fields = ('nome','tipo_resultado')
+    #fields = ('nome',)
     model = Exame
     template_name = 'Exame/CadastrarExame.html'
 

@@ -221,11 +221,13 @@ class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
 
 @login_required
 def listarAlertas(request):
+    quinze = date.today() - timedelta(days=15)
+    dez = date.today() - timedelta(days=10)
     amostras_alerta = Amostra.objects.filter(
         responsavel=request.user,
         status=True,
         data_coleta__lte=date.today() - timedelta(days=10)).order_by('data_coleta')
     context = {'lista_amostras': amostras_alerta, 'titulo': "Amostras com alerta", 'amostrasUsuario': True,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAlertas'}
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAlertas','quinze':quinze,'dez':dez}
     return render(request, 'Amostra/listar.html', context)
 
