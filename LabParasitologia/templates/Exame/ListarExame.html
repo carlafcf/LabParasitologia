@@ -41,25 +41,17 @@
                    <th scope="row"><center>{{ forloop.counter }}</center></th>
                   <td><center>{{ exame.nome }}</center></td>
                    <td>
-                       <table>
-                       <th>
                       <a onclick="carregar('{% url 'exame:DetalheExame' pk=exame.pk %}');" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                       </a>
-                       </th>
-                      <!-- <button action="displayDate()" class="fa fa-search"></button>-->
-                       <th>
                        <a href="{% url 'exame:EditarExame' pk=exame.pk %}?next={{ request.path }}" class="btn btn-warning-outline" data-toggle="tooltip" title="Editar">
                           <i class="fas fa-pencil-alt" style="color:blue"></i>
                        </a>
-                       </th>
-                       <th>
                       <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{exame.pk}}"
                                         data-tt="tooltip" title="Deletar">
                       <i class="fa fa-times" aria-hidden="true" style="color:red"></i>
 
                       </a>
-                        </th>
                                  <div class="modal fade" id="fm-modal-grid-{{exame.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="fm-modal-grid-{{amostra.pk}}"
                                     aria-hidden="true">
@@ -94,7 +86,6 @@
                                         </div>
                                     </div>
                                 </div>
-                    </table>
                    </td>
                </tr>
                {{ exame.full_name|upper }}

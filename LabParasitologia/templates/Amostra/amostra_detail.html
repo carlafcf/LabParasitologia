@@ -5,9 +5,9 @@
 <div class="container">
 
 			{% if user.is_superuser or amostra.responsavel.pk == user.pk %}
-				<div class="text-right">
-        			<a href="{% url 'exame:AdicionarExame' pk=amostra.pk %}" class="btn btn-success">Adicionar exame</a>
-				</div>
+				<!--<div class="text-right">-->
+        			<!--<a href="{% url 'exame:AdicionarExame' pk=amostra.pk %}" class="btn btn-success">Adicionar exame</a>-->
+				<!--</div>-->
 			{% endif %}
 			<h1><strong>Amostra {{ amostra.identificacao }}</strong></h1>
 			<h5>Data: {{ amostra.data_coleta }} </h5>

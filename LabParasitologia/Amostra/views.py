@@ -68,20 +68,20 @@ def home(request):
 
     while (a1 <= 12):
         for a in amostra:
-            if (item.created_at >= ultimo_ano and item.created_at <= tdy):
-                if a.created_at.month == a1: j = j + 1
+            if (item.data_coleta >= ultimo_ano and item.data_coleta <= tdy):
+                if a.data_coleta.month == a1: j = j + 1
         mesA.insert(a1, j)
         a1 = a1 + 1
         j = 0
 
     for item in Rexame:
-        if item.created_at.month == tdy.month:
+        if item.data.month == tdy.month:
             qtdE = qtdE + 1
 
     while (a2 <= 12):
         for e in Rexame:
-            if (item.created_at >= ultimo_ano and item.created_at <= tdy):
-                if e.created_at.month == a2: j = j + 1
+            if (item.data >= ultimo_ano and item.data <= tdy):
+                if e.data.month == a2: j = j + 1
         mesE.insert(a2, j)
         a2 = a2 + 1
         j = 0
@@ -89,7 +89,7 @@ def home(request):
     for e in exame:
         LE.insert(i, e.nome)
         for item in Rexame:
-            if (item.created_at >= ultimo_seis_meses and item.created_at <= tdy):
+            if (item.data >= ultimo_seis_meses and item.data <= tdy):
                 if LE[i] == item.exame.nome: j = j + 1
         LEV.insert(i, j)
         i = i + 1

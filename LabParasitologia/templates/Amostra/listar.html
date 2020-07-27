@@ -54,26 +54,21 @@
 
 
                   <td>
-                      <table border="0">
-                          <th>
+
                       <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
                         <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
                       </a>
-                        </th>
                       {% if not finalizadas  %}
                           {% if user.is_superuser or amostrasUsuario or amostra.responsavel.pk == user.pk %}
-                                <th>
+
                                 <a href="{% url 'amostra:editar' pk=amostra.pk %}?next={{ request.path }}" class="btn btn-warning-outline"
                                         data-toggle="tooltip" title="Editar">
                                     <i class="fas fa-pencil-alt" style="color:blue"></i>
                                 </a>
-                                </th>
-                                <th>
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{amostra.pk}}"
                                         data-tt="tooltip" title="Deletar">
                                     <i class="fa fa-trash" aria-hidden="true" style="color:black"></i>
                                 </a>
-                                </th>
                                 <div class="modal fade" id="fm-modal-grid-{{amostra.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="fm-modal-grid-{{amostra.pk}}"
                                     aria-hidden="true">
@@ -115,13 +110,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <th>
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#mudar-status-{{amostra.pk}}"
                                     data-tt="tooltip" title="Finalizar amostra">
                                     <i class="fas fa-times-circle" aria-hidden="true" style="color:red"></i>
 
                                 </a>
-                                </th>
                                 <div class="modal fade" id="mudar-status-{{amostra.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="mudar-status-{{amostra.pk}}"
                                     aria-hidden="true">
@@ -169,12 +162,10 @@
 
                       {% else %}
                             {% if user.is_superuser or amostra.responsavel.pk == user.pk %}
-                                <th>
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#reativar-{{amostra.pk}}"
                                         data-tt="tooltip" title="Reativar amostra">
                                     <i class="fas fa-check-circle" aria-hidden="true" style="color:green"></i>
                                 </a>
-                                </th>
                                 <div class="modal fade" id="reativar-{{amostra.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="reativar-{{amostra.pk}}"
                                     aria-hidden="true">
@@ -218,7 +209,6 @@
                                 </div>
                             {% endif %}
                       {% endif %}
-                          </table>
                   </td>
 
               </tr>
