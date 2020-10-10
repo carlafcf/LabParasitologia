@@ -37,11 +37,11 @@ def home(request):
     ultimo_seis_meses = tdy+relativedelta(months=-6)
     coluna = ultimo_ano
 
-    MAB = 0
-    qtdE = 0
-    qtdA = 0
-    qtdAT = 0
-    qtdAB = 0
+    MAB = 0 #minhas amostras abertas
+    qtdE = 0 #quantidade de exames(mes)
+    qtdA = 0 #quantidade de amostras(mes)
+    qtdAT = 0 #quantidade de amostras (total)
+    qtdAB = 0 #quantidade de amostras abertas
 
     while(ex <=12):
         coluna = coluna + relativedelta(months=1)
@@ -101,7 +101,7 @@ def home(request):
     json_LEV = json.dumps(LEV)
 
     if qtdAT == 0:
-        pctAB = (qtdAB * 100) / 1
+        pctAB = (qtdAB * 100) / 100 #porcentagem amostras abertas
     else:
         pctAB = (qtdAB*100)/qtdAT
     context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
