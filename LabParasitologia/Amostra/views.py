@@ -42,6 +42,7 @@ def home(request):
     qtdA = 0 #quantidade de amostras(mes)
     qtdAT = 0 #quantidade de amostras (total)
     qtdAB = 0 #quantidade de amostras abertas
+    qtdABM = 0  # quantidade de amostras abertas no mês
 
     while(ex <=12):
         coluna = coluna + relativedelta(months=1)
@@ -60,6 +61,8 @@ def home(request):
         qtdAB = qtdAB + 1
         if item.responsavel == user:
             MAB = MAB + 1
+        if item.created_at.month == tdy.month:
+            qtdABM = qtdABM + 1
 
     for item in amostra:
         if item.created_at.month == tdy.month:
@@ -100,11 +103,21 @@ def home(request):
     json_LE = json.dumps(LE)
     json_LEV = json.dumps(LEV)
 
+    # porcentagem amostras abertas
     if qtdAT == 0:
-        pctAB = (qtdAB * 100) / 100 #porcentagem amostras abertas
+        #pctAB = (qtdAB * 100) / 100
+        pctAB = 0
     else:
         pctAB = (qtdAB*100)/qtdAT
-    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
+
+    # porcentagem amostras abertas no mês
+    if qtdA == 0:
+        #pctAB = (qtdAB * 100) / 100
+        pctABM = 0
+    else:
+        pctABM = (qtdABM*100)/qtdA
+
+    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'pctABM':round(pctABM, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
     return render(request, 'Amostra/index.html', context)
 
 @login_required
