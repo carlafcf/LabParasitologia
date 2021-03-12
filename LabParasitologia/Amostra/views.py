@@ -16,7 +16,6 @@ from dateutil.relativedelta import *
 def home(request):
     exame = Exame.objects.all()
     Rexame = RealizacaoExame.objects.all()
-    print(Rexame)
     amostra = Amostra.objects.all()
     AB = Amostra.objects.filter(status=True)
     user = User.objects.filter(username=request.user.username)[0]
@@ -38,11 +37,12 @@ def home(request):
     ultimo_seis_meses = tdy+relativedelta(months=-6)
     coluna = ultimo_ano
 
-    MAB = 0
-    qtdE = 0
-    qtdA = 0
-    qtdAT = 0
-    qtdAB = 0
+    MAB = 0 #minhas amostras abertas
+    qtdE = 0 #quantidade de exames(mes)
+    qtdA = 0 #quantidade de amostras(mes)
+    qtdAT = 0 #quantidade de amostras (total)
+    qtdAB = 0 #quantidade de amostras abertas
+    qtdABM = 0  # quantidade de amostras abertas no mês
 
     while(ex <=12):
         coluna = coluna + relativedelta(months=1)
@@ -61,6 +61,8 @@ def home(request):
         qtdAB = qtdAB + 1
         if item.responsavel == user:
             MAB = MAB + 1
+        if item.created_at.month == tdy.month:
+            qtdABM = qtdABM + 1
 
     for item in amostra:
         if item.created_at.month == tdy.month:
@@ -69,8 +71,8 @@ def home(request):
 
     while (a1 <= 12):
         for a in amostra:
-            if (item.created_at >= ultimo_ano and item.created_at <= tdy):
-                if a.created_at.month == a1: j = j + 1
+            if (item.data_coleta >= ultimo_ano and item.data_coleta <= tdy):
+                if a.data_coleta.month == a1: j = j + 1
         mesA.insert(a1, j)
         a1 = a1 + 1
         j = 0
@@ -101,11 +103,21 @@ def home(request):
     json_LE = json.dumps(LE)
     json_LEV = json.dumps(LEV)
 
+    # porcentagem amostras abertas
     if qtdAT == 0:
-        pctAB = (qtdAB * 100) / 1
+        #pctAB = (qtdAB * 100) / 100
+        pctAB = 0
     else:
         pctAB = (qtdAB*100)/qtdAT
-    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
+
+    # porcentagem amostras abertas no mês
+    if qtdA == 0:
+        #pctAB = (qtdAB * 100) / 100
+        pctABM = 0
+    else:
+        pctABM = (qtdABM*100)/qtdA
+
+    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'pctABM':round(pctABM, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
     return render(request, 'Amostra/index.html', context)
 
 @login_required
@@ -222,11 +234,13 @@ class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
 
 @login_required
 def listarAlertas(request):
+    quinze = date.today() - timedelta(days=15)
+    dez = date.today() - timedelta(days=10)
     amostras_alerta = Amostra.objects.filter(
         responsavel=request.user,
         status=True,
         data_coleta__lte=date.today() - timedelta(days=10)).order_by('data_coleta')
     context = {'lista_amostras': amostras_alerta, 'titulo': "Amostras com alerta", 'amostrasUsuario': True,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAlertas'}
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAlertas','quinze':quinze,'dez':dez}
     return render(request, 'Amostra/listar.html', context)
 

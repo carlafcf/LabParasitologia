@@ -25,6 +25,7 @@ class RealizacaoExame(models.Model):
     amostra = models.ForeignKey(to='Amostra.amostra', on_delete=models.CASCADE, null=True)
     resultado_numerico = models.IntegerField(null=True)
     resultado_textual = models.CharField(max_length=200, blank=True, null=True)
+    created_at = models.DateField(default=date.today, null=True, blank=True)
     # created_at = models.DateTimeField(auto_now_add=True)
     data = models.DateField(default=date.today)
 
