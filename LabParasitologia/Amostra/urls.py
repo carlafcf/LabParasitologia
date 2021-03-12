@@ -24,17 +24,19 @@ app_name = 'amostra'
 
 urlpatterns = [
 	path('home/', views.home, name='home'),
-	path('', views.listar, name='listar'),
-	path('listar', views.listar, name='listar'),
-	path('listarFinalizada', views.listarFinalizada, name='listarFinalizada'),
-	#path('nova', views.adicionar, name='adicionar'),
-	path('nova', views.CriarAmostra.as_view(), name='adicionar'),
+
+	path('', views.listar_amostras, name='listar'),
+	path('listar/', views.listar_amostras, name='listar'),
+	path('listar/finalizadas', views.listar_amostras_finalizadas, name='listarFinalizada'),
+	path('listar/usuario/<int:pk>', views.listar_amostras_usuario, name='listarAmostraUser'),
+	path('listar/finalizadas/usuario/<int:pk>', views.listar_amostras_finalizadas_usuario, name='listarAmostraUserFinalizada'),
+
+	path('criar/', views.CriarAmostra.as_view(), name='adicionar'),
 	path('detalhes/<int:pk>', exame_amostraDetalhes, name='detalhes'),
 	path('editar/<int:pk>', views.EditarAmostra.as_view(), name='editar'),
 	path('deletar/<int:pk>', views.DeletarAmostra.as_view(), name='deletar'),
-	path('listarAmostraUser/<int:pk>', views.listarAmostraUser, name='listarAmostraUser'),
-	path('listarAmostraUserFinalizada/<int:pk>', views.listarAmostraFinalizada, name='listarAmostraUserFinalizada'),
+	
 	path('mudar_status/<int:status>/<int:amostra>', views.mudar_status, name='mudar_status'),
-	path('alertas/', views.listarAlertas, name='listar_alertas'),
+	path('alertas/', views.listar_alertas, name='listar_alertas'),
 
 ]

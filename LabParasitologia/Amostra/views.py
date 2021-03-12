@@ -17,15 +17,20 @@ def home(request):
 
     tdy = date.today()
 
-    exame = Exame.objects.all()
-    Rexame = RealizacaoExame.objects.all()
-    amostra = Amostra.objects.all()
-    AB = Amostra.objects.filter(status=True)
-    user = User.objects.filter(username=request.user.username)[0]
-
+    #quantidade de amostras(mes)
     amostras_mes = Amostra.objects.filter(data_coleta__month = tdy.month)
+    qtdA = amostras_mes.count()
+
+    #quantidade de exames(mes)
     exames_mes = RealizacaoExame.objects.filter(data__month = tdy.month)
+    qtdE = exames_mes.count()
+
+    #minhas amostras abertas
+    user = User.objects.filter(username=request.user.username)[0]
     minhas_amostras_abertas = Amostra.objects.filter(responsavel=user, status=True)
+    MAB = minhas_amostras_abertas.count()
+
+    #quantidade de amostras abertas
     amostras_abertas = Amostra.objects.filter(status=True).order_by('data_coleta')
     amostras_fechadas = Amostra.objects.filter(status=False)
 
@@ -36,101 +41,56 @@ def home(request):
     else:
         amostras_fechadas = amostras_fechadas.filter(data_coleta__gte=data_ultima_amostra_aberta)
 
+    ultimo_seis_meses = tdy+relativedelta(months=-6)
+
+    pctAB = (amostras_abertas.count() * 100)/(amostras_abertas.count() + amostras_fechadas.count())
+
+    #amostras e exames cadastrados (últimos 12 meses)
     ultimo_12 = []
     mesE = []
     mesA = []
     LE = []
     LEV = []
-    i = 0
-    j = 0
-    a1 = 1
-    a2 = 1
-    a = 1
-    ex = 0
+    mes_atual = tdy.month
+    ano_atual = tdy.year-1
 
-    ultimo_ano = tdy+relativedelta(years=-1)
+    for i in range(1, 13):
+        mes_atual += 1
+        if (mes_atual == 13):
+            mes_atual = 1
+        if (mes_atual == 1):
+            ano_atual += 1
+        amostras_passadas = Amostra.objects.filter(data_coleta__month = mes_atual, data_coleta__year = ano_atual)
+        exames_passados = RealizacaoExame.objects.filter(data__month = mes_atual, data__year = ano_atual)
+        mesA.insert(i, amostras_passadas.count())
+        mesE.insert(i, exames_passados.count())
+        ultimo_12.insert(i, str(mes_atual)+"/"+str(ano_atual))
+    
+    #exames realizados (últimos 6 meses)
+    exame = Exame.objects.filter(status=True)
     ultimo_seis_meses = tdy+relativedelta(months=-6)
-    coluna = ultimo_ano
+    resultados_exame = RealizacaoExame.objects.filter(data__gte = ultimo_seis_meses)
 
-    MAB = 0 #minhas amostras abertas
-    qtdE = 0 #quantidade de exames(mes)
-    qtdA = 0 #quantidade de amostras(mes)
-    qtdAT = 0 #quantidade de amostras (total)
-    qtdAB = 0 #quantidade de amostras abertas
-    qtdABM = 0  # quantidade de amostras abertas no mês
-
-    while(ex <=12):
-        coluna = coluna + relativedelta(months=1)
-        if coluna.month <= tdy.month:
-            ultimo_12.insert(a, str(coluna.month)+"/"+str(coluna.year))
-            a = a + 1
-        ex = ex + 1
-    coluna = ultimo_ano
-    while(a <=12):
-        coluna = coluna + relativedelta(months=1)
-        if coluna.month > tdy.month:
-            ultimo_12.insert(a, str(coluna.month)+"/"+str(coluna.year))
-        a = a + 1
-
-    # for item in AB:
-    #     qtdAB = qtdAB + 1
-    #     if item.created_at.month == tdy.month:
-    #         qtdABM = qtdABM + 1
-
-    qtdA = amostras_mes.count()
-    qtdE = exames_mes.count()
-    MAB = minhas_amostras_abertas.count()
-    qtdAB = (amostras_abertas.count() * 100)/(amostras_abertas.count() + amostras_fechadas.count())
-
-    while (a1 <= 12):
-        for a in amostra:
-            if (a.data_coleta >= ultimo_ano and a.data_coleta <= tdy):
-                if a.data_coleta.month == a1: j = j + 1
-        mesA.insert(a1, j)
-        a1 = a1 + 1
-        j = 0
-
-    while (a2 <= 12):
-        for e in Rexame:
-            if (e.data >= ultimo_ano and e.data <= tdy):
-                if e.data.month == a2: j = j + 1
-        mesE.insert(a2, j)
-        a2 = a2 + 1
-        j = 0
-
+    count = 0
     for e in exame:
-        LE.insert(i, e.nome)
-        for item in Rexame:
-            if (item.data >= ultimo_seis_meses and item.data <= tdy):
-                if LE[i] == item.exame.nome: j = j + 1
-        LEV.insert(i, j)
-        i = i + 1
-        j = 0
+        LE.insert(count, e.nome)
+        LEV.insert(count, resultados_exame.filter(exame = e).count())
+        count += 1
+
+    #definição dos json
     json_coluna = json.dumps(ultimo_12)
     json_mesA = json.dumps(mesA)
     json_mesE = json.dumps(mesE)
     json_LE = json.dumps(LE)
     json_LEV = json.dumps(LEV)
 
-    # porcentagem amostras abertas
-    if qtdAT == 0:
-        #pctAB = (qtdAB * 100) / 100
-        pctAB = 0
-    else:
-        pctAB = (qtdAB*100)/qtdAT
-
-    # porcentagem amostras abertas no mês
-    if qtdA == 0:
-        #pctAB = (qtdAB * 100) / 100
-        pctABM = 0
-    else:
-        pctABM = (qtdABM*100)/qtdA
-
-    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(qtdAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
-    return render(request, 'Amostra/index.html', context)
+    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,
+                'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,
+                'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
+    return render(request, 'home.html', context)
 
 @login_required
-def listar(request):
+def listar_amostras(request):
     amostras = Amostra.objects.filter(status = True)
     quinze = date.today() - timedelta(days=15)
     dez = date.today() - timedelta(days=10)
@@ -139,14 +99,14 @@ def listar(request):
     return render(request, 'Amostra/listar.html', context)
 
 @login_required
-def listarFinalizada(request):
+def listar_amostras_finalizadas(request):
     amostras = Amostra.objects.filter(status = False)
     context = {'lista_amostras': amostras, 'titulo': "Amostras finalizadas", 'amostrasUsuario': False,
                'finalizadas': True, 'paginaRetorno': 'Amostra:listarFinalizada'}
     return render(request, 'Amostra/listar.html', context)
 
 @login_required
-def listarAmostraUser(request, pk):
+def listar_amostras_usuario(request, pk):
     amostras = Amostra.objects.filter(responsavel_id=pk,  status = True)
     quinze = date.today() - timedelta(days=15)
     dez = date.today() - timedelta(days=10)
@@ -155,31 +115,11 @@ def listarAmostraUser(request, pk):
     return render(request, 'Amostra/listar.html', context)
 
 @login_required
-def listarAmostraFinalizada(request, pk):
+def listar_amostras_finalizadas_usuario(request, pk):
     amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
     context = {'lista_amostras': amostras, 'titulo': "Minhas amostras finalizadas", 'amostrasUsuario': True,
                'finalizadas': True, 'paginaRetorno': 'Amostra:listarAmostraUserFinalizada'}
     return render(request, 'Amostra/listar.html', context)
-
-@login_required
-def adicionar(request):
-    if request.method=="POST":
-        form = amostraForm(request.POST)
-
-        if form.is_valid():
-            user = User.objects.filter(username=request.user.username)[0]
-            form.instance.responsavel = user
-            amostra = form.save()
-            amostra.save()
-            return listar(request)
-
-        else:
-            print(form.errors)
-    else:
-        form = amostraForm()
-
-    return render(request, 'Amostra/adicionar.html',
-                        {'form':form})
 
 def mudar_status(request, status, amostra):
     amostra = Amostra.objects.get(pk=amostra)
@@ -242,7 +182,7 @@ class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
         return(self.request.POST.get('next', '/'))
 
 @login_required
-def listarAlertas(request):
+def listar_alertas(request):
     quinze = date.today() - timedelta(days=15)
     dez = date.today() - timedelta(days=10)
     amostras_alerta = Amostra.objects.filter(
