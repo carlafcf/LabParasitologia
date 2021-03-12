@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 
+{% block titulo %}
+Amostra {{ amostra.identificacao }}
+{% endblock %}
+
 {% block content %}
 <div class="container">
 
@@ -9,7 +13,7 @@
         			<!--<a href="{% url 'exame:AdicionarExame' pk=amostra.pk %}" class="btn btn-success">Adicionar exame</a>-->
 				<!--</div>-->
 			{% endif %}
-			<h1><strong>Amostra {{ amostra.identificacao }}</strong></h1>
+			<!--<h1><strong>Amostra {{ amostra.identificacao }}</strong></h1>-->
 			<h5>Data: {{ amostra.data_coleta }} </h5>
 			<h5>Responsavel: {{ amostra.responsavel }} </h5>
 			<h5>Localidade: {{ amostra.localidade }}</h5>
