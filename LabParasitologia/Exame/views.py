@@ -1,15 +1,20 @@
 from django.shortcuts import render, redirect
-from .forms import RealizacaoExameForm,ResultadoFormNumerico,ResultadoFormTextual, ResultadoTextualFormset, ResultadoNumericoFormset
+
 from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime, date, timedelta
-# # from dateutil.relativedelta import relativedelta
+
+from django.contrib import messages
+
 import json
 
 from .forms import especieForm
+from .forms import ExameForm, RealizacaoExameForm, ResultadoFormNumerico, ResultadoFormTextual
+from .forms import ResultadoTextualFormset, ResultadoNumericoFormset
+
 from .models import RealizacaoExame, Exame, ResultadoExame
 from Amostra.models import Amostra
 
@@ -102,10 +107,8 @@ def novoAddExame(request, pk, exame):
                   {'exame_form': exame_form, 'amostra':amostra})
 
 
-
 class CadastrarExame(LoginRequiredMixin, generic.CreateView):
     fields = ('nome','tipo_resultado')
-    #fields = ('nome',)
     model = Exame
     template_name = 'Exame/CadastrarExame.html'
 
@@ -115,6 +118,63 @@ class CadastrarExame(LoginRequiredMixin, generic.CreateView):
         else:
             url = reverse_lazy('exame:definir_resultados', kwargs={'pk': self.object.id})
         return url
+
+def cadastrar_exame(request):
+    if request.method == "POST":
+        exame_form = ExameForm(request.POST)
+        if exame_form.is_valid():
+            nome = exame_form.cleaned_data['nome']
+            tipo_resultado = exame_form.cleaned_data['tipo_resultado']
+            return redirect('exame:resultados', nome, tipo_resultado)
+        else:
+            print(exame_form.errors)
+    else:
+        exame_form = ExameForm()
+    
+    
+    return render(request, 'Exame/CadastrarExame.html',
+                  {'form': exame_form})
+
+def definir_saidas(request, nome, tipo_resultado):
+    template_name = 'Exame/DefinirResultados.html'
+    i=0
+    if tipo_resultado == "NUM":
+        if request.method == 'GET':
+            formset = ResultadoNumericoFormset(request.GET or None)
+        elif request.method == 'POST':
+            formset = ResultadoNumericoFormset(request.POST)
+            if formset.is_valid():
+                exame = Exame(nome=nome, tipo_resultado=tipo_resultado)
+                exame.save()
+                for count, form in enumerate(formset, start=1):
+                    valor = form.cleaned_data.get('valor')
+                    if valor:
+                        ResultadoExame(resultado_numerico=valor, exame=exame, ordem=i).save()
+                        i=i+1
+                return redirect('exame:ListarExame')
+        return render(request, template_name, {
+            'formset': formset, 'tipo': 'NUM',
+        })
+    else:
+        if request.method == 'GET':
+            formset = ResultadoTextualFormset(request.GET or None)
+        elif request.method == 'POST':
+            formset = ResultadoTextualFormset(request.POST)
+            if formset.is_valid():
+                # is_empty = False
+                # for form in formset:
+                #     if not form.cleaned_data.get('valor'):
+                #         is_empty = True
+                #         messages.error(request, 'Document deleted.')
+                # if not is_empty:
+                    exame = Exame(nome=nome, tipo_resultado=tipo_resultado)
+                    exame.save()
+                    for count, form in enumerate(formset, start=1):
+                        valor = form.cleaned_data.get('valor')
+                        if valor:
+                            ResultadoExame(resultado_textual=valor, exame=exame, ordem=count).save()
+                    return redirect('exame:ListarExame')    
+        return render(request, template_name, {'formset': formset, 'tipo': 'TEX',})    
 
 def definir_resultados(request,pk):
     template_name = 'Exame/DefinirResultados.html'
@@ -129,13 +189,10 @@ def definir_resultados(request,pk):
             if formset.is_valid():
                 print("valid")
                 for count, form in enumerate(formset, start=1):
-                    # extract name from each form and save
                     valor = form.cleaned_data.get('valor')
-                    # save book instance
                     if valor:
                         ResultadoExame(resultado_numerico=valor, exame=exame, ordem=i).save()
                         i=i+1
-                # once all books are saved, redirect to book list view
                 return redirect('exame:ListarExame')
         print("not valid")
         return render(request, template_name, {
@@ -148,12 +205,9 @@ def definir_resultados(request,pk):
             formset = ResultadoTextualFormset(request.POST)
             if formset.is_valid():
                 for count, form in enumerate(formset, start=1):
-                    # extract name from each form and save
                     valor = form.cleaned_data.get('valor')
-                    # save book instance
                     if valor:
                         ResultadoExame(resultado_textual=valor, exame=exame, ordem=count).save()
-                # once all books are saved, redirect to book list view
                 return redirect('exame:ListarExame')
         return render(request, template_name, {
             'formset': formset, 'tipo': 'TEX',

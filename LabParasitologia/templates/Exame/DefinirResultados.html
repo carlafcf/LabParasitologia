@@ -8,6 +8,36 @@ Definir possíveis resultados
 {% block content %}
   <div class="container">
 
+    <div class="container margin-bottom">
+        {%if formset.errors %}
+                <div class="alert alert-danger" role="alert">
+                    Não são permitidos resultados vazios.
+                </div>
+              {% endif %}
+        <form class="form-horizontal" method="POST" action="">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            {% for form in formset %}
+                <div class="row form-row spacer margin-bottom">
+                    <div class="col-2">
+                        <label>{{form.valor.label}}</label>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group">
+                            {{form.valor}}
+                            <div class="input-group-append">
+                                <a class="btn btn-success add-form-row" onclick="editElements(this)"><i class="fas fa-plus" style="color:white;"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+                    <button type="submit" class="btn btn-success">Cadastrar</button>
+        </form>
+
+    </div>
+        
+
       <div class="card shadow mb-4">
                 <!-- Card Header - Accordion -->
                 <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
@@ -29,36 +59,18 @@ Definir possíveis resultados
                 </div>
               </div>
 
-      <form class="form-horizontal" method="POST" action="">
-        {% csrf_token %}
-        {{ formset.management_form }}
-        {% for form in formset %}
-            <div class="row form-row spacer">
-                <div class="col-2">
-                    <label>{{form.valor.label}}</label>
-                </div>
-                <div class="col-4">
-                    <div class="input-group">
-                        {{form.valor}}
-                        <div class="input-group-append">
-                            <a class="btn btn-success add-form-row" onclick="editElements(this)"><i class="fas fa-plus" style="color:white;"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-        {% endfor %}
-        <!--<div class="row spacer">-->
-            <!--<div class="col-4 offset-2">-->
-                <button type="submit" class="btn btn-success">Cadastrar</button>
-            <!--</div>-->
-        <!--</div>-->
-        </form>
+              
   </div>
 
   {% endblock %}
 
 {% block extra_js %}
+
+<style>
+    .margin-bottom {
+       margin-bottom: 10px;
+    }
+</style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

@@ -9,7 +9,7 @@ TIPOS_RESULTADO = [
 ]
 
 class Exame(models.Model):
-    nome = models.CharField(max_length=200)
+    nome = models.CharField(max_length=200, unique=True)
     status = models.BooleanField(default=True)
     tipo_resultado = models.CharField(max_length=3, choices=TIPOS_RESULTADO, default='NUM', null=True)
 

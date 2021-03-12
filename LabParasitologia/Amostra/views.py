@@ -14,11 +14,27 @@ import json
 from dateutil.relativedelta import *
 
 def home(request):
+
+    tdy = date.today()
+
     exame = Exame.objects.all()
     Rexame = RealizacaoExame.objects.all()
     amostra = Amostra.objects.all()
     AB = Amostra.objects.filter(status=True)
     user = User.objects.filter(username=request.user.username)[0]
+
+    amostras_mes = Amostra.objects.filter(data_coleta__month = tdy.month)
+    exames_mes = RealizacaoExame.objects.filter(data__month = tdy.month)
+    minhas_amostras_abertas = Amostra.objects.filter(responsavel=user, status=True)
+    amostras_abertas = Amostra.objects.filter(status=True).order_by('data_coleta')
+    amostras_fechadas = Amostra.objects.filter(status=False)
+
+    data_ultima_amostra_aberta = amostras_abertas[0].data_coleta
+    data_30_dias = date.today() - timedelta(days=30)
+    if(data_ultima_amostra_aberta < data_30_dias):
+        amostras_fechadas = amostras_fechadas.filter(data_coleta__gte=data_30_dias)
+    else:
+        amostras_fechadas = amostras_fechadas.filter(data_coleta__gte=data_ultima_amostra_aberta)
 
     ultimo_12 = []
     mesE = []
@@ -32,7 +48,6 @@ def home(request):
     a = 1
     ex = 0
 
-    tdy = date.today()
     ultimo_ano = tdy+relativedelta(years=-1)
     ultimo_seis_meses = tdy+relativedelta(months=-6)
     coluna = ultimo_ano
@@ -57,33 +72,27 @@ def home(request):
             ultimo_12.insert(a, str(coluna.month)+"/"+str(coluna.year))
         a = a + 1
 
-    for item in AB:
-        qtdAB = qtdAB + 1
-        if item.responsavel == user:
-            MAB = MAB + 1
-        if item.created_at.month == tdy.month:
-            qtdABM = qtdABM + 1
+    # for item in AB:
+    #     qtdAB = qtdAB + 1
+    #     if item.created_at.month == tdy.month:
+    #         qtdABM = qtdABM + 1
 
-    for item in amostra:
-        if item.created_at.month == tdy.month:
-            qtdA = qtdA + 1
-        qtdAT = qtdAT+1
+    qtdA = amostras_mes.count()
+    qtdE = exames_mes.count()
+    MAB = minhas_amostras_abertas.count()
+    qtdAB = (amostras_abertas.count() * 100)/(amostras_abertas.count() + amostras_fechadas.count())
 
     while (a1 <= 12):
         for a in amostra:
-            if (item.data_coleta >= ultimo_ano and item.data_coleta <= tdy):
+            if (a.data_coleta >= ultimo_ano and a.data_coleta <= tdy):
                 if a.data_coleta.month == a1: j = j + 1
         mesA.insert(a1, j)
         a1 = a1 + 1
         j = 0
 
-    for item in Rexame:
-        if item.data.month == tdy.month:
-            qtdE = qtdE + 1
-
     while (a2 <= 12):
         for e in Rexame:
-            if (item.data >= ultimo_ano and item.data <= tdy):
+            if (e.data >= ultimo_ano and e.data <= tdy):
                 if e.data.month == a2: j = j + 1
         mesE.insert(a2, j)
         a2 = a2 + 1
@@ -117,7 +126,7 @@ def home(request):
     else:
         pctABM = (qtdABM*100)/qtdA
 
-    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(pctAB, 2),'pctABM':round(pctABM, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
+    context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,'exame':exame,'pctAB':round(qtdAB, 2),'mesA':json_mesA,'mesE':json_mesE,'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
     return render(request, 'Amostra/index.html', context)
 
 @login_required
