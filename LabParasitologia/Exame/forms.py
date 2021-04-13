@@ -1,8 +1,8 @@
 from django import forms
 from django.core import validators
 from django.forms import formset_factory
-from .models import Exame, RealizacaoExame, ResultadoExame
-from Amostra.models import Amostra
+from .models import Exame, ResultadoExame
+from Amostra.models import Amostra, RealizacaoExame
 from datetime import date
 
 class ExameForm(forms.ModelForm):

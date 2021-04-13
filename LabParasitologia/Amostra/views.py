@@ -5,14 +5,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 
 from Usuario.models import User
-from .models import Amostra
+from .models import Amostra, RealizacaoExame
 from .forms import AmostraForm
-from Exame.models import Exame, RealizacaoExame
+from Exame.models import Exame
 from datetime import date, timedelta,datetime
 from .forms import amostraForm
 import json
 from dateutil.relativedelta import *
 
+@login_required
 def home(request):
 
     tdy = date.today()

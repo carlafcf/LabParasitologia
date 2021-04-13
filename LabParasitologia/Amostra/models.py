@@ -47,7 +47,7 @@ class Amostra(models.Model):
     especie_animal = models.CharField(max_length=2, choices=ESPECIES_ANIMAIS,default='OU')
     sexo_animal = models.CharField(max_length=1, choices=SEXO, default='I')
     status = models.BooleanField(default=True)
-    exame = models.ManyToManyField(Exame)
+    exames = models.ManyToManyField(Exame, through='RealizacaoExame')
     created_at = models.DateField(default=date.today, null=True, blank=True)
 
     def __str__(self):
@@ -56,5 +56,18 @@ class Amostra(models.Model):
     class Meta:
         ordering = ['-data_coleta','origem','localidade','setor','especie_animal','identificacao','tipo_amostra']
 
+
+
+class RealizacaoExame(models.Model):
+
+    exame = models.ForeignKey(Exame, on_delete=models.CASCADE)
+    amostra = models.ForeignKey(Amostra, on_delete=models.CASCADE)
+    resultado_numerico = models.IntegerField(null=True)
+    resultado_textual = models.CharField(max_length=200, blank=True, null=True)
+    created_at = models.DateField(default=date.today, null=True, blank=True)
+    data = models.DateField(default=date.today)
+
+    def __str__(self):
+        return "{} : {}".format(self.amostra.identificacao, self.exame.nome)
 
 

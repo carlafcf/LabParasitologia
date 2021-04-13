@@ -1,5 +1,4 @@
 from django.db import models
-# from Amostra.models import Amostra
 from datetime import datetime, date
 from django.utils import timezone
 
@@ -18,16 +17,6 @@ class Exame(models.Model):
 
     class Meta:
         ordering = ('nome',)
-
-class RealizacaoExame(models.Model):
-
-    exame = models.ForeignKey(Exame, on_delete=models.CASCADE)
-    amostra = models.ForeignKey(to='Amostra.amostra', on_delete=models.CASCADE, null=True)
-    resultado_numerico = models.IntegerField(null=True)
-    resultado_textual = models.CharField(max_length=200, blank=True, null=True)
-    created_at = models.DateField(default=date.today, null=True, blank=True)
-    # created_at = models.DateTimeField(auto_now_add=True)
-    data = models.DateField(default=date.today)
 
 
 

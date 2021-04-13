@@ -15,8 +15,8 @@ from .forms import especieForm
 from .forms import ExameForm, RealizacaoExameForm, ResultadoFormNumerico, ResultadoFormTextual
 from .forms import ResultadoTextualFormset, ResultadoNumericoFormset
 
-from .models import RealizacaoExame, Exame, ResultadoExame
-from Amostra.models import Amostra
+from .models import Exame, ResultadoExame
+from Amostra.models import Amostra, RealizacaoExame
 
 def exameListar(request):
     exame_list = Exame.objects.filter(status=True)

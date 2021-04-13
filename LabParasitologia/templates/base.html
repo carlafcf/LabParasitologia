@@ -33,7 +33,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home:home' %}">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-microscope"></i>
         </div>
@@ -65,34 +65,18 @@
         </a>
       </li>
 
-      <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="{% url 'amostra:listar' %}">
+          <i class="fas fa-vials"></i>
+          <span>Listar</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'amostra:listarAmostraUser' pk=user.pk %}">
           <i class="fas fa-vial"></i>
           <span>Minhas amostras</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Situação:</h6>
-            <a class="collapse-item" href="{% url 'amostra:listarAmostraUser' pk=user.pk %}">Ativas</a>
-            <a class="collapse-item" href="{% url 'amostra:listarAmostraUserFinalizada' pk=user.pk %}">Concluídas</a>
-          </div>
-        </div>
-      </li>
-
-      <!-- Nav Item - Utilities Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-vials"></i>
-          <span>Todas as amostras</span>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-             <h6 class="collapse-header">Situação:</h6>
-            <a class="collapse-item" href="{% url 'amostra:listar' %}">Ativas</a>
-            <a class="collapse-item" href="{% url 'amostra:listarFinalizada' %}">Concluídas</a>
-          </div>
-        </div>
       </li>
 
       <!-- Divider -->
@@ -109,28 +93,19 @@
           <span>Cadastrar</span>
         </a>
       </li>
-      {% endif %}
 
-       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseExame" aria-expanded="true" aria-controls="collapseUtilities">
-           <i class="fa fa-clipboard-list"></i>
-          <span>Todos exames</span>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'exame:ListarExame' %}">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Listar</span>
         </a>
-        <div id="collapseExame" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-             <h6 class="collapse-header">Situação:</h6>
-            <a class="collapse-item" href="{% url 'exame:ListarExame' %}">Ativos</a>
-            <a class="collapse-item" href="{% url 'exame:examesInativos' %}">Inativos</a>
-          </div>
-        </div>
       </li>
 
-      {% if user.is_superuser %}
        <hr class="sidebar-divider">
 
 
        <div class="sidebar-heading">
-        Usuarios
+        Usuários
       </div>
 
       <li class="nav-item">
@@ -141,17 +116,10 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser" aria-expanded="true" aria-controls="collapseUtilities">
+        <a class="nav-link collapsed" href="{% url 'usuario:listar' %}">
           <i class="fas fa-users"></i>
-          <span>Listar Usuarios</span>
+          <span>Listar</span>
         </a>
-        <div id="collapseUser" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-             <h6 class="collapse-header">Situação:</h6>
-            <a class="collapse-item" href="{% url 'usuario:listar' %}">Ativos</a>
-            <a class="collapse-item" href="{% url 'usuario:inativos' %}">Inativos</a>
-          </div>
-        </div>
       </li>
 
        <hr class="sidebar-divider">
@@ -169,7 +137,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'local:listarLocal' %}">
           <i class="fa fa-clipboard-list"></i>
-          <span>Listar local</span>
+          <span>Listar</span>
         </a>
       </li>
 
@@ -254,12 +222,12 @@
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="{% url 'usuario:editar' pk=user.pk %}">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Profile
+                  Minha conta
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'usuario:logout' %}">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Logout
+                  Sair
                 </a>
               </div>
             </li>
