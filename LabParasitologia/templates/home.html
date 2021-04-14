@@ -11,12 +11,17 @@ Página inicial
         </span>
         <span class="text">Adicionar amostra</span>
     </a>
-    <a href="{% url 'exame:cadastrar' %}" class="btn btn-primary btn-icon-split">
-        <span class="icon text-white-50">
-             <i class="fas fa-plus"></i>
-        </span>
-        <span class="text">Registrar Exame</span>
-    </a>
+    <button class="btn btn-primary dropdown-toggle btn-icon-split" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="icon text-white-50">
+        <i class="fas fa-plus"></i>
+      </span>
+      <span class="text">Registrar Exame</span>
+    </button>
+    <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+      {% for exame in lista_exames %}
+          <a class="dropdown-item" href="{% url 'exame:cadastrar_multiplos_resultados' fase=0 pk=exame.pk %}">{{exame.nome}}</a>
+      {% endfor %}
+    </div>
 {% endblock %}
 
 {% block content %}

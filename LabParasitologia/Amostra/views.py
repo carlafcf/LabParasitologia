@@ -87,7 +87,7 @@ def home(request):
 
     context = {'qtdE':qtdE,'qtdA':qtdA,'tdy':tdy,'MAB':MAB,
                 'pctAB':round(pctAB, 2),'mesA':json_mesA,'mesE':json_mesE,
-                'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna}
+                'LE':json_LE,'LEV':json_LEV,'coluna':json_coluna, 'lista_exames': exame}
     return render(request, 'home.html', context)
 
 @login_required

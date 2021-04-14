@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from django.contrib.auth import views as auth_views
 from . import views
 from django.urls import path
+
 app_name = 'exame'
 
 urlpatterns = [
@@ -18,5 +19,7 @@ urlpatterns = [
     path('EditarExame/<int:pk>', views.EditarExame.as_view(), name='EditarExame'),
     path('DeletarExame/<int:pk>', views.DeletarExame.as_view(), name='DeletarExame'),
     path('mudar_status_exame/<int:status>/<int:exame>', views.mudar_status_exame, name='mudar_status_exame'),
+
+    path('cadastrar_multiplos_resultados/<int:fase>/<int:pk>', views.cadastrar_multiplos_resultados, name='cadastrar_multiplos_resultados'),
 
 ]

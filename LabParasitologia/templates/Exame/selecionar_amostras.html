@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block titulo %}
+Selecionar amostras
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <p><strong>Exame:</strong> {{ exame.nome }}</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <table id="amostraDT" class="table" cellspacing="0" width="100%">
+            <thead >
+                <th></th>
+                <th scope="col">#</th>
+                <th><center>Localidade</center></th>
+                <th><center>Origem</center></th>
+                <th><center>Setor</center></th> <!-- Setor -->
+                <th><center>Data da amostra</center></th>
+                <th><center>Espécie</center></th>
+                <th><center>Identificação</center></th> <!-- Número da amostra -->
+                <th><center>Tipo de amostra</center></th>
+                <th><center>Sexo</center></th>
+                <th><center>Cadastrado</center></th>
+            </thead>
+  
+              <tbody>
+  
+            {% for amostra in lista_amostras %}
+                {% if amostra.created_at <= dez and amostra.created_at > quinze %}
+                    <tr class="table-warning">
+                {% elif amostra.created_at <= quinze %}
+                    <tr class="table-danger">
+                {% else %}
+                    <tr>
+                {% endif %}
+                        <th><input class="form-check-input" type="checkbox" name="amostras" value="{{amostra.id}}" id="option{{amostra.id}}"></th>
+                        <th scope="row"><font color="black"> <center>{{ forloop.counter }}</center></font></th>
+                        <td><font color=#383636><center>{{ amostra.localidade }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.origem }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.setor }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.data_coleta|date:"d/m/y" }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.get_especie_animal_display }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.identificacao }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.get_tipo_amostra_display }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.sexo_animal }}</center></font></td>
+                        <td><font color=#383636>
+                            <center>
+                                {% if exame in amostra.exames.all %}
+                                    <i class="fas fa-check" style="color:green"></i>
+                                {% else %}
+                                    <i class="fas fa-times" style="color:red"></i>
+                                {% endif %}
+                            </center>
+                            </font>
+                        </td>
+                    </tr>  
+            {% endfor %}
+            </tbody>
+          </table>
+          <input type="submit" class="btn btn-success" value="Próximo">
+        </form>
+    </div>
+{% endblock %}

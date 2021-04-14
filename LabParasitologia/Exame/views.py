@@ -294,7 +294,6 @@ def NovoDetalheExame(request, pk):
 
     # O que exibir: POST (por especie) ou então todos
     if request.method == 'POST':
-        print("IF")
         form = especieForm(request.POST)
         if form.is_valid():
             especie = request.POST['especie_animal']
@@ -317,7 +316,6 @@ def NovoDetalheExame(request, pk):
                     if exame.amostra.especie_animal == especie:
                         resultado[index_tipo] = resultado[index_tipo] + 1
     else:
-        print("Else")
         form = especieForm()
         for exame in exames:
             data = str(exame.data.month) + "/" + str(exame.data.year)
@@ -379,6 +377,44 @@ def examesInativos(request):
     exame = paginator.get_page(page)
     context = {'listar_exame':exame}
     return render(request, 'Exame/exames_inativos.html', context)
+
+@login_required
+def cadastrar_multiplos_resultados(request, fase, pk):
+    exame = Exame.objects.filter(pk=pk)[0]
+    if request.method == 'POST':
+        if fase==0:
+            id_amostras_selecionadas = request.POST.getlist('amostras')
+            amostras_selecionadas = []
+            for amostra_id in id_amostras_selecionadas:
+                amostras_selecionadas.append(Amostra.objects.filter(id=int(amostra_id))[0])
+            resultados_exame = ResultadoExame.objects.filter(exame=exame)
+            return render(request, 'Exame/cadastrar_multiplos_resultados.html', 
+                {'amostras_selecionadas': amostras_selecionadas, 'exame': exame, 
+                'resultados_exame': resultados_exame, 'data_atual': date.today()})
+        else:
+            resultados_numericos = request.POST.getlist('resultados_num')
+            resultados_textuais = request.POST.getlist('resultados_tex')
+            id_amostras = request.POST.getlist('id_amostra')
+            for index, id_amostra in enumerate(id_amostras):
+                amostra = Amostra.objects.filter(id=id_amostra)[0]
+                if (exame.tipo_resultado=="NUM"):
+                    realizacao_exame = RealizacaoExame(exame=exame, amostra=amostra,
+                                                        resultado_numerico=int(resultados_numericos[index]),
+                                                        data=request.POST.get('date'))
+                    realizacao_exame.save()
+                else:
+                    realizacao_exame = RealizacaoExame(exame=exame, amostra=amostra,
+                                                        resultado_textual=resultados_textuais[index],
+                                                        data=request.POST.get('date'))
+                    realizacao_exame.save()
+            return redirect('amostra:listar')
+    else:
+        if fase==0:
+            lista_amostras = Amostra.objects.filter(status=True).order_by('localidade', 'origem', 'setor')
+            return render(request, 'Exame/selecionar_amostras.html', {'lista_amostras': lista_amostras, 'exame': exame})
+        else:
+            pass
+
 
 
 

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block titulo %}
+Resultados de Exames
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <p><strong>Exame:</strong> {{ exame.nome }}</p>
+
+        <form method="post" action="{% url 'exame:cadastrar_multiplos_resultados' fase=1 pk=exame.pk %}">
+            {% csrf_token %}
+            <strong>Data:</strong> <input id="date" name="date" type="date" value="{{data_atual|date:'Y-m-d'}}">
+            <br>
+            <br>
+
+            <table id="amostraDT" class="table" cellspacing="0" width="100%">
+                <thead >
+                    <th scope="col"><center>#</center></th>
+                    <th><center>Identificação</center></th> <!-- Número da amostra -->
+                    <th><center>Local</center></th>
+                    <th><center>Tipo de amostra</center></th>
+                    <th><center>Data da coleta</center></th>
+                    <th><center>Resultado</center></th>
+                </thead>
+      
+                  <tbody>
+      
+                {% for amostra in amostras_selecionadas %}
+                    </tr>
+                        
+                        <th scope="row"><font color="black"> <center>{{ forloop.counter }}</center></font></th>
+                        <td>
+                            <font color=#383636><center>{{ amostra.identificacao }}</center></font>
+                            <input type="hidden" id="id_amostra" name="id_amostra" value="{{amostra.id}}">
+                        </td>
+                        <td><font color=#383636><center>{{ amostra.localidade }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.get_tipo_amostra_display }}</center></font></td>
+                        <td><font color=#383636><center>{{ amostra.data_coleta|date:"d/m/y" }}</center></font></td>
+                        {% if exame.tipo_resultado == "NUM" %}
+                            <td><center><input type="number" min="0" step="1" name="resultados_num"/></center></td>
+                        {% else %}
+                            <td>
+                                <select class="form-control" id="options" name="resultados_tex">
+                                    {% for resultado in resultados_exame %}
+                                        <option>{{resultado.resultado_textual}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        {% endif %}
+                    </tr>  
+                {% endfor %}
+                </tbody>
+              </table>
+
+            <input type="submit" class="btn btn-success" value="Cadastrar">
+        </form>
+    </div>
+{% endblock %}
