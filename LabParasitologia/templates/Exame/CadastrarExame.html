@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load bootstrap4 %}
+{% load crispy_forms_tags %} 
 
 {% block titulo %}
 Cadastrar Exame
@@ -21,7 +21,14 @@ Cadastrar Exame
 
     <form method="post">
       {% csrf_token %}
-      {% bootstrap_form form %}
+      <div class="row">
+        <div class="col-6">
+          {{ form.nome|as_crispy_field}}
+        </div>
+        <div class="col-6">
+          {{ form.tipo_resultado|as_crispy_field }}
+        </div>
+      </div>
         <input type="submit" class="btn btn-success" value="Próximo">
         <!--<input type="submit" class="btn btn-success" name="add" value="Cadastrar e adicionar novamente" >-->
     </form>

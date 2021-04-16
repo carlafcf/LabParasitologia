@@ -25,7 +25,7 @@ app_name = 'amostra'
 urlpatterns = [
 	path('home/', views.home, name='home'),
 
-	path('', views.listar_amostras, name='listar'),
+	path('', views.home, name='home'),
 	path('listar/', views.listar_amostras, name='listar'),
 	path('listar/finalizadas', views.listar_amostras_finalizadas, name='listarFinalizada'),
 	path('listar/usuario/<int:pk>', views.listar_amostras_usuario, name='listarAmostraUser'),

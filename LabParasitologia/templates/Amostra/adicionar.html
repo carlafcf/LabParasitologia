@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load bootstrap4 %}
+{% load crispy_forms_tags %}  
 {% block titulo %}
 Nova amostra
 {% endblock %}
@@ -9,7 +9,37 @@ Nova amostra
     <div class="container">
         <form method="POST">
           {% csrf_token %}
-          {% bootstrap_form form %}
+          <div class="row">
+            <div class="col-4">
+              {{ form.data_coleta|as_crispy_field}}
+            </div>
+            <div class="col-4">
+              {{ form.especie_animal|as_crispy_field }}
+            </div>
+            <div class="col-4">
+              {{ form.tipo_amostra|as_crispy_field}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              {{ form.localidade|as_crispy_field}}
+            </div>
+            <div class="col-4">
+              {{ form.origem|as_crispy_field }}
+            </div>
+            <div class="col-4">
+              {{ form.setor|as_crispy_field }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              {{ form.identificacao|as_crispy_field}}
+            </div>
+            <div class="col-6">
+              {{ form.sexo_animal|as_crispy_field }}
+            </div>
+          </div>
+          
             <?php
               $user = (!empty($_POST['user'])) ? $_POST['user'] : '';
              ?>

@@ -35,7 +35,7 @@ def home(request):
     amostras_abertas = Amostra.objects.filter(status=True).order_by('data_coleta')
     amostras_fechadas = Amostra.objects.filter(status=False)
 
-    if (amostras_abertas.len() > 0):
+    if (len(amostras_abertas) > 0):
         data_ultima_amostra_aberta = amostras_abertas[0].data_coleta
     else:
         data_ultima_amostra_aberta = date.today()
