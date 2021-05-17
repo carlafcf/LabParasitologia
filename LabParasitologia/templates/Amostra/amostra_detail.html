@@ -3,6 +3,61 @@
 
 {% block titulo %}
 Amostra {{ amostra.identificacao }}
+	{% if alerta != None %}
+		<i class="fas fa-exclamation-triangle" style="color:{{alerta}}"></i>
+	{% endif %}
+{% endblock %}
+
+{% block titulo_lateral %}
+	<a href="{% url 'amostra:editar' pk=amostra.pk %}?next={{ request.path }}" class="btn btn-warning-outline"
+	data-toggle="tooltip" title="Editar">
+	<i class="fas fa-pencil-alt" style="color:blue"></i>
+	</a>
+	<a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{amostra.pk}}"
+			data-tt="tooltip" title="Deletar">
+		<i class="fa fa-trash" aria-hidden="true" style="color:black"></i>
+	</a>
+	<div class="modal fade" id="fm-modal-grid-{{amostra.pk}}" tabindex="-1"
+			role="dialog" aria-labelledBy="fm-modal-grid-{{amostra.pk}}"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: rgb(78,115,223) ;">
+					<h5 class="modal-title" id=""><strong><font color="white">Deletar Amostra</font></strong></h5>
+					<button class="close" data-dismiss="modal" aria-label="Cerrar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-12 col-sm-6">
+								<p><strong>Você tem certeza que deseja deletar a seguinte amostra:</strong></p>
+								<p>Identificação: {{amostra.identificacao}}</p>
+								<p>Origem: {{amostra.origem}}</p>
+								<p>Espécie: {{amostra.get_especie_animal_display}}</p>
+								<p>Tipo de amostra: {{amostra.get_tipo_amostra_display}}</p>
+								<p>Sexo: {{amostra.get_sexo_animal_display}}</p>
+								<p>Local de coleta: {{amostra.localidade}}</p>
+								<p>Setor: {{amostra.setor}}</p>
+								<p>Data de coleta: {{amostra.data_coleta}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer" style="background-color: rgb(78,115,223);">
+					<form action="{% url 'amostra:deletar' pk=amostra.pk %}" method="POST">
+							{% csrf_token %}
+							<input type="hidden" name="next" value="{{request.path}}">
+							<button class="btn btn-danger">Deletar</button>
+					</form>
+					<button class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block content %}
@@ -172,28 +227,60 @@ Amostra {{ amostra.identificacao }}
     		<!-- <h5>Sexo: {{ amostra.sexo_animal }}</h5> -->
 			<!-- <br> -->
 
-	<h2><strong>Exames</strong></h2>
-	{% if lista_exame %}
-		{% for exame in lista_exame %}
-			<h5>Exame: {{ exame.exame }}</h5>
-			{% if exame.exame.tipo_resultado == 'NUM' %}
-				<h5>Resultado: {{ exame.resultado_numerico }}</h5>
-			{% else %}
-				<h5>Resultado: {{ exame.resultado_textual }}</h5>
-			{% endif %}
-			<br>
-		{% endfor %}
-	{% else %}
-		<h5>Nao há exame adicionado</h5>
-	{% endif %}
+	
+	<div class="row">
+		<div class="col-6">
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Exames realizados</h6>
+				</div>
+				<div class="card-body">
+					{% if lista_exames %}
+						<table class="table" cellspacing="0" width="100%">
+							<thead >
+								<th><center>Nome do exame</center></th>
+								<th><center>Resultado</center></th>
+								<th></th>
+							</thead>
+				
+							<tbody>
+								{% for exame in lista_exames %}
+									<tr>
+										<td><center>{{exame.exame.nome}}</center></td>
+										<td>
+											{% if exame.exame.tipo_resultado == 'NUM' %}
+											<center>{{ exame.resultado_numerico }}</center>
+											{% else %}
+											<center>{{ exame.resultado_textual }}</center>
+											{% endif %}
+										</td>
+									</tr>
+								{% endfor %}
+						</table>
+					{% else %}
+						<h5>Não foram realizados exames nessa amostra.</h5>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="col-6">
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Registrar resultado de exame</h6>
+				</div>
+				<div class="card-body">
+					{% for exame in exames_cadastrados %}
+						<a href="{% url 'exame:NovoAdicionarExame' pk=amostra.pk exame=exame.pk %}" class="btn btn-success-outline" data-toggle="tooltip" title="Registrar resultado">
+							<i class="fas fa-plus" aria-hidden="true" style="color:#165d08"></i>
+						</a>
 
-	<br>
-
-	{% if exames_cadastrados %}
-		{% for exame in exames_cadastrados %}
-			<a href="{% url 'exame:NovoAdicionarExame' pk=amostra.pk exame=exame.pk%}" class="btn btn-success">Exame {{exame}}</a>
-		{% endfor %}
-	{% endif %}
+						{{exame.nome}}
+						<br>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
 
 
   </div>

@@ -29,11 +29,25 @@ def exameListar(request):
 
 def exame_amostraDetalhes(request, pk):
     amostra = Amostra.objects.filter(pk=pk)[0]
-    print(pk)
-    exame = RealizacaoExame.objects.filter(amostra_id=pk)
-    print(exame)
+    resultados_exames = RealizacaoExame.objects.filter(amostra_id=pk)
     exames_cadastrados = Exame.objects.all()
-    context = {'amostra':amostra, 'lista_exame':exame, 'exames_cadastrados': exames_cadastrados}
+
+    quinze = date.today() - timedelta(days=15)
+    dez = date.today() - timedelta(days=10)
+
+    if amostra.data_coleta <= quinze:
+        alerta = "#e74a3b"
+    elif amostra.data_coleta <= dez:
+        alerta = "#f6c23e"
+    else:
+        alerta = None
+
+    context = {
+        'amostra':amostra,
+        'lista_exames': resultados_exames,
+        'exames_cadastrados': exames_cadastrados,
+        'alerta': alerta
+    }
     return render(request, 'Amostra/amostra_detail.html', context)
 
 

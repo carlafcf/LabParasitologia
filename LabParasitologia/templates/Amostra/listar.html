@@ -7,16 +7,13 @@
 {% endblock %}
 
 {% block titulo %}
-<div class="container">
-    <div class="row">
-      <div class="col-8">{{titulo}}</div>
-      <div class="col-4">
-        <a href="{% url 'amostra:listarFinalizada'%}" class="btn btn-danger-outline" data-toggle="tooltip" title="Exames Finalizados">
-            <i class="fa fa-calendar-times" aria-hidden="true" style="color:#fd0505"></i>
-          </a>
-      </div>
-    </div>
-  </div>
+{{titulo}}
+{% endblock %}
+
+{% block titulo_lateral %}
+<a href="{% url 'amostra:listarFinalizada'%}" class="btn btn-info btn-circle" title="Exames Finalizados">
+    <i class="fas fa-lock"></i>
+  </a>
 {% endblock %}
 
 
@@ -32,8 +29,6 @@
             <th><center>Espécie</center></th>
             <th><center>Identificação</center></th> <!-- Número da amostra -->
             <th><center>Tipo de amostra</center></th>
-            <th><center>Sexo</center></th>
-            <th><center>Responsável</center></th>
             <th><center>Exames</center></th>
             <th></th>
           </thead>
@@ -41,9 +36,9 @@
             <tbody>
 
           {% for amostra in lista_amostras %}
-                  {% if amostra.created_at <= dez and amostra.created_at > quinze %}
+                  {% if amostra.data_coleta <= dez and amostra.data_coleta > quinze %}
                   <tr class="table-warning">
-                  {% elif amostra.created_at <= quinze %}
+                  {% elif amostra.data_coleta <= quinze %}
                   <tr class="table-danger">
                   {% else %}
                   <tr>
@@ -54,9 +49,13 @@
                   <td><font color=#383636><center>{{ amostra.get_especie_animal_display }}</center></font></td>
                   <td><font color=#383636><center>{{ amostra.identificacao }}</center></font></td>
                   <td><font color=#383636><center>{{ amostra.get_tipo_amostra_display }}</center></font></td>
-                  <td><font color=#383636><center>{{ amostra.sexo_animal }}</center></font></td>
-                  <td><font color=#383636><center>{{ amostra.responsavel }}</center></font></td>
-                  <td><font color=#383636><center>{{ amostra.exame }}</center></font></td>
+                  <td><font color=#383636><center>
+                    {% if amostra.exames.count == 0 %}
+                      <strong>{{ amostra.exames.count }}</strong>
+                    {% else %}
+                        {{ amostra.exames.count }}
+                    {% endif %}
+                    </center></font></td>
 
 
                   <td>
