@@ -31,7 +31,7 @@ urlpatterns = [
 	path('listar/usuario/<int:pk>', views.listar_amostras_usuario, name='listarAmostraUser'),
 	path('listar/finalizadas/usuario/<int:pk>', views.listar_amostras_finalizadas_usuario, name='listarAmostraUserFinalizada'),
 
-	path('criar/', views.CriarAmostra.as_view(), name='adicionar'),
+	path('adicionar/', views.criar_amostra, name='adicionar'),
 	path('detalhes/<int:pk>', exame_amostraDetalhes, name='detalhes'),
 	path('editar/<int:pk>', views.EditarAmostra.as_view(), name='editar'),
 	path('deletar/<int:pk>', views.DeletarAmostra.as_view(), name='deletar'),

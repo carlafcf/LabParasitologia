@@ -3,6 +3,7 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
+from django.contrib import messages
 
 from Usuario.models import User
 from .models import Amostra, RealizacaoExame
@@ -134,23 +135,72 @@ def mudar_status(request, status, amostra):
     amostra.save()
     return redirect(request.POST.get('next', '/'))
 
+@login_required
+def criar_amostra(request):
+    if (request.method == "POST"):
+        form = amostraForm(request.POST)
+        if (form.is_valid()):
+            amostra = Amostra()
+            amostra.identificacao = form.cleaned_data['identificacao']
+            amostra.origem = form.cleaned_data['origem']
+            amostra.responsavel = User.objects.filter(id=request.user.id)[0]
+            amostra.localidade = form.cleaned_data['localidade']
+            amostra.setor = form.cleaned_data['setor']
+            amostra.data_coleta = form.cleaned_data['data_coleta']
+            amostra.tipo_amostra = form.cleaned_data['tipo_amostra']
+            amostra.especie_animal = form.cleaned_data['especie_animal']
+            amostra.sexo_animal = form.cleaned_data['sexo_animal']
+            amostra.save()
+            deletar_mensagens(request)
+            messages.success(request, 'Amostra ' + amostra.identificacao + ' foi adicionada com sucesso.' )
+            if request.POST.get("add") == None:
+                valores_iniciais = {
+                    "data_coleta": amostra.data_coleta,
+                    "origem": amostra.origem,
+                    "localidade": amostra.localidade,
+                    "setor": amostra.setor,
+                    "tipo_amostra": amostra.tipo_amostra,
+                    "especie_animal": amostra.especie_animal
+                }
+                novo_form = amostraForm(initial=valores_iniciais)
+                # form['identificacao'] = amostraForm()['identificacao']
+                # form['sexo_animal'] = amostraForm()['sexo_animal']
+                return render(request, "Amostra/adicionar.html", {'form': novo_form})
+            else:
+                return redirect('amostra:listar')
+    else:
+        deletar_mensagens(request)
+        form = amostraForm()
+    return render(request, "Amostra/adicionar.html", {'form': form})
+
+def deletar_mensagens(request):
+    storage = messages.get_messages(request)
+    for _ in storage:
+        # This is important
+        # Without this loop `_loaded_messages` is empty
+        pass
+
+    for _ in list(storage._loaded_messages):
+        del storage._loaded_messages[0]
+
 class CriarAmostra(LoginRequiredMixin, generic.CreateView):
     form_class = amostraForm
     model = Amostra
     template_name = 'Amostra/adicionar.html'
 
-    #def get_initial(self):
-    #    if 'addmais' in self.request.POST:
-    #        initial = super(CriarAmostra, self).get_initial()
-    #        obj = Amostra.objects.filter(responsavel_id=self.request.user.pk).order_by('-id')[0]
-    #        initial['data_coleta'] = obj.data_coleta
-    #        initial[ 'origem'] = obj.origem
-    #        initial['localidade'] = obj.localidade
-    #        initial['setor'] = obj.setor
-    #        initial['especie_animal'] = obj.especie_animal
-    #    else:
-    #        initial = super(CriarAmostra, self).get_initial()
-    #    return initial
+    def get_initial(self):
+        print(self.request.META.get('HTTP_REFERER'))
+        if 'addmais' in self.request.POST:
+           initial = super(CriarAmostra, self).get_initial()
+           initial['data_coleta'] = self.request.POST['data_coleta']
+           initial['origem'] = self.request.POST['origem']
+           initial['localidade'] = self.request.POST['localidade']
+           initial['setor'] = self.request.POST['setor']
+           initial['especie_animal'] = self.request.POST['especie_animal']
+           initial['tipo_amostra'] = self.request.POST['tipo_amostra']
+        else:
+           initial = super(CriarAmostra, self).get_initial()
+        return initial
 
     def form_valid(self, form):
         user = User.objects.filter(username=self.request.user.username)[0]

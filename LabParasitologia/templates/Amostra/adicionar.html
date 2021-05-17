@@ -5,6 +5,16 @@ Nova amostra
 {% endblock %}
 {% block content %}
 
+  {% if messages %}
+      {% for message in messages %}
+        <div class="card mb-4 py-3 border-left-success">
+          <div class="card-body">
+            {{ message }}
+          </div>
+        </div>
+      {% endfor %}
+  {% endif %}
+
 
     <div class="container">
         <form method="POST">
@@ -44,7 +54,7 @@ Nova amostra
               $user = (!empty($_POST['user'])) ? $_POST['user'] : '';
              ?>
 
-          <input type="submit" class="btn btn-success" value="Cadastrar">
+          <input type="submit" class="btn btn-success" id="add" name="add" value="Cadastrar">
           <input type="submit" class="btn btn-success" id="addmais" name="addmais" value="Cadastrar e adicionar outro" >
 
         </form>

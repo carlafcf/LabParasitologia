@@ -6,13 +6,12 @@ from Local.models import Local
 from datetime import datetime, date
 
 TIPOS_AMOSTRA = [
-        ('SA', 'Sangue'),
-        ('FE', 'Fezes'),
-        ('FA', 'Resultado do FAMACHA'),
         ('CA', 'Carrapato'),
+        ('FE', 'Fezes'),
         ('MO', 'Mosca'),
-        ('PU', 'Pulga'),
         ('PI', 'Piolho'),
+        ('PU', 'Pulga'),
+        ('SA', 'Sangue'),
         ('OU', 'Outro'),
     ]
 
