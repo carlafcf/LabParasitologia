@@ -5,18 +5,24 @@ Página inicial
 {% endblock %}
 
 {% block titulo_lateral %}
-    <a href="{% url 'amostra:adicionar' %}" class="btn btn-primary btn-icon-split">
+    <!-- <a href="{% url 'amostra:adicionar' %}" class="btn btn-primary btn-icon-split">
         <span class="icon text-white-50">
              <i class="fas fa-plus"></i>
         </span>
         <span class="text">Adicionar amostra</span>
+    </a> -->
+    <a href="{% url 'amostra:adicionar' %}" class="btn btn-primary btn-circle" title="Cadastrar Amostras" >
+      <i class="fas fa-vial"></i>
     </a>
-    <button class="btn btn-primary dropdown-toggle btn-icon-split" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a href="" class="btn btn-success btn-circle" title="Registrar Exames" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-microscope"></i>
+    </a>
+    <!-- <button class="btn btn-primary dropdown-toggle btn-icon-split" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="icon text-white-50">
         <i class="fas fa-plus"></i>
       </span>
       <span class="text">Registrar Exame</span>
-    </button>
+    </button> -->
     <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
       {% for exame in lista_exames %}
           <a class="dropdown-item" href="{% url 'exame:cadastrar_multiplos_resultados' fase=0 pk=exame.pk %}">{{exame.nome}}</a>
@@ -29,7 +35,7 @@ Página inicial
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
 <script src="path/to/chartjs/dist/Chart.js"></script>
 
-<div class="container">
+<!-- <div class="container"> -->
     <div class="row">
 
             <div class="col-xl-3 col-md-6 mb-4">
@@ -105,11 +111,11 @@ Página inicial
                 </div>
               </div>
             </div>
-
+</div>
          <div class="row">
 
             <!-- Area Chart -->
-            <div class="col-xl-8 col-lg-7">
+            <div class="col-lg-8">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -137,11 +143,11 @@ Página inicial
             </div>
 
             <!-- Pie Chart -->
-            <div class="col-xl-4 col-lg-5">
+            <div class="col-lg-4">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Exames realizados (últimos 6 meses)</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Exames realizados <br> (últimos 6 meses)</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="MenuChartUm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -165,8 +171,8 @@ Página inicial
               </div>
             </div>
           </div>
-    </div>
-</div>
+    <!-- </div> -->
+<!-- </div> -->
 
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');

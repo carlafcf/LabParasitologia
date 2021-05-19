@@ -104,21 +104,14 @@ def novoAddExame(request, pk, exame):
     if exame_form.is_valid():
         exame_form.instance.amostra = amostra
         exame_form.instance.exame = exame_cadastrar
-        print(exame_form.instance.amostra)
-        print(exame_form.instance.exame)
-        print(exame_form.instance.resultado_numerico)
         RealizacaoExame = exame_form.save()
-        print("Passou")
         RealizacaoExame.save()
-        print("Daqui tambem")
         if 'add' in request.POST:
             return redirect('exame:AdicionarExame', pk)
         else:
             return redirect('amostra:detalhes', pk)
-    else:
-        print(exame_form.errors)
     return render(request, 'Exame/AdicionarExame.html',
-                  {'exame_form': exame_form, 'amostra':amostra})
+                  {'form': exame_form, 'amostra':amostra, 'tipo': tipo, 'exame': exame_cadastrar})
 
 
 class CadastrarExame(LoginRequiredMixin, generic.CreateView):
@@ -424,8 +417,12 @@ def cadastrar_multiplos_resultados(request, fase, pk):
             return redirect('amostra:listar')
     else:
         if fase==0:
-            lista_amostras = Amostra.objects.filter(status=True).order_by('localidade', 'origem', 'setor')
-            return render(request, 'Exame/selecionar_amostras.html', {'lista_amostras': lista_amostras, 'exame': exame})
+            quinze = date.today() - timedelta(days=15)
+            dez = date.today() - timedelta(days=10)
+            lista_amostras = Amostra.objects.filter(status=True).order_by('data_coleta')
+            return render(request, 'Exame/selecionar_amostras.html', 
+                        {'lista_amostras': lista_amostras, 'exame': exame,
+                        'quinze':quinze,'dez':dez})
         else:
             pass
 

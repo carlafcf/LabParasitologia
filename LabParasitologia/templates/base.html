@@ -21,6 +21,7 @@
   <!-- Custom styles for this template-->
 
   <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin-2.css' %}" />
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
 </head>
 
@@ -82,11 +83,11 @@
       <!-- Divider -->
       <hr class="sidebar-divider">
 
+      {% if user.is_superuser %}
       <!-- Heading -->
       <div class="sidebar-heading">
         Exames
       </div>
-      {% if user.is_superuser %}
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'exame:cadastrar' %}">
           <i class="fas fa-plus"></i>
@@ -142,13 +143,13 @@
       </li>
 
 
-      {% endif %}
 
 
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
+      {% endif %}
       <!-- Sidebar Toggler (Sidebar) -->
       <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
@@ -327,6 +328,10 @@
   <!-- Page level custom scripts -->
   <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
   <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+  <script src="{% static 'vendor/datatables/jquery.dataTables.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
 </body>
 

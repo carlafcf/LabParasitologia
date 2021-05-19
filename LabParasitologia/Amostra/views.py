@@ -48,7 +48,10 @@ def home(request):
 
     ultimo_seis_meses = tdy+relativedelta(months=-6)
 
-    pctAB = (amostras_abertas.count() * 100)/(amostras_abertas.count() + amostras_fechadas.count())
+    if (amostras_abertas.count() + amostras_fechadas.count() != 0):
+        pctAB = (amostras_abertas.count() * 100)/(amostras_abertas.count() + amostras_fechadas.count())
+    else:
+        pctAB = 0
 
     #amostras e exames cadastrados (últimos 12 meses)
     ultimo_12 = []
@@ -99,8 +102,10 @@ def listar_amostras(request):
     amostras = Amostra.objects.filter(status = True)
     quinze = date.today() - timedelta(days=15)
     dez = date.today() - timedelta(days=10)
+    lista_exames = Exame.objects.filter(status=True)
     context = {'lista_amostras': amostras, 'titulo': "Amostras", 'amostrasUsuario': False,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listar','quinze':quinze,'dez':dez}
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listar','quinze':quinze,'dez':dez,
+               'lista_exames': lista_exames}
     return render(request, 'Amostra/listar.html', context)
 
 @login_required

@@ -11,9 +11,26 @@
 {% endblock %}
 
 {% block titulo_lateral %}
-<a href="{% url 'amostra:listarFinalizada'%}" class="btn btn-info btn-circle" title="Exames Finalizados">
+
+{% if not finalizadas %}
+<a href="{% url 'amostra:adicionar' %}" class="btn btn-primary btn-circle" title="Cadastrar Amostras" >
+    <i class="fas fa-vial"></i>
+  </a>
+  <a href="" class="btn btn-success btn-circle" title="Registrar Exames" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fas fa-microscope"></i>
+  </a>
+  <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+    {% for exame in lista_exames %}
+        <a class="dropdown-item" href="{% url 'exame:cadastrar_multiplos_resultados' fase=0 pk=exame.pk %}">{{exame.nome}}</a>
+    {% endfor %}
+  </div>
+<a href="{% url 'amostra:listarFinalizada'%}" class="btn btn-info btn-circle" title="Amostras Finalizadas">
     <i class="fas fa-lock"></i>
   </a>
+
+ 
+  
+{% endif %}
 {% endblock %}
 
 
@@ -21,14 +38,15 @@
 {% block content %}
 
 	{% if lista_amostras %}
-        <table id="amostraDT" class="table" cellspacing="0" width="100%">
+    <div class="table-responsive">
+        <table class="table" id="dataTable" width="100%" cellspacing="0">
           <thead >
             <th scope="col">#</th>
-            <th><center>Data da amostra</center></th>
+            <th><center>Data</center></th>
             <th><center>Setor</center></th> <!-- Setor -->
             <th><center>Espécie</center></th>
             <th><center>Identificação</center></th> <!-- Número da amostra -->
-            <th><center>Tipo de amostra</center></th>
+            <th><center>Tipo</center></th>
             <th><center>Exames</center></th>
             <th></th>
           </thead>
@@ -61,43 +79,55 @@
                   <td>
 
                       <a href="{% url 'amostra:detalhes' pk=amostra.pk %}" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
-                        <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
+                        <i class="fa fa-search" aria-hidden="true" style="color:#1cc88a"></i>
                       </a>
                       {% if not finalizadas  %}
                           {% if user.is_superuser or amostrasUsuario or amostra.responsavel.pk == user.pk %}
 
                                 <a href="{% url 'amostra:editar' pk=amostra.pk %}?next={{ request.path }}" class="btn btn-warning-outline"
                                         data-toggle="tooltip" title="Editar">
-                                    <i class="fas fa-pencil-alt" style="color:blue"></i>
+                                    <i class="fas fa-pencil-alt" style="color:#4e73df"></i>
                                 </a>
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{amostra.pk}}"
                                         data-tt="tooltip" title="Deletar">
-                                    <i class="fa fa-trash" aria-hidden="true" style="color:black"></i>
+                                    <i class="fa fa-trash" aria-hidden="true" style="color:#e74a3b"></i>
                                 </a>
                                 <div class="modal fade" id="fm-modal-grid-{{amostra.pk}}" tabindex="-1"
                                      role="dialog" aria-labelledBy="fm-modal-grid-{{amostra.pk}}"
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <div class="modal-header" style="background-color: rgb(78,115,223) ;">
-                                                <h5 class="modal-title" id=""><strong><font color="white">Deletar Amostra</font></strong></h5>
+                                            <div class="modal-header" style="background-color:#4e73df">
+                                                <h5 class="modal-title" id=""><strong><font color="white">Você tem certeza que deseja deletar a seguinte amostra?</font></strong></h5>
                                                 <button class="close" data-dismiss="modal" aria-label="Cerrar">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="container-fluid">
+                                                <div class="container">
+                                                    {% if amostra.exames.count != 0 %}
+                                                        <p>
+                                                            <i class="fas fa-microscope" style="color: #1cc88a"></i>
+                                                            Foram realizados exames nessa amostra.
+                                                        </p>
+                                                    {% endif %}
                                                     <div class="row">
-                                                        <div class="col-12 col-sm-6">
-                                                            <p><strong>Você tem certeza que deseja deletar a seguinte amostra:</strong></p>
-                                                            <p>Identificação: {{amostra.identificacao}}</p>
-                                                            <p>Origem: {{amostra.origem}}</p>
-                                                            <p>Espécie: {{amostra.get_especie_animal_display}}</p>
-                                                            <p>Tipo de amostra: {{amostra.get_tipo_amostra_display}}</p>
-                                                            <p>Sexo: {{amostra.get_sexo_animal_display}}</p>
-                                                            <p>Local de coleta: {{amostra.localidade}}</p>
-                                                            <p>Setor: {{amostra.setor}}</p>
-                                                            <p>Data de coleta: {{amostra.data_coleta}}</p>
+                                                        <div class="col-4">
+                                                            <p><strong>Identificação:</strong> {{amostra.identificacao}}</p>
+                                                            <p><strong>Origem:</strong> {{amostra.origem}}</p>
+                                                            <p><strong>Sexo:</strong> {{amostra.get_sexo_animal_display}}</p>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <p><strong>Data de coleta:</strong> {{amostra.data_coleta|date:"d/m/y"}}</p>
+                                                            <p><strong>Local de coleta:</strong> {{amostra.localidade}}</p>
+                                                            <p><strong>Tipo de amostra:</strong> {{amostra.get_tipo_amostra_display}}</p>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <p><strong>Espécie:</strong> {{amostra.get_especie_animal_display}}</p>
+                                                            <p><strong>Setor:</strong> {{amostra.setor}}</p>
+                                                            <p><strong>Responsável:</strong> {{amostra.responsavel}}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -117,7 +147,7 @@
                                 </div>
                                 <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#mudar-status-{{amostra.pk}}"
                                     data-tt="tooltip" title="Finalizar amostra">
-                                    <i class="fas fa-times-circle" aria-hidden="true" style="color:red"></i>
+                                    <i class="fas fa-check" aria-hidden="true" style="color:#36b9cc"></i>
 
                                 </a>
                                 <div class="modal fade" id="mudar-status-{{amostra.pk}}" tabindex="-1"
@@ -125,26 +155,37 @@
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <div class="modal-header" style="background-color: rgb(78,115,223);">
-                                                <h5 class="modal-title" id=""><strong><font color="white">Finalizar Amostra</font></strong></h5>
+                                            <div class="modal-header" style="background-color:#4e73df">
+                                                <h5 class="modal-title" id=""><strong><font color="white">Você tem certeza que deseja finalizar a seguinte amostra?</font></strong></h5>
                                                 <button class="close" data-dismiss="modal" aria-label="Cerrar">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="container-fluid">
+                                                <div class="container">
+                                                    {% if amostra.exames.count != 0 %}
+                                                        <p>
+                                                            <i class="fas fa-microscope" style="color: #1cc88a"></i>
+                                                            Foram realizados exames nessa amostra.
+                                                        </p>
+                                                    {% endif %}
                                                     <div class="row">
-                                                        <div class="col-12 col-sm-6">
-                                                            <p><strong>Você deseja concluir a seguinte amostra amostra:</strong></p>
-                                                            <p>Identificação: {{amostra.identificacao}}</p>
-                                                            <p>Origem: {{amostra.origem}}</p>
-                                                            <p>Espécie: {{amostra.get_especie_animal_display}}</p>
-                                                            <p>Tipo de amostra: {{amostra.get_tipo_amostra_display}}</p>
-                                                            <p>Sexo: {{amostra.get_sexo_animal_display}}</p>
-                                                            <p>Local de coleta: {{amostra.localidade}}</p>
-                                                            <p>Setor: {{amostra.setor}}</p>
-                                                            <p>Data de coleta: {{amostra.data_coleta}}</p>
+                                                        <div class="col-4">
+                                                            <p><strong>Identificação:</strong> {{amostra.identificacao}}</p>
+                                                            <p><strong>Origem:</strong> {{amostra.origem}}</p>
+                                                            <p><strong>Sexo:</strong> {{amostra.get_sexo_animal_display}}</p>
+                                                        </div>
 
+                                                        <div class="col-4">
+                                                            <p><strong>Data de coleta:</strong> {{amostra.data_coleta|date:"d/m/y"}}</p>
+                                                            <p><strong>Local de coleta:</strong> {{amostra.localidade}}</p>
+                                                            <p><strong>Tipo de amostra:</strong> {{amostra.get_tipo_amostra_display}}</p>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <p><strong>Espécie:</strong> {{amostra.get_especie_animal_display}}</p>
+                                                            <p><strong>Setor:</strong> {{amostra.setor}}</p>
+                                                            <p><strong>Responsável:</strong> {{amostra.responsavel}}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -167,51 +208,34 @@
 
                       {% else %}
                             {% if user.is_superuser or amostra.responsavel.pk == user.pk %}
-                                <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#reativar-{{amostra.pk}}"
-                                        data-tt="tooltip" title="Reativar amostra">
-                                    <i class="fas fa-check-circle" aria-hidden="true" style="color:green"></i>
-                                </a>
-                                <div class="modal fade" id="reativar-{{amostra.pk}}" tabindex="-1"
-                                     role="dialog" aria-labelledBy="reativar-{{amostra.pk}}"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header" style="background-color: rgb(78,115,223);">
-                                                <h5 class="modal-title" id=""><strong><font color="white">Reativar amostra</font></strong></h5>
-                                                <button class="close" data-dismiss="modal" aria-label="Cerrar">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-12 col-sm-6">
-                                                            <p><strong>Você deseja reativar a seguinte amostra amostra:</strong></p>
-                                                            <p>Identificação: {{amostra.identificacao}}</p>
-                                                            <p>Origem: {{amostra.origem}}</p>
-                                                            <p>Espécie: {{amostra.get_especie_animal_display}}</p>
-                                                            <p>Tipo de amostra: {{amostra.get_tipo_amostra_display}}</p>
-                                                            <p>Sexo: {{amostra.get_sexo_animal_display}}</p>
-                                                            <p>Local de coleta: {{amostra.localidade}}</p>
-                                                            <p>Setor: {{amostra.setor}}</p>
-                                                            <p>Data de coleta: {{amostra.data_coleta}}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="modal-footer" style="background-color: rgb(78,115,223);">
-                                                <form action="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST">
-                                                       {% csrf_token %}
-                                                        <input type="hidden" name="next" value="{{request.path}}">
-                                                       <button class="btn btn-success">Habilitar</button>
-                                                </form>
-                                                <button class="btn btn-dark" data-dismiss="modal">Cancelar</button>
-
-                                            </div>
-                                        </div>
+                            <a href="" class="btn btn-info-outline" data-toggle="modal" data-target="#mudar-status-{{amostra.pk}}"
+                            data-tt="tooltip" title="Reabrir amostra">
+                            <i class="fas fa-check" aria-hidden="true" style="color:#36b9cc"></i>
+                        
+                            </a>
+                            <div class="modal fade" id="mudar-status-{{amostra.pk}}" tabindex="-1"
+                                role="dialog" aria-labelledBy="mudar-status-{{amostra.pk}}"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color:#4e73df">
+                                        <h5 class="modal-title" id=""><strong><font color="white">Você tem certeza que deseja reabrir a amostra {{amostra.identificacao}}?</font></strong></h5>
+                                        <button class="close" data-dismiss="modal" aria-label="Cerrar">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-footer" style="background-color: rgb(78,115,223);">
+                                        <form action="{% url 'amostra:mudar_status' status=1 amostra=amostra.pk %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="next" value="amostra:listar">
+                                                <button class="btn btn-danger">Confirmar</button>
+                                        </form>
+                                        <button class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                        
                                     </div>
                                 </div>
+                            </div>
+                            </div>
                             {% endif %}
                       {% endif %}
                   </td>
@@ -221,6 +245,7 @@
           {% endfor %}
           </tbody>
         </table>
+    </div>
       {% else %}
         <p>Não há amostras cadastradas!</p>
       {% endif %}

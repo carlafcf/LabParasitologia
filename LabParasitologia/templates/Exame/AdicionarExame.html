@@ -1,31 +1,181 @@
 {% extends "base.html" %}
-{% load bootstrap4 %}
+
+{% load crispy_forms_tags %}  
 
 {% block titulo %}
- <h1>Adicionar Exame</h1>
+ Cadastrar resultado de exame {{exame}}
+
 {% endblock %}
 
 {% block content %}
   <div class="container">
+    <div class="row">
 
-    {% if amostra %}
-            <h5>Amostra: {{ amostra.identificacao }}</h5>
-			<h5>Data: {{ amostra.data_coleta }} </h5>
-			<h5>Responsavel: {{ amostra.responsavel }} </h5>
-            <h5>Localidade: {{ amostra.localidade }}</h5>
-			<h5>Setor: {{ amostra.setor }}</h5>
-    		<h5>{{ amostra.get_tipo_amostra_display }}</h5>
-    		<h5>Especie: {{ amostra.get_especie_animal_display }}</h5>
-    		<h5>Sexo: {{ amostra.sexo_animal }}</h5>
-            <br>
-    {% endif %}
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Data da coleta</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{amostra.data_coleta|date:"d/m/Y"}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Localidade</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{amostra.localidade}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-map-marked-alt fa-2x text-gray-300"></i>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-secondary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Origem</div>
+            <div class="row no-gutters align-items-center">
+            <div class="col-auto">
+              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{amostra.origem}}</div>
+            </div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-warehouse fa-2x text-gray-300"></i>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Pending Requests Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Setor</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{amostra.setor}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-vector-square fa-2x text-gray-300"></i>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="row">
+
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Espécie</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{amostra.get_especie_animal_display}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-paw fa-2x text-gray-300"></i>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-dark shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">Tipo de amostra</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{amostra.get_tipo_amostra_display}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-syringe fa-2x text-gray-300"></i>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sexo do animal</div>
+            <div class="row no-gutters align-items-center">
+            <div class="col-auto">
+              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{amostra.get_sexo_animal_display}}</div>
+            </div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-venus-mars fa-2x text-gray-300"></i>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Pending Requests Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Responsável</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{amostra.responsavel}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-user fa-2x text-gray-300"></i>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+	  </div>
+  </div>
+  <div class="container">
+
     <form method="POST">
       {% csrf_token %}
-      {% for field in exame_form %}
-        {% bootstrap_field field %}
-      {% endfor %}
-        <input type="submit" class="btn btn-success" value="Adicionar">
-        <input type="submit" class="btn btn-success" name="add" value="Adicionar novamente" >
+      <div class="row">
+        <div class="col-6">
+          {{ form.data|as_crispy_field }}
+        </div>
+        <div class="col-6">
+          {% if tipo == "TEX" %}
+            {{ form.resultado_textual|as_crispy_field }}
+          {% else %}
+            {{ form.resultado_numerico|as_crispy_field }}
+          {% endif %}
+        </div>
+      </div>
+      <input type="submit" class="btn btn-success" value="Adicionar">
     </form>
   </div>
 {% endblock %}

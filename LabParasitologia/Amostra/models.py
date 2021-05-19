@@ -53,7 +53,7 @@ class Amostra(models.Model):
         return self.identificacao
 
     class Meta:
-        ordering = ['-data_coleta','origem','localidade','setor','especie_animal','identificacao','tipo_amostra']
+        ordering = ['-data_coleta','-id']
 
 
 
