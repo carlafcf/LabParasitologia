@@ -46,7 +46,7 @@
                   Amostras
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="{% url 'amostra:adicionar' %}">Cadastrar</a>
+                  <a class="dropdown-item" href="{% url 'amostra:cadastrar' %}">Cadastrar</a>
 
                   <div class="dropdown-divider"></div>
                   <a class="">
@@ -65,8 +65,8 @@
                   </a>
 
                    <div class="dropdown-submenu" >
-                    <a class="dropdown-item" href="{% url 'amostra:listarAmostraUser' pk=user.pk %}">Abertas</a>
-                    <a class="dropdown-item" href="{% url 'amostra:listarAmostraUserFinalizada' pk=user.pk %}">Finalizadas</a>
+                    <a class="dropdown-item" href="{% url 'amostra:listar_amostras_usuario' pk=user.pk %}">Abertas</a>
+                    <a class="dropdown-item" href="{% url 'amostra:listar_amostras_finalizadas_usuario' pk=user.pk %}">Finalizadas</a>
 
                    </div>
 
@@ -78,7 +78,7 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="examesDropdown">
                     <a class="dropdown-item" href="{% url 'exame:CadastrarExame' %}">Cadastrar</a>
-                    <a class="dropdown-item" href="{% url 'exame:ListarExame' %}">Listar</a>
+                    <a class="dropdown-item" href="{% url 'exame:listar' %}">Listar</a>
                   </div>
                 </li>
               {% if user.is_superuser %}
@@ -89,7 +89,7 @@
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'usuario:listar' %}">Listar</a>
                     <a class="dropdown-item" href="{% url 'usuario:cadastrar' %}">Cadastrar</a>
-                    <a class="dropdown-item" href="{% url 'usuario:inativos' %}">Usuários inativos</a>
+                    <a class="dropdown-item" href="{% url 'usuario:listar_inativos' %}">Usuários inativos</a>
                   </div>
                 </li>
               {% endif %}

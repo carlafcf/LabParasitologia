@@ -3,7 +3,7 @@ from datetime import datetime, date
 from django.utils import timezone
 
 TIPOS_RESULTADO = [
-    ('NUM', 'Números'),
+    ('NUM', 'Numérico'),
     ('TEX', 'Valores exatos')
 ]
 

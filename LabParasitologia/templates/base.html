@@ -60,7 +60,7 @@
       </div>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'amostra:adicionar' %}">
+        <a class="nav-link collapsed" href="{% url 'amostra:cadastrar' %}">
           <i class="fas fa-plus"></i>
           <span>Cadastrar</span>
         </a>
@@ -74,7 +74,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'amostra:listarAmostraUser' pk=user.pk %}">
+        <a class="nav-link collapsed" href="{% url 'amostra:listar_amostras_usuario' pk=user.pk %}">
           <i class="fas fa-vial"></i>
           <span>Minhas amostras</span>
         </a>
@@ -96,7 +96,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'exame:ListarExame' %}">
+        <a class="nav-link collapsed" href="{% url 'exame:listar' %}">
           <i class="fas fa-clipboard-list"></i>
           <span>Listar</span>
         </a>
@@ -129,7 +129,7 @@
         Local
       </div>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'local:cadastrarLocal' %}">
+        <a class="nav-link collapsed" href="{% url 'local:cadastrar' %}">
           <i class="fas fa-plus"></i>
           <span>Cadastrar</span>
         </a>

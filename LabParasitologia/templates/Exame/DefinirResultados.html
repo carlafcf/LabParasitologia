@@ -2,13 +2,22 @@
 {% load bootstrap4 %}
 
 {% block titulo %}
+{% if tipo == 'NUM' %}
+Definir valores de análise
+{% else %}
 Definir possíveis resultados
+{% endif %}
+<p class="m-0 h5 font-weight-regular text-gray-500">Exame: {{nome}}</p>
+{% endblock %}
+
+{% block titulo_lateral %}
+<a class="btn btn-success add-form-row" onclick="addElements(this)"><i class="fas fa-plus" style="color:white;"></i></a>
 {% endblock %}
 
 {% block content %}
-  <div class="container">
+  <!-- <div class="container"> -->
 
-    <div class="container margin-bottom">
+    <!-- <div class="container margin-bottom"> -->
         {%if formset.errors %}
                 <div class="alert alert-danger" role="alert">
                     Não são permitidos resultados vazios.
@@ -26,7 +35,7 @@ Definir possíveis resultados
                         <div class="input-group">
                             {{form.valor}}
                             <div class="input-group-append">
-                                <a class="btn btn-success add-form-row" onclick="editElements(this)"><i class="fas fa-plus" style="color:white;"></i></a>
+                                <a class="btn btn-danger remove-form-row" onclick="deleteForm('form', this)"><i class="fas fa-minus" style="color:white;"></i></a>
                             </div>
                         </div>
                     </div>
@@ -35,7 +44,8 @@ Definir possíveis resultados
                     <button type="submit" class="btn btn-success">Cadastrar</button>
         </form>
 
-    </div>
+    <!-- </div> -->
+    <br>
         
 
       <div class="card shadow mb-4">
@@ -60,7 +70,7 @@ Definir possíveis resultados
               </div>
 
               
-  </div>
+  <!-- </div> -->
 
   {% endblock %}
 
@@ -194,6 +204,11 @@ var myChartVE = new Chart(ctx, {
                 deleteForm('form', obj);
                 return false;
             }
+        }
+
+        function addElements() {
+            cloneMore('.form-row:last', 'form');
+            return false;
         }
     </script>
 {% endblock %}

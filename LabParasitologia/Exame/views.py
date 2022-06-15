@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
 from django.views import generic
 from django.urls import reverse_lazy
@@ -10,6 +11,7 @@ from datetime import datetime, date, timedelta
 from django.contrib import messages
 
 import json
+import csv
 
 from .forms import especieForm
 from .forms import ExameForm, RealizacaoExameForm, ResultadoFormNumerico, ResultadoFormTextual
@@ -18,7 +20,7 @@ from .forms import ResultadoTextualFormset, ResultadoNumericoFormset
 from .models import Exame, ResultadoExame
 from Amostra.models import Amostra, RealizacaoExame
 
-def exameListar(request):
+def listar(request):
     exame_list = Exame.objects.filter(status=True)
     paginator = Paginator(exame_list, 5)
 
@@ -27,29 +29,33 @@ def exameListar(request):
     context = {'listar_exame':exame}
     return render(request, 'Exame/ListarExame.html', context)
 
-def exame_amostraDetalhes(request, pk):
-    amostra = Amostra.objects.filter(pk=pk)[0]
-    resultados_exames = RealizacaoExame.objects.filter(amostra_id=pk)
-    exames_cadastrados = Exame.objects.all()
+def detalhes(request, pk):
+    exame = Exame.objects.filter(pk=pk)[0]
+    resultados_exame = RealizacaoExame.objects
 
-    quinze = date.today() - timedelta(days=15)
-    dez = date.today() - timedelta(days=10)
+    ultimo_12 = []
+    exames_mes = []
+    mes_atual = date.today().month
+    ano_atual = date.today().year-1
 
-    if amostra.data_coleta <= quinze:
-        alerta = "#e74a3b"
-    elif amostra.data_coleta <= dez:
-        alerta = "#f6c23e"
-    else:
-        alerta = None
+    for i in range(1, 13):
+        mes_atual += 1
+        if (mes_atual == 13):
+            mes_atual = 1
+        if (mes_atual == 1):
+            ano_atual += 1
+        exames_passados = RealizacaoExame.objects.filter(exame=exame, data__month = mes_atual, data__year = ano_atual)
+        exames_mes.insert(i, exames_passados.count())
+        ultimo_12.insert(i, str(mes_atual)+"/"+str(ano_atual))
+    
 
-    context = {
-        'amostra':amostra,
-        'lista_exames': resultados_exames,
-        'exames_cadastrados': exames_cadastrados,
-        'alerta': alerta
+
+    informacoes = {
+        'exame': exame,
+        'exames_mes': json.dumps(exames_mes),
+        'ultimo_12': json.dumps(ultimo_12)
     }
-    return render(request, 'Amostra/amostra_detail.html', context)
-
+    return render(request, 'Exame/detalhes.html', informacoes)
 
 #class AdicionarExame(LoginRequiredMixin, generic.CreateView):
 #    fields = ('exame','resultado')
@@ -64,13 +70,13 @@ def exame_amostraDetalhes(request, pk):
 #    def get_success_url(self):
 #
 #        if 'add' in self.request.POST:
-#            url = reverse_lazy('exame:AdicionarExame')
+#            url = reverse_lazy('exame:adicionar')
 #        else:
 #            url = reverse_lazy('amostra:listar')
 
 #        return url
 
-def addExame(request, pk):
+def adicionar(request, pk):
     amostra = Amostra.objects.get(pk=pk)
     if request.method == "POST":
         exame_form = RealizacaoExameForm(request.POST)
@@ -82,7 +88,7 @@ def addExame(request, pk):
         RealizacaoExame = exame_form.save()
         RealizacaoExame.save()
         if 'add' in request.POST:
-            return redirect('exame:AdicionarExame', pk)
+            return redirect('exame:adicionar', pk)
         else:
             return redirect('amostra:detalhes', pk)
     else:
@@ -90,7 +96,7 @@ def addExame(request, pk):
     return render(request, 'Exame/AdicionarExame.html',
                   {'exame_form': exame_form, 'amostra':amostra})
 
-def novoAddExame(request, pk, exame):
+def adicionar_exame_amostra(request, pk, exame):
     amostra = Amostra.objects.get(pk=pk)
     exame_cadastrar = Exame.objects.get(pk=exame)
     tipo = exame_cadastrar.tipo_resultado
@@ -107,7 +113,7 @@ def novoAddExame(request, pk, exame):
         RealizacaoExame = exame_form.save()
         RealizacaoExame.save()
         if 'add' in request.POST:
-            return redirect('exame:AdicionarExame', pk)
+            return redirect('exame:adicionar', pk)
         else:
             return redirect('amostra:detalhes', pk)
     return render(request, 'Exame/AdicionarExame.html',
@@ -126,7 +132,7 @@ class CadastrarExame(LoginRequiredMixin, generic.CreateView):
             url = reverse_lazy('exame:definir_resultados', kwargs={'pk': self.object.id})
         return url
 
-def cadastrar_exame(request):
+def cadastrar(request):
     if request.method == "POST":
         exame_form = ExameForm(request.POST)
         if exame_form.is_valid():
@@ -158,9 +164,9 @@ def definir_saidas(request, nome, tipo_resultado):
                     if valor:
                         ResultadoExame(resultado_numerico=valor, exame=exame, ordem=i).save()
                         i=i+1
-                return redirect('exame:ListarExame')
+                return redirect('exame:listar')
         return render(request, template_name, {
-            'formset': formset, 'tipo': 'NUM',
+            'formset': formset, 'tipo': 'NUM', 'nome': nome
         })
     else:
         if request.method == 'GET':
@@ -180,8 +186,8 @@ def definir_saidas(request, nome, tipo_resultado):
                         valor = form.cleaned_data.get('valor')
                         if valor:
                             ResultadoExame(resultado_textual=valor, exame=exame, ordem=count).save()
-                    return redirect('exame:ListarExame')    
-        return render(request, template_name, {'formset': formset, 'tipo': 'TEX',})    
+                    return redirect('exame:listar')    
+        return render(request, template_name, {'formset': formset, 'tipo': 'TEX', 'nome': nome})    
 
 def definir_resultados(request,pk):
     template_name = 'Exame/DefinirResultados.html'
@@ -200,7 +206,7 @@ def definir_resultados(request,pk):
                     if valor:
                         ResultadoExame(resultado_numerico=valor, exame=exame, ordem=i).save()
                         i=i+1
-                return redirect('exame:ListarExame')
+                return redirect('exame:listar')
         print("not valid")
         return render(request, template_name, {
             'formset': formset, 'tipo': 'NUM',
@@ -215,7 +221,7 @@ def definir_resultados(request,pk):
                     valor = form.cleaned_data.get('valor')
                     if valor:
                         ResultadoExame(resultado_textual=valor, exame=exame, ordem=count).save()
-                return redirect('exame:ListarExame')
+                return redirect('exame:listar')
         return render(request, template_name, {
             'formset': formset, 'tipo': 'TEX',
         })
@@ -351,7 +357,7 @@ def NovoDetalheExame(request, pk):
                'categorias': json_tipo_exame, 'resultado_total': json_resultado_total}
     return render(request, 'Exame/exame_detail.html', context)
 
-class EditarExame(LoginRequiredMixin, generic.UpdateView):
+class Editar(LoginRequiredMixin, generic.UpdateView):
     model = Exame
     fields = ['nome']
     template_name = 'Exame/exame_update.html'
@@ -359,7 +365,7 @@ class EditarExame(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         return(self.request.POST.get('next', '/'))
 
-class DeletarExame(LoginRequiredMixin, generic.DeleteView):
+class Deletar(LoginRequiredMixin, generic.DeleteView):
     model = Exame
     template_name = 'Exame/ListarExame.html'
 
@@ -373,10 +379,10 @@ def mudar_status_exame(request, status, exame):
     else:
         exame.status = False
     exame.save()
-    return redirect('exame:ListarExame')
+    return redirect('exame:listar')
 
 @login_required
-def examesInativos(request):
+def listar_inativos(request):
     exame_list = Exame.objects.filter(status=False)
     paginator = Paginator(exame_list, 5)
 
@@ -427,7 +433,21 @@ def cadastrar_multiplos_resultados(request, fase, pk):
             pass
 
 
+def download_exames(request):
+    response = HttpResponse(content_type='text/csv')
+    writer = csv.writer(response)
+    writer.writerow(['Exame', 'Identificação', 'Origem', 'Localidade', 'Setor', 'Data da coleta', 
+                    'Tipo de amostra', 'Espécie', 'Sexo', 'Data do exame', 
+                    'Resultado'])
+    for exame in RealizacaoExame.objects.all():
+        writer.writerow([exame.exame.nome, exame.amostra.identificacao, exame.amostra.origem, 
+            exame.amostra.localidade, exame.amostra.setor, exame.amostra.data_coleta, exame.amostra.tipo_amostra,
+            exame.amostra.especie_animal, exame.amostra.sexo_animal, exame.data, 
+            exame.resultado_numerico if exame.resultado_numerico else exame.resultado_textual])
+    
+    response['Content-Disposition'] = 'attachment; filename="exames.csv"'
 
+    return response
 
 
 

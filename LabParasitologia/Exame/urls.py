@@ -6,20 +6,21 @@ from django.urls import path
 app_name = 'exame'
 
 urlpatterns = [
-    #path('AdicionarExame/<int:pk>', views.AdicionarExame.as_view(), name='AdicionarExame'),
-    path('adicionar_exame/<int:pk>', views.addExame, name='AdicionarExame'),
-    path('NovoAdicionarExame/<int:pk>/<int:exame>', views.novoAddExame, name='NovoAdicionarExame'),
+    path('adicionar/<int:pk>', views.adicionar, name='adicionar'),
+    path('adicionar/<int:pk>/<int:exame>', views.adicionar_exame_amostra, name='adicionar_exame_amostra'),
     # path('DefinirResultados/<int:pk>', views.definir_resultados, name='definir_resultados'),
-    path('ListarExame/', views.exameListar, name='ListarExame'),
-    path('examesInativos/', views.examesInativos, name='examesInativos'),
+    path('listar/', views.listar, name='listar'),
+    path('listar-inativos/', views.listar_inativos, name='listar_inativos'),
     # path('CadastrarExame/', views.CadastrarExame.as_view(), name='CadastrarExame'),
-    path('cadastrar/', views.cadastrar_exame, name='cadastrar'),
+    path('cadastrar/', views.cadastrar, name='cadastrar'),
     path('cadastrar/resultados/<str:nome>/<str:tipo_resultado>', views.definir_saidas, name='resultados'),
-    path('DetalhesExame/<int:pk>', views.NovoDetalheExame, name='DetalheExame'),
-    path('EditarExame/<int:pk>', views.EditarExame.as_view(), name='EditarExame'),
-    path('DeletarExame/<int:pk>', views.DeletarExame.as_view(), name='DeletarExame'),
-    path('mudar_status_exame/<int:status>/<int:exame>', views.mudar_status_exame, name='mudar_status_exame'),
+    path('detalhes/<int:pk>', views.detalhes, name='detalhes'),
+    path('detalhes/<int:pk>', views.NovoDetalheExame, name='DetalheExame'),
+    path('editar/<int:pk>', views.Editar.as_view(), name='editar'),
+    path('deletar/<int:pk>', views.Deletar.as_view(), name='deletar'),
+    path('mudar-status/<int:status>/<int:exame>', views.mudar_status_exame, name='mudar_status_exame'),
 
-    path('cadastrar_multiplos_resultados/<int:fase>/<int:pk>', views.cadastrar_multiplos_resultados, name='cadastrar_multiplos_resultados'),
+    path('cadastrar-multiplos-resultados/<int:fase>/<int:pk>', views.cadastrar_multiplos_resultados, name='cadastrar_multiplos_resultados'),
 
+	path('download/', views.download_exames, name='download')
 ]

@@ -18,7 +18,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from . import views
-from Exame.views import exame_amostraDetalhes
 
 app_name = 'amostra'
 
@@ -26,17 +25,19 @@ urlpatterns = [
 	path('home/', views.home, name='home'),
 
 	path('', views.home, name='home'),
-	path('listar/', views.listar_amostras, name='listar'),
-	path('listar/finalizadas', views.listar_amostras_finalizadas, name='listarFinalizada'),
-	path('listar/usuario/<int:pk>', views.listar_amostras_usuario, name='listarAmostraUser'),
-	path('listar/finalizadas/usuario/<int:pk>', views.listar_amostras_finalizadas_usuario, name='listarAmostraUserFinalizada'),
+	path('listar/', views.listar, name='listar'),
+	path('listar/finalizadas', views.listar_finalizadas, name='listar_finalizadas'),
+	path('listar/usuario/<int:pk>', views.listar_amostras_usuario, name='listar_amostras_usuario'),
+	path('listar/finalizadas/usuario/<int:pk>', views.listar_amostras_finalizadas_usuario, name='listar_amostras_finalizadas_usuario'),
 
-	path('adicionar/', views.criar_amostra, name='adicionar'),
-	path('detalhes/<int:pk>', exame_amostraDetalhes, name='detalhes'),
-	path('editar/<int:pk>', views.EditarAmostra.as_view(), name='editar'),
-	path('deletar/<int:pk>', views.DeletarAmostra.as_view(), name='deletar'),
+	path('cadastrar/', views.cadastrar, name='cadastrar'),
+	path('detalhes/<int:pk>', views.detalhes, name='detalhes'),
+	path('editar/<int:pk>', views.Editar.as_view(), name='editar'),
+	path('deletar/<int:pk>', views.Deletar.as_view(), name='deletar'),
 	
-	path('mudar_status/<int:status>/<int:amostra>', views.mudar_status, name='mudar_status'),
+	path('mudar-status/<int:status>/<int:amostra>', views.mudar_status, name='mudar_status'),
 	path('alertas/', views.listar_alertas, name='listar_alertas'),
+
+	path('download/', views.download_amostras, name='download')
 
 ]

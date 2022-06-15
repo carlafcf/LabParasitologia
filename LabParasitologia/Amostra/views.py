@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,6 +13,7 @@ from Exame.models import Exame
 from datetime import date, timedelta,datetime
 from .forms import amostraForm
 import json
+import csv
 from dateutil.relativedelta import *
 
 @login_required
@@ -98,7 +100,7 @@ def home(request):
     return render(request, 'home.html', context)
 
 @login_required
-def listar_amostras(request):
+def listar(request):
     amostras = Amostra.objects.filter(status = True)
     quinze = date.today() - timedelta(days=15)
     dez = date.today() - timedelta(days=10)
@@ -109,7 +111,7 @@ def listar_amostras(request):
     return render(request, 'Amostra/listar.html', context)
 
 @login_required
-def listar_amostras_finalizadas(request):
+def listar_finalizadas(request):
     amostras = Amostra.objects.filter(status = False)
     context = {'lista_amostras': amostras, 'titulo': "Amostras finalizadas", 'amostrasUsuario': False,
                'finalizadas': True, 'paginaRetorno': 'Amostra:listarFinalizada'}
@@ -121,14 +123,14 @@ def listar_amostras_usuario(request, pk):
     quinze = date.today() - timedelta(days=15)
     dez = date.today() - timedelta(days=10)
     context = {'lista_amostras': amostras, 'titulo': "Minhas amostras", 'amostrasUsuario': True,
-               'finalizadas': False, 'paginaRetorno': 'Amostra:listarAmostraUser','quinze':quinze,'dez':dez}
+               'finalizadas': False, 'paginaRetorno': 'Amostra:listar_amostras_usuario','quinze':quinze,'dez':dez}
     return render(request, 'Amostra/listar.html', context)
 
 @login_required
 def listar_amostras_finalizadas_usuario(request, pk):
     amostras = Amostra.objects.filter(responsavel_id=pk,  status = False)
     context = {'lista_amostras': amostras, 'titulo': "Minhas amostras finalizadas", 'amostrasUsuario': True,
-               'finalizadas': True, 'paginaRetorno': 'Amostra:listarAmostraUserFinalizada'}
+               'finalizadas': True, 'paginaRetorno': 'Amostra:listar_amostras_finalizadas_usuario'}
     return render(request, 'Amostra/listar.html', context)
 
 def mudar_status(request, status, amostra):
@@ -141,7 +143,7 @@ def mudar_status(request, status, amostra):
     return redirect(request.POST.get('next', '/'))
 
 @login_required
-def criar_amostra(request):
+def cadastrar(request):
     if (request.method == "POST"):
         form = amostraForm(request.POST)
         if (form.is_valid()):
@@ -214,7 +216,7 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         if 'addmais' in self.request.POST:
-            url = reverse_lazy('amostra:adicionar')
+            url = reverse_lazy('amostra:cadastrar')
         else:
             url = reverse_lazy('amostra:listar')
         return url
@@ -224,8 +226,31 @@ class CriarAmostra(LoginRequiredMixin, generic.CreateView):
 #    model = Amostra
 #    template_name = "Amostra/amostra_detail.html"
 
+def detalhes(request, pk):
+    amostra = Amostra.objects.filter(pk=pk)[0]
+    resultados_exames = RealizacaoExame.objects.filter(amostra_id=pk)
+    exames_cadastrados = Exame.objects.all()
 
-class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
+    quinze = date.today() - timedelta(days=15)
+    dez = date.today() - timedelta(days=10)
+
+    if amostra.data_coleta <= quinze:
+        alerta = "#e74a3b"
+    elif amostra.data_coleta <= dez:
+        alerta = "#f6c23e"
+    else:
+        alerta = None
+
+    context = {
+        'amostra':amostra,
+        'lista_exames': resultados_exames,
+        'exames_cadastrados': exames_cadastrados,
+        'alerta': alerta
+    }
+    return render(request, 'Amostra/amostra_detail.html', context)
+
+
+class Editar(LoginRequiredMixin, generic.UpdateView):
     model = Amostra
     form_class = amostraForm
     template_name = 'Amostra/amostra_update_form.html'
@@ -233,7 +258,7 @@ class EditarAmostra(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         return(self.request.POST.get('next', '/'))
 
-class DeletarAmostra(LoginRequiredMixin, generic.DeleteView):
+class Deletar(LoginRequiredMixin, generic.DeleteView):
     model = Amostra
     template_name = 'Amostra/listar.html'
 
@@ -252,3 +277,13 @@ def listar_alertas(request):
                'finalizadas': False, 'paginaRetorno': 'Amostra:listarAlertas','quinze':quinze,'dez':dez}
     return render(request, 'Amostra/listar.html', context)
 
+def download_amostras(request):
+    response = HttpResponse(content_type='text/csv')
+    writer = csv.writer(response)
+    writer.writerow(['Identificação', 'Origem', 'Localidade', 'Setor', 'Data da coleta', 'Tipo de amostra', 'Espécie', 'Sexo'])
+    for amostra in Amostra.objects.all().values_list('identificacao', 'origem', 'localidade', 'setor', 'data_coleta', 'tipo_amostra', 'especie_animal', 'sexo_animal'):
+        writer.writerow(amostra)
+    
+    response['Content-Disposition'] = 'attachment; filename="amostra.csv"'
+
+    return response

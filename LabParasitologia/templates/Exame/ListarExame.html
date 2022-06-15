@@ -14,7 +14,7 @@
 {% block content %}
 
 
-  <div class="container">
+  <!-- <div class="container"> -->
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript" src="includes/upload/jquery-1.4.2.min.js"></script>
@@ -28,28 +28,28 @@
 
 
     {% if listar_exame %}
-       <table id="exameT" class="table" cellspacing="0" width="100%">
+       <table id="dataTable" class="table" cellspacing="0" width="100%">
            <thead >
-            <th scope="col"><center>#</center></th>
-            <th><center>Nome</center></th>
+            <th scope="col"><font><center>#</center></font></th>
+            <th><font></font><center>Nome</center></font></th>
             <th></th>
           </thead>
             <tbody>
                {% for exame in listar_exame %}
 
                <tr>
-                   <th scope="row"><center>{{ forloop.counter }}</center></th>
-                  <td><center>{{ exame.nome }}</center></td>
+                   <th scope="row"><font></font><center>{{ forloop.counter }}</center></font></th>
+                  <td><font></font><center>{{ exame.nome }}</center></font></td>
                    <td>
-                      <a onclick="carregar('{% url 'exame:DetalheExame' pk=exame.pk %}');" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
-                        <i class="fa fa-search" aria-hidden="true" style="color:#165d08"></i>
+                      <a href="{% url 'exame:detalhes' pk=exame.pk %}" class="btn btn-primary-outline" data-toggle="tooltip" title="Detalhes">
+                        <i class="fa fa-search" aria-hidden="true" style="color:#1cc88a"></i>
                       </a>
-                       <a href="{% url 'exame:EditarExame' pk=exame.pk %}?next={{ request.path }}" class="btn btn-warning-outline" data-toggle="tooltip" title="Editar">
-                          <i class="fas fa-pencil-alt" style="color:blue"></i>
+                       <a href="{% url 'exame:editar' pk=exame.pk %}?next={{ request.path }}" class="btn btn-warning-outline" data-toggle="tooltip" title="Editar">
+                          <i class="fas fa-pencil-alt" style="color:#4e73df"></i>
                        </a>
                       <a href="" class="btn btn-danger-outline" data-toggle="modal" data-target="#fm-modal-grid-{{exame.pk}}"
                                         data-tt="tooltip" title="Deletar">
-                      <i class="fa fa-times" aria-hidden="true" style="color:red"></i>
+                      <i class="fa fa-times" aria-hidden="true" style="color:#e74a3b"></i>
 
                       </a>
                                  <div class="modal fade" id="fm-modal-grid-{{exame.pk}}" tabindex="-1"
@@ -123,5 +123,5 @@
       <div id="conteudo"></div>
 
 
-  </div>
+  <!-- </div> -->
 {% endblock %}

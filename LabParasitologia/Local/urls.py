@@ -5,9 +5,9 @@ from django.urls import path
 app_name = 'local'
 
 urlpatterns = [
-    url('CadastrarLocal/', views.CadastrarLocal.as_view(), name='cadastrarLocal'),
-    url('ListarLocal/', views.localListar, name='listarLocal'),
-    path('DetalhesLocal/<int:pk>', views.local_amostraDetalhes, name='detalhesLocal'),
-    path('EditarLocal/<int:pk>', views.EditarLocal.as_view(), name='EditarLocal'),
-    path('DeletarLocal/<int:pk>', views.DeletarLocal.as_view(), name='DeletarLocal'),
+    url('cadastrar/', views.Cadastrar.as_view(), name='cadastrar'),
+    url('listar/', views.localListar, name='listarLocal'),
+    path('detalhes/<int:pk>', views.listar_amostras_local, name='listar_amostras_local'),
+    path('editar/<int:pk>', views.Editar.as_view(), name='editar'),
+    path('deletar/<int:pk>', views.Deletar.as_view(), name='deletar'),
 ]

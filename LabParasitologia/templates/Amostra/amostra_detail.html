@@ -256,7 +256,7 @@ Amostra {{ amostra.identificacao }}
 
 			<!-- {% if user.is_superuser or amostra.responsavel.pk == user.pk %} -->
 				<!--<div class="text-right">-->
-        			<!--<a href="{% url 'exame:AdicionarExame' pk=amostra.pk %}" class="btn btn-success">Adicionar exame</a>-->
+        			<!--<a href="{% url 'exame:adicionar' pk=amostra.pk %}" class="btn btn-success">Adicionar exame</a>-->
 				<!--</div>-->
 			<!-- {% endif %} -->
 			<!--<h1><strong>Amostra {{ amostra.identificacao }}</strong></h1>-->
@@ -314,7 +314,7 @@ Amostra {{ amostra.identificacao }}
 				</div>
 				<div class="card-body">
 					{% for exame in exames_cadastrados %}
-						<a href="{% url 'exame:NovoAdicionarExame' pk=amostra.pk exame=exame.pk %}" class="btn btn-success-outline" data-toggle="tooltip" title="Registrar resultado">
+						<a href="{% url 'exame:adicionar_exame_amostra' pk=amostra.pk exame=exame.pk %}" class="btn btn-success-outline" data-toggle="tooltip" title="Registrar resultado">
 							<i class="fas fa-plus" aria-hidden="true" style="color:#165d08"></i>
 						</a>
 
